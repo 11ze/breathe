@@ -209,7 +209,10 @@ struct BreathingPanelView: View {
         let settings = AppSettingsManager.shared.settings
         let config: BreathingConfig
 
-        if settings.defaultPreset == "custom" {
+        if settings.defaultPreset == "auto" {
+            let preset = TimeOfDay.current().recommendedPreset
+            config = BreathingConfig(preset: preset)
+        } else if settings.defaultPreset == "custom" {
             guard let custom = BreathingConfig(
                 inhale: settings.customInhaleSeconds,
                 exhale: settings.customExhaleSeconds,
@@ -224,7 +227,7 @@ struct BreathingPanelView: View {
         } else if let preset = Preset(rawValue: settings.defaultPreset) {
             config = BreathingConfig(preset: preset)
         } else {
-            // auto 或未知值 → balanced
+            // 未知值 → balanced
             config = BreathingConfig(preset: .balanced)
         }
 

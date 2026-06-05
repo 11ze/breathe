@@ -1,0 +1,576 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		014521FF590A9B3B02B4F408 /* LaunchAtLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179E6074418D679AE947A273 /* LaunchAtLoginManager.swift */; };
+		0920046ADE07AE5A16F8C2CB /* HistoryWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511EA9652A94F91FC727E733 /* HistoryWindowController.swift */; };
+		11111CC7DBFFC6FC2FB0AEDD /* BreathingEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 754182D8DAB4DD3497BD4043 /* BreathingEngine.swift */; };
+		11C462AE3FD1833F321EDCAD /* RatioValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E182A693A254C3FC4694DF06 /* RatioValidator.swift */; };
+		1293184E0107893159A09C8C /* AppSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903B4A0C7313747E2000A0DA /* AppSettingsTests.swift */; };
+		1E4FD64C5A0F07E54A423CD1 /* RatioValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA6C7665E0742443F79874B /* RatioValidatorTests.swift */; };
+		21510A81EFD629F1599007C6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7190917332FBC8C0FAA77539 /* Assets.xcassets */; };
+		2907922623B6314E56AACEEE /* BreatheApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE541BCAE9699B54AEA4222 /* BreatheApp.swift */; };
+		293229611D4BBDD3783FE389 /* BreathingConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7100736003BF5786081E696 /* BreathingConfig.swift */; };
+		48C14A836A401EFAAECB2312 /* SessionRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6884FF96EA5D920DF4E25A6 /* SessionRecord.swift */; };
+		53223B62B5473E6873DD1779 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BE827E152A257975C9F1B1 /* AudioManager.swift */; };
+		663BB0DEA477EDEE89274CAA /* SessionLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190B7C79107946EB7C429189 /* SessionLoggerTests.swift */; };
+		6B809A8929E4B091C1576013 /* BreathingCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBD956F8F453E5C5392591D /* BreathingCircle.swift */; };
+		716FF4DB0EBC8E59680754F4 /* TimeOfDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210FE12C45115A2009D72487 /* TimeOfDay.swift */; };
+		78D85B02423A8EAD6EDAE56E /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD90835F015617E89BBCA96 /* NotificationManager.swift */; };
+		7A7A1B5504AD0CFF6853C735 /* SessionLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7367B98F283F5CD05E9C82 /* SessionLogger.swift */; };
+		899DF036A84EA016F13D40CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE5E420EC5A6D6A8D36E2F3 /* AppDelegate.swift */; };
+		89C25D5AD8D8049754CA23B0 /* BreathingPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93473953D606736CC8248084 /* BreathingPanelView.swift */; };
+		9CD127CCAD0BAB7F4FC0A549 /* SettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0807B159CAF60EC334FBAB93 /* SettingsWindowController.swift */; };
+		A64D12CD7DDF4DABA857DB38 /* PresetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DD1EA05414E687FE9AECF0 /* PresetTests.swift */; };
+		A8BB27AE0D42EAA99140B646 /* BreathingEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8A96B4E73308B83FC0D2A3 /* BreathingEngineTests.swift */; };
+		B56F599D6F807AC1A54370A2 /* Preset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F817F2E6D6AD9DACB1DC904 /* Preset.swift */; };
+		B6EFF5CC0FB8BC03EEE6E428 /* SessionRecordTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4F41373F0652B5D48A035D /* SessionRecordTests.swift */; };
+		D10219580E0CCE6012936B4B /* AppPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6974DEE880CE78F69C44A33A /* AppPaths.swift */; };
+		D50CD405A3E353E8DEF1CD57 /* TimeOfDayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EEC46121DF8355AC87C3DA /* TimeOfDayTests.swift */; };
+		D7BD06D9C0B9E6D1AE112D93 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67702772AF38C11379C4AC11 /* AppSettings.swift */; };
+		DCE64AD25F692779E9482B58 /* BreathingPanelWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C7FFBB82B35D34E5214240 /* BreathingPanelWindowController.swift */; };
+		DE6842B444EA21C3FB12E8E7 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B7E057DA3C6E4D7380BE34 /* HistoryView.swift */; };
+		E74C7A7539A48310AD501567 /* BreathingConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDFFBA996DCE1E524A82EA5 /* BreathingConfigTests.swift */; };
+		EBB4C1031337173E876EEBC3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05F43E5F56F86AAEB272D29 /* SettingsView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6E3A1B6BFB727472F12BE48D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 431F826B0EC6C48EE6665B69 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 20F411D971095E3A4AE113A0;
+			remoteInfo = Breathe;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0807B159CAF60EC334FBAB93 /* SettingsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindowController.swift; sourceTree = "<group>"; };
+		13C7FFBB82B35D34E5214240 /* BreathingPanelWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingPanelWindowController.swift; sourceTree = "<group>"; };
+		179E6074418D679AE947A273 /* LaunchAtLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginManager.swift; sourceTree = "<group>"; };
+		190B7C79107946EB7C429189 /* SessionLoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionLoggerTests.swift; sourceTree = "<group>"; };
+		210FE12C45115A2009D72487 /* TimeOfDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeOfDay.swift; sourceTree = "<group>"; };
+		2EDFFBA996DCE1E524A82EA5 /* BreathingConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingConfigTests.swift; sourceTree = "<group>"; };
+		511EA9652A94F91FC727E733 /* HistoryWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryWindowController.swift; sourceTree = "<group>"; };
+		58F63F913E9A9EDA2A0E6D11 /* BreatheTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BreatheTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F817F2E6D6AD9DACB1DC904 /* Preset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preset.swift; sourceTree = "<group>"; };
+		67702772AF38C11379C4AC11 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		6974DEE880CE78F69C44A33A /* AppPaths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPaths.swift; sourceTree = "<group>"; };
+		6D7367B98F283F5CD05E9C82 /* SessionLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionLogger.swift; sourceTree = "<group>"; };
+		7190917332FBC8C0FAA77539 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		754182D8DAB4DD3497BD4043 /* BreathingEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingEngine.swift; sourceTree = "<group>"; };
+		7BD90835F015617E89BBCA96 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		84DD1EA05414E687FE9AECF0 /* PresetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetTests.swift; sourceTree = "<group>"; };
+		8EE5E420EC5A6D6A8D36E2F3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		903B4A0C7313747E2000A0DA /* AppSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsTests.swift; sourceTree = "<group>"; };
+		93473953D606736CC8248084 /* BreathingPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingPanelView.swift; sourceTree = "<group>"; };
+		B05F43E5F56F86AAEB272D29 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		BBBD956F8F453E5C5392591D /* BreathingCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingCircle.swift; sourceTree = "<group>"; };
+		BD4F41373F0652B5D48A035D /* SessionRecordTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRecordTests.swift; sourceTree = "<group>"; };
+		C3B86DEEE9A9C05F8FFBD4D0 /* Breathe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Breathe.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C4BE827E152A257975C9F1B1 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		C7100736003BF5786081E696 /* BreathingConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingConfig.swift; sourceTree = "<group>"; };
+		CAE541BCAE9699B54AEA4222 /* BreatheApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreatheApp.swift; sourceTree = "<group>"; };
+		CF8A96B4E73308B83FC0D2A3 /* BreathingEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingEngineTests.swift; sourceTree = "<group>"; };
+		DBA6C7665E0742443F79874B /* RatioValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatioValidatorTests.swift; sourceTree = "<group>"; };
+		E182A693A254C3FC4694DF06 /* RatioValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatioValidator.swift; sourceTree = "<group>"; };
+		E6884FF96EA5D920DF4E25A6 /* SessionRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRecord.swift; sourceTree = "<group>"; };
+		E7B7E057DA3C6E4D7380BE34 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		F5EEC46121DF8355AC87C3DA /* TimeOfDayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeOfDayTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		04C2DFAA685D499E201C3D23 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C7100736003BF5786081E696 /* BreathingConfig.swift */,
+				5F817F2E6D6AD9DACB1DC904 /* Preset.swift */,
+				E6884FF96EA5D920DF4E25A6 /* SessionRecord.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		0CB695134DC3ACF42AAC4EDF /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				903B4A0C7313747E2000A0DA /* AppSettingsTests.swift */,
+				2EDFFBA996DCE1E524A82EA5 /* BreathingConfigTests.swift */,
+				CF8A96B4E73308B83FC0D2A3 /* BreathingEngineTests.swift */,
+				84DD1EA05414E687FE9AECF0 /* PresetTests.swift */,
+				DBA6C7665E0742443F79874B /* RatioValidatorTests.swift */,
+				190B7C79107946EB7C429189 /* SessionLoggerTests.swift */,
+				BD4F41373F0652B5D48A035D /* SessionRecordTests.swift */,
+				F5EEC46121DF8355AC87C3DA /* TimeOfDayTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		1C033842A7B831BDD27E59D5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C3B86DEEE9A9C05F8FFBD4D0 /* Breathe.app */,
+				58F63F913E9A9EDA2A0E6D11 /* BreatheTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		22233A56AC8B69E546318F84 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				31F4A7C9E0765EDB1B19446E /* App */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		2CA008E4F9A9D771C8E9278B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				BBBD956F8F453E5C5392591D /* BreathingCircle.swift */,
+				93473953D606736CC8248084 /* BreathingPanelView.swift */,
+				E7B7E057DA3C6E4D7380BE34 /* HistoryView.swift */,
+				B05F43E5F56F86AAEB272D29 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		30F97D08B1CA813F61516309 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				67702772AF38C11379C4AC11 /* AppSettings.swift */,
+				C4BE827E152A257975C9F1B1 /* AudioManager.swift */,
+				179E6074418D679AE947A273 /* LaunchAtLoginManager.swift */,
+				7BD90835F015617E89BBCA96 /* NotificationManager.swift */,
+				6D7367B98F283F5CD05E9C82 /* SessionLogger.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		31F4A7C9E0765EDB1B19446E /* App */ = {
+			isa = PBXGroup;
+			children = (
+				8EE5E420EC5A6D6A8D36E2F3 /* AppDelegate.swift */,
+				6974DEE880CE78F69C44A33A /* AppPaths.swift */,
+				CAE541BCAE9699B54AEA4222 /* BreatheApp.swift */,
+				72B12756F944CDFE563861F6 /* Engine */,
+				30F97D08B1CA813F61516309 /* Managers */,
+				04C2DFAA685D499E201C3D23 /* Models */,
+				2CA008E4F9A9D771C8E9278B /* Views */,
+				DA924134B79EC57BB32FC528 /* WindowControllers */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		32C9FFE476156B0316D839AF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7190917332FBC8C0FAA77539 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		72B12756F944CDFE563861F6 /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				754182D8DAB4DD3497BD4043 /* BreathingEngine.swift */,
+				E182A693A254C3FC4694DF06 /* RatioValidator.swift */,
+				210FE12C45115A2009D72487 /* TimeOfDay.swift */,
+			);
+			path = Engine;
+			sourceTree = "<group>";
+		};
+		DA924134B79EC57BB32FC528 /* WindowControllers */ = {
+			isa = PBXGroup;
+			children = (
+				13C7FFBB82B35D34E5214240 /* BreathingPanelWindowController.swift */,
+				511EA9652A94F91FC727E733 /* HistoryWindowController.swift */,
+				0807B159CAF60EC334FBAB93 /* SettingsWindowController.swift */,
+			);
+			path = WindowControllers;
+			sourceTree = "<group>";
+		};
+		E3759CDAD77B7D402D758644 = {
+			isa = PBXGroup;
+			children = (
+				32C9FFE476156B0316D839AF /* Resources */,
+				22233A56AC8B69E546318F84 /* Sources */,
+				0CB695134DC3ACF42AAC4EDF /* Tests */,
+				1C033842A7B831BDD27E59D5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		20F411D971095E3A4AE113A0 /* Breathe */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78C393FB4D945B3EC671740B /* Build configuration list for PBXNativeTarget "Breathe" */;
+			buildPhases = (
+				A735618702C767AAE8631E81 /* Sources */,
+				872B5547327A74042FD26936 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Breathe;
+			packageProductDependencies = (
+			);
+			productName = Breathe;
+			productReference = C3B86DEEE9A9C05F8FFBD4D0 /* Breathe.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AFF1921A2D4BD18FB2DD6E5F /* BreatheTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 902C4BB6EFA4CADD316B20D4 /* Build configuration list for PBXNativeTarget "BreatheTests" */;
+			buildPhases = (
+				D2B3157C492DC35D793B5053 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FE1A08A3F0FEAD35261718C7 /* PBXTargetDependency */,
+			);
+			name = BreatheTests;
+			packageProductDependencies = (
+			);
+			productName = BreatheTests;
+			productReference = 58F63F913E9A9EDA2A0E6D11 /* BreatheTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		431F826B0EC6C48EE6665B69 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					20F411D971095E3A4AE113A0 = {
+						ProvisioningStyle = Manual;
+					};
+					AFF1921A2D4BD18FB2DD6E5F = {
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = ECBD48DFA405978B00F59927 /* Build configuration list for PBXProject "breathe" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = E3759CDAD77B7D402D758644;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 1C033842A7B831BDD27E59D5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				20F411D971095E3A4AE113A0 /* Breathe */,
+				AFF1921A2D4BD18FB2DD6E5F /* BreatheTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		872B5547327A74042FD26936 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21510A81EFD629F1599007C6 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A735618702C767AAE8631E81 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				899DF036A84EA016F13D40CB /* AppDelegate.swift in Sources */,
+				D10219580E0CCE6012936B4B /* AppPaths.swift in Sources */,
+				D7BD06D9C0B9E6D1AE112D93 /* AppSettings.swift in Sources */,
+				53223B62B5473E6873DD1779 /* AudioManager.swift in Sources */,
+				2907922623B6314E56AACEEE /* BreatheApp.swift in Sources */,
+				6B809A8929E4B091C1576013 /* BreathingCircle.swift in Sources */,
+				293229611D4BBDD3783FE389 /* BreathingConfig.swift in Sources */,
+				11111CC7DBFFC6FC2FB0AEDD /* BreathingEngine.swift in Sources */,
+				89C25D5AD8D8049754CA23B0 /* BreathingPanelView.swift in Sources */,
+				DCE64AD25F692779E9482B58 /* BreathingPanelWindowController.swift in Sources */,
+				DE6842B444EA21C3FB12E8E7 /* HistoryView.swift in Sources */,
+				0920046ADE07AE5A16F8C2CB /* HistoryWindowController.swift in Sources */,
+				014521FF590A9B3B02B4F408 /* LaunchAtLoginManager.swift in Sources */,
+				78D85B02423A8EAD6EDAE56E /* NotificationManager.swift in Sources */,
+				B56F599D6F807AC1A54370A2 /* Preset.swift in Sources */,
+				11C462AE3FD1833F321EDCAD /* RatioValidator.swift in Sources */,
+				7A7A1B5504AD0CFF6853C735 /* SessionLogger.swift in Sources */,
+				48C14A836A401EFAAECB2312 /* SessionRecord.swift in Sources */,
+				EBB4C1031337173E876EEBC3 /* SettingsView.swift in Sources */,
+				9CD127CCAD0BAB7F4FC0A549 /* SettingsWindowController.swift in Sources */,
+				716FF4DB0EBC8E59680754F4 /* TimeOfDay.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2B3157C492DC35D793B5053 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1293184E0107893159A09C8C /* AppSettingsTests.swift in Sources */,
+				E74C7A7539A48310AD501567 /* BreathingConfigTests.swift in Sources */,
+				A8BB27AE0D42EAA99140B646 /* BreathingEngineTests.swift in Sources */,
+				A64D12CD7DDF4DABA857DB38 /* PresetTests.swift in Sources */,
+				1E4FD64C5A0F07E54A423CD1 /* RatioValidatorTests.swift in Sources */,
+				663BB0DEA477EDEE89274CAA /* SessionLoggerTests.swift in Sources */,
+				B6EFF5CC0FB8BC03EEE6E428 /* SessionRecordTests.swift in Sources */,
+				D50CD405A3E353E8DEF1CD57 /* TimeOfDayTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FE1A08A3F0FEAD35261718C7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 20F411D971095E3A4AE113A0 /* Breathe */;
+			targetProxy = 6E3A1B6BFB727472F12BE48D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		225C1473A116BBBA0C7C30A3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cai.breathe.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Breathe.app/Contents/MacOS/Breathe";
+			};
+			name = Release;
+		};
+		6206954854C4FC0E2E532522 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cai.breathe;
+				PRODUCT_NAME = Breathe;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		AAA4A6208459F44644BBBED3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		B3A29B5B5DF77EB56742CF96 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		DF3D7CB3A0AF0EE20D317810 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cai.breathe;
+				PRODUCT_NAME = Breathe;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		F35E753522C0CA19DCBF9438 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cai.breathe.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Breathe.app/Contents/MacOS/Breathe";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		78C393FB4D945B3EC671740B /* Build configuration list for PBXNativeTarget "Breathe" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DF3D7CB3A0AF0EE20D317810 /* Debug */,
+				6206954854C4FC0E2E532522 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		902C4BB6EFA4CADD316B20D4 /* Build configuration list for PBXNativeTarget "BreatheTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F35E753522C0CA19DCBF9438 /* Debug */,
+				225C1473A116BBBA0C7C30A3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		ECBD48DFA405978B00F59927 /* Build configuration list for PBXProject "breathe" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B3A29B5B5DF77EB56742CF96 /* Debug */,
+				AAA4A6208459F44644BBBED3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 431F826B0EC6C48EE6665B69 /* Project object */;
+}
