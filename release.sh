@@ -40,7 +40,7 @@ generate_release_notes() {
     local last_tag
     last_tag=$(git describe --tags --abbrev=0 2>/dev/null) || last_tag="0.0.0"
 
-    git log ${last_tag}..HEAD --pretty=format:"%s" 2>/dev/null | awk -F': ' '{
+    git log "${last_tag}..HEAD" --pretty=format:"%s" 2>/dev/null | awk -F': ' '{
         split($1, a, "(")
         type = a[1]
         msg = $2
