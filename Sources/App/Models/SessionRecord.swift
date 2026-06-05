@@ -1,7 +1,9 @@
 import Foundation
 
 /// 一次呼吸会话的记录（CSV 可序列化）
-struct SessionRecord: Equatable {
+struct SessionRecord: Equatable, Identifiable {
+    /// 唯一标识（用 csvRow 的哈希，SwiftUI Table 需要 Identifiable）
+    var id: String { csvRow }
     let date: String          // YYYY-MM-DD
     let time: String          // HH:MM:SS
     let preset: String        // balanced / calm / extended / custom
