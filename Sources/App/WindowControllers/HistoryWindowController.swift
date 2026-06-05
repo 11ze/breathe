@@ -1,0 +1,53 @@
+import AppKit
+import SwiftUI
+
+@MainActor
+final class HistoryWindowController: NSObject {
+    static let shared = HistoryWindowController()
+
+    private var window: NSWindow?
+    private var hasWindowObserver = false
+
+    private override init() {
+        super.init()
+    }
+
+    func showWindow() {
+        if let window = window {
+            window.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+
+        let contentView = HistoryView()
+        let hostingView = NSHostingView(rootView: contentView)
+
+        window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 650, height: 400),
+            styleMask: [.titled, .closable, .resizable, .miniaturizable],
+            backing: .buffered,
+            defer: false
+        )
+        window?.title = "呼吸历史"
+        window?.contentView = hostingView
+        window?.isReleasedWhenClosed = false
+        window?.center()
+
+        if let window = window, !hasWindowObserver {
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(windowWillClose),
+                name: NSWindow.willCloseNotification,
+                object: window
+            )
+            hasWindowObserver = true
+        }
+
+        window?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    @objc private func windowWillClose() {
+        // 清理
+    }
+}

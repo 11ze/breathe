@@ -17,6 +17,7 @@ targets:
     sources:
       - Sources
       - Sources/App/Views
+      - Sources/App/WindowControllers
       - Resources/Assets.xcassets
     settings:
       base:
