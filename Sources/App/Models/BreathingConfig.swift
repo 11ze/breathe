@@ -51,6 +51,24 @@ struct BreathingConfig: Equatable {
         "\(inhaleSeconds)-\(exhaleSeconds)"
     }
 
+    /// 根据当前设置创建配置（供菜单项和面板按钮共用）
+    @MainActor static func fromCurrentSettings() -> BreathingConfig {
+        let settings = AppSettingsManager.shared.settings
+        if settings.defaultPreset == "auto" {
+            return BreathingConfig(preset: TimeOfDay.current().recommendedPreset)
+        } else if settings.defaultPreset == "custom" {
+            return BreathingConfig(
+                inhale: settings.customInhaleSeconds,
+                exhale: settings.customExhaleSeconds,
+                durationMinutes: settings.customDurationMinutes
+            ) ?? BreathingConfig(preset: .balanced)
+        } else if let preset = Preset(rawValue: settings.defaultPreset) {
+            return BreathingConfig(preset: preset)
+        } else {
+            return BreathingConfig(preset: .balanced)
+        }
+    }
+
     /// 向上取整到呼吸周期的整数倍
     /// Python 的 `-(-a // b) * b` 用 floor division，Swift 的 `/` 是 truncating division
     /// 等价的 Swift 写法：`(a + b - 1) / b * b`

@@ -15,10 +15,12 @@ final class BreathingPanelWindowController: NSWindowController {
     static let shared = BreathingPanelWindowController()
 
     private var eventMonitor: Any?
+    private var hostingController: NSHostingController<BreathingPanelView>?
 
     private init() {
         let contentView = BreathingPanelView()
-        let hostingView = NSHostingView(rootView: contentView)
+        let hostingCtrl = NSHostingController(rootView: contentView)
+        hostingController = hostingCtrl
 
         let panel = KeyPanel(
             contentRect: NSRect(x: 0, y: 0, width: 320, height: 460),
@@ -35,7 +37,7 @@ final class BreathingPanelWindowController: NSWindowController {
         panel.titleVisibility = .hidden
         panel.titlebarAppearsTransparent = true
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-        panel.contentView = hostingView
+        panel.contentViewController = hostingCtrl
 
         super.init(window: panel)
 
@@ -62,9 +64,10 @@ final class BreathingPanelWindowController: NSWindowController {
     }
 
     func show() {
-        // 通过 NSApp.delegate 获取 AppDelegate 的 statusItem button
-        guard let appDelegate = NSApp.delegate as? AppDelegate,
-              let button = appDelegate.statusItem?.button else { return }
+        guard let appDelegate = AppDelegate.shared,
+              let button = appDelegate.statusItem?.button else {
+            return
+        }
         positionNearStatusBarButton(button)
         window?.makeKeyAndOrderFront(nil)
         setupEventMonitor()

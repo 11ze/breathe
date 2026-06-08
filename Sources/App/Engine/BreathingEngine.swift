@@ -44,6 +44,8 @@ final class BreathingEngine: ObservableObject {
 
     // MARK: - 回调
 
+    /// 会话开始时触发（用于更新 UI 状态，如菜单栏图标）
+    var onSessionStart: (() -> Void)?
     /// 吸气开始时触发（用于播放音频）
     var onInhaleStart: (() -> Void)?
     /// 呼气开始时触发（用于播放音频）
@@ -67,10 +69,12 @@ final class BreathingEngine: ObservableObject {
         self.phaseProgress = 0.0
         self.isSessionActive = true
         self.sessionStartTime = Date()
+        self.phaseStartTime = Date()
 
         // 开始 3-2-1 倒计时
         phase = .countdown(3)
         startTimer()
+        onSessionStart?()
     }
 
     /// 停止会话（用户主动）
@@ -119,11 +123,13 @@ final class BreathingEngine: ObservableObject {
     // MARK: - Timer
 
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: frameInterval, repeats: true) { [weak self] _ in
+        let t = Timer(timeInterval: frameInterval, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 self?.tick()
             }
         }
+        RunLoop.main.add(t, forMode: .common)
+        timer = t
     }
 
     private func stopTimer() {

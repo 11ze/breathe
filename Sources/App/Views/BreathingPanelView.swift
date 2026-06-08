@@ -206,32 +206,7 @@ struct BreathingPanelView: View {
     }
 
     private func startBreathing() {
-        let settings = AppSettingsManager.shared.settings
-        let config: BreathingConfig
-
-        if settings.defaultPreset == "auto" {
-            let preset = TimeOfDay.current().recommendedPreset
-            config = BreathingConfig(preset: preset)
-        } else if settings.defaultPreset == "custom" {
-            guard let custom = BreathingConfig(
-                inhale: settings.customInhaleSeconds,
-                exhale: settings.customExhaleSeconds,
-                durationMinutes: settings.customDurationMinutes
-            ) else {
-                // 自定义参数无效时 fallback 到 balanced
-                config = BreathingConfig(preset: .balanced)
-                engine.start(config: config)
-                return
-            }
-            config = custom
-        } else if let preset = Preset(rawValue: settings.defaultPreset) {
-            config = BreathingConfig(preset: preset)
-        } else {
-            // 未知值 → balanced
-            config = BreathingConfig(preset: .balanced)
-        }
-
-        engine.start(config: config)
+        engine.start(config: BreathingConfig.fromCurrentSettings())
     }
 
     private func formatTime(_ seconds: Int) -> String {

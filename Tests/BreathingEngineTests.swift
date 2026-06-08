@@ -170,4 +170,139 @@ final class BreathingEngineTests: XCTestCase {
     func testSharedSingleton() {
         XCTAssertTrue(BreathingEngine.shared === BreathingEngine.shared)
     }
+
+    // MARK: - onSessionStart 回调
+
+    /// 验证 start() 触发 onSessionStart 回调
+    /// 这个回调驱动菜单栏图标的更新，如果没触发，图标不会变
+    func testOnSessionStartCallbackFiredOnStart() {
+        let config = BreathingConfig(preset: .balanced)
+
+        var startFired = false
+        engine.onSessionStart = {
+            startFired = true
+        }
+
+        engine.start(config: config)
+
+        XCTAssertTrue(startFired, "start() 应该触发 onSessionStart 回调")
+    }
+
+    /// 验证 stop() 不触发 onSessionStart（只有 start 才触发）
+    func testOnSessionStartNotFiredOnStop() {
+        let config = BreathingConfig(preset: .balanced)
+        engine.start(config: config)
+
+        var startCount = 0
+        engine.onSessionStart = {
+            startCount += 1
+        }
+
+        engine.stop()
+
+        XCTAssertEqual(startCount, 0, "stop() 不应触发 onSessionStart")
+    }
+
+    // MARK: - 异步状态转换
+
+    /// 验证 3 秒倒计时后引擎自动进入吸气阶段
+    /// 如果引擎 timer 不工作或 phaseStartTime 未正确初始化，此测试会失败
+    func testCountdownTransitionsToInhale() {
+        let config = BreathingConfig(preset: .balanced)
+        engine.start(config: config)
+        XCTAssertEqual(engine.phase, .countdown(3))
+
+        let expectation = expectation(description: "倒计时结束进入吸气阶段")
+
+        // 用 Timer 轮询，避免 DispatchQueue.main.asyncAfter 的时序问题
+        var elapsed = 0.0
+        let pollTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] t in
+            guard let self = self else { t.invalidate(); return }
+            elapsed += 0.1
+            if case .inhale = self.engine.phase {
+                t.invalidate()
+                expectation.fulfill()
+            } else if elapsed > 5.0 {
+                t.invalidate()
+                XCTFail("5 秒后仍未进入吸气阶段，当前: \(self.engine.phase)")
+            }
+        }
+        RunLoop.main.add(pollTimer, forMode: .common)
+
+        waitForExpectations(timeout: 6) { _ in
+            pollTimer.invalidate()
+        }
+    }
+
+    /// 验证吸气阶段 phaseProgress 持续增长
+    /// 这是呼吸动画的核心驱动——如果 progress 不变，SwiftUI 圆环就不会动
+    func testPhaseProgressChangesDuringInhale() {
+        let config = BreathingConfig(preset: .balanced)
+        engine.start(config: config)
+
+        let expectation = expectation(description: "吸气阶段 progress 发生变化")
+
+        // 先等倒计时结束
+        var countdownDone = false
+        var initialProgress: Double?
+
+        let pollTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] t in
+            guard let self = self else { t.invalidate(); return }
+
+            if !countdownDone {
+                if case .inhale = self.engine.phase {
+                    countdownDone = true
+                    initialProgress = self.engine.phaseProgress
+                }
+                return
+            }
+
+            // 吸气阶段中，progress 应该 > 初始值
+            let currentProgress = self.engine.phaseProgress
+            if currentProgress > (initialProgress ?? 0) + 0.05 {
+                t.invalidate()
+                expectation.fulfill()
+            }
+        }
+        RunLoop.main.add(pollTimer, forMode: .common)
+
+        waitForExpectations(timeout: 8) { _ in
+            pollTimer.invalidate()
+        }
+    }
+
+    /// 验证吸气→呼气的自动转换
+    /// 完整的呼吸循环才能让用户看到"膨胀-收缩"动画
+    func testInhaleTransitionsToExhale() {
+        let config = BreathingConfig(preset: .balanced)
+        engine.start(config: config)
+
+        let expectation = expectation(description: "吸气结束后进入呼气阶段")
+
+        var phaseLog: [String] = []
+
+        let pollTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] t in
+            guard let self = self else { t.invalidate(); return }
+
+            switch self.engine.phase {
+            case .exhale:
+                // 确保经过了吸气阶段
+                if phaseLog.contains("inhale") {
+                    t.invalidate()
+                    expectation.fulfill()
+                }
+            case .inhale:
+                if !phaseLog.contains("inhale") {
+                    phaseLog.append("inhale")
+                }
+            default:
+                break
+            }
+        }
+        RunLoop.main.add(pollTimer, forMode: .common)
+
+        waitForExpectations(timeout: 15) { _ in
+            pollTimer.invalidate()
+        }
+    }
 }

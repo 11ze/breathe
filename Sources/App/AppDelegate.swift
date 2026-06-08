@@ -3,6 +3,7 @@ import SwiftUI
 
 @MainActor
 class AppDelegate: NSObject, NSApplicationDelegate {
+    static weak var shared: AppDelegate?
     var statusItem: NSStatusItem?
 
     // 菜单项引用（需要动态更新标题）
@@ -11,6 +12,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var presetSubmenu: NSMenu?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        Self.shared = self
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
         if let button = statusItem?.button {
@@ -137,6 +139,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupEngineCallbacks() {
         let engine = BreathingEngine.shared
 
+        engine.onSessionStart = { [weak self] in
+            self?.updateStatusBarIcon(isActive: true)
+        }
+
         engine.onInhaleStart = {
             AudioManager.shared.playInhale()
         }
@@ -146,6 +152,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         engine.onSessionComplete = { [weak self] record in
+            // 恢复图标
+            self?.updateStatusBarIcon(isActive: false)
+
             // 发送通知
             NotificationManager.shared.showSessionComplete(
                 breaths: record.breaths,
@@ -174,6 +183,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    // MARK: - 菜单动作
+
+    @objc private func toggleBreathing() {
+        let engine = BreathingEngine.shared
+        if engine.isSessionActive {
+            engine.stop()
+        } else {
+            engine.start(config: BreathingConfig.fromCurrentSettings())
+            BreathingPanelWindowController.shared.show()
+        }
+    }
+
     // MARK: - 状态栏点击
 
     @objc private func statusBarButtonClicked(_ sender: NSStatusBarButton) {
@@ -183,18 +204,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else if event.type == .rightMouseUp {
             guard let menu = sender.menu else { return }
             menu.popUp(positioning: nil, at: NSPoint(x: 0, y: sender.bounds.height + 5), in: sender)
-        }
-    }
-
-    // MARK: - 菜单动作
-
-    @objc private func toggleBreathing() {
-        let engine = BreathingEngine.shared
-        if engine.isSessionActive {
-            engine.stop()
-            refreshPanel()
-        } else {
-            BreathingPanelWindowController.shared.show()
         }
     }
 
@@ -237,6 +246,42 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     // MARK: - 辅助
+
+    private func updateStatusBarIcon(isActive: Bool) {
+        guard let button = statusItem?.button else { return }
+
+        if isActive {
+            // 手动着色 SF Symbol — contentTintColor 对菜单栏图标无效
+            if let sfImage = NSImage(systemSymbolName: "wind", accessibilityDescription: "Breathe Active") {
+                let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .bold)
+                if let configured = sfImage.withSymbolConfiguration(config) {
+                    button.image = tint(image: configured, with: .systemCyan)
+                }
+            }
+        } else {
+            // 恢复原始 template 图标
+            if let image = NSImage(named: "MenuBarIcon") {
+                image.isTemplate = true
+                button.image = image
+            } else if let sfImage = NSImage(systemSymbolName: "wind", accessibilityDescription: "Breathe") {
+                let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .regular)
+                sfImage.isTemplate = true
+                button.image = sfImage.withSymbolConfiguration(config)
+            }
+        }
+    }
+
+    /// 用 sourceAtop 合成模式将 template 图像着色
+    private func tint(image: NSImage, with color: NSColor) -> NSImage {
+        let tinted = NSImage(size: image.size)
+        tinted.lockFocus()
+        let rect = NSRect(origin: .zero, size: image.size)
+        image.draw(in: rect)
+        color.withAlphaComponent(0.9).setFill()
+        rect.fill(using: .sourceAtop)
+        tinted.unlockFocus()
+        return tinted
+    }
 
     private func refreshPanel() {
         // 面板视图通过 @ObservedObject 自动刷新

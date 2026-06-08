@@ -36,8 +36,9 @@ struct BreathingCircle: View {
                     )
                 )
                 .frame(width: baseSize * scale, height: baseSize * scale)
-                .animation(.linear(duration: 0.05), value: scale)
         }
+        .animation(.easeInOut(duration: 0.15), value: progress)
+        .animation(.easeInOut(duration: 0.3), value: phase)
     }
 
     /// 根据阶段返回 (缩放比例, 渐变颜色对)
