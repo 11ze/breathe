@@ -30,6 +30,8 @@ final class BreathingEngine: ObservableObject {
     @Published private(set) var totalDurationSeconds: Int = 0
     /// 是否正在会话中
     @Published private(set) var isSessionActive: Bool = false
+    /// 当前阶段剩余秒数（吸气/呼气/倒计时）
+    @Published private(set) var currentPhaseSecondsRemaining: Int = 0
 
     // MARK: - 内部状态
 
@@ -163,6 +165,7 @@ final class BreathingEngine: ObservableObject {
         let elapsed = Date().timeIntervalSince(phaseStartTime)
         let progress = elapsed / 1.0 // 每个倒计时数字 1 秒
         phaseProgress = progress
+        currentPhaseSecondsRemaining = remaining
 
         if progress >= 1.0 {
             if remaining > 1 {
@@ -182,6 +185,7 @@ final class BreathingEngine: ObservableObject {
         let phaseDuration = Double(config.inhaleSeconds)
         let progress = phaseElapsed / phaseDuration
         phaseProgress = min(progress, 1.0)
+        currentPhaseSecondsRemaining = max(0, config.inhaleSeconds - Int(phaseElapsed))
 
         updateRemainingSeconds()
 
@@ -197,6 +201,7 @@ final class BreathingEngine: ObservableObject {
         let phaseDuration = Double(config.exhaleSeconds)
         let progress = phaseElapsed / phaseDuration
         phaseProgress = min(progress, 1.0)
+        currentPhaseSecondsRemaining = max(0, config.exhaleSeconds - Int(phaseElapsed))
 
         updateRemainingSeconds()
 
@@ -288,6 +293,7 @@ final class BreathingEngine: ObservableObject {
         stopTimer()
         phase = .idle
         phaseProgress = 0.0
+        currentPhaseSecondsRemaining = 0
         isSessionActive = false
         config = nil
     }

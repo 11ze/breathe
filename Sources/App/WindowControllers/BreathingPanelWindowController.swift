@@ -7,14 +7,12 @@ final class KeyPanel: NSPanel {
     override var canBecomeMain: Bool { true }
 }
 
-/// 呼吸面板窗口控制器
-/// 复用 menu-bar-executor 的 CommandPaletteWindowController 模式
-/// 关键区别：会话期间不自动关闭（用户需要一边做其他事一边看呼吸引导）
+/// 呼吸球窗口控制器
+/// 桌面浮动呼吸球，会话期间始终可见，空闲时隐藏
 @MainActor
 final class BreathingPanelWindowController: NSWindowController {
     static let shared = BreathingPanelWindowController()
 
-    private var eventMonitor: Any?
     private var hostingController: NSHostingController<BreathingPanelView>?
 
     private init() {
@@ -23,7 +21,7 @@ final class BreathingPanelWindowController: NSWindowController {
         hostingController = hostingCtrl
 
         let panel = KeyPanel(
-            contentRect: NSRect(x: 0, y: 0, width: 320, height: 460),
+            contentRect: NSRect(x: 0, y: 0, width: 260, height: 260),
             styleMask: [.nonactivatingPanel, .fullSizeContentView],
             backing: .buffered,
             defer: false
@@ -40,13 +38,6 @@ final class BreathingPanelWindowController: NSWindowController {
         panel.contentViewController = hostingCtrl
 
         super.init(window: panel)
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(windowDidResignKey),
-            name: NSWindow.didResignKeyNotification,
-            object: panel
-        )
     }
 
     required init?(coder: NSCoder) {
@@ -55,69 +46,26 @@ final class BreathingPanelWindowController: NSWindowController {
 
     // MARK: - 显示/隐藏
 
-    func toggle() {
-        if let window = window, window.isVisible {
-            hide()
-        } else {
-            show()
-        }
-    }
-
     func show() {
-        guard let appDelegate = AppDelegate.shared,
-              let button = appDelegate.statusItem?.button else {
-            return
+        if let window = window, !window.isVisible {
+            positionDefault()
         }
-        positionNearStatusBarButton(button)
         window?.makeKeyAndOrderFront(nil)
-        setupEventMonitor()
     }
 
     func hide() {
-        removeEventMonitor()
         window?.orderOut(nil)
     }
 
     // MARK: - 定位
 
-    private func positionNearStatusBarButton(_ button: NSStatusBarButton) {
-        guard let window = window else { return }
-        let buttonFrame = button.window?.convertToScreen(button.convert(button.bounds, to: nil)) ?? .zero
-        let panelWidth = window.frame.width
-        let x = buttonFrame.origin.x + (buttonFrame.width - panelWidth) / 2
-        let y = buttonFrame.origin.y - window.frame.height - 5
+    /// 首次显示时放到屏幕中央
+    private func positionDefault() {
+        guard let window = window,
+              let screen = NSScreen.main else { return }
+        let screenFrame = screen.visibleFrame
+        let x = screenFrame.midX - window.frame.width / 2
+        let y = screenFrame.midY - window.frame.height / 2
         window.setFrameOrigin(NSPoint(x: x, y: y))
-    }
-
-    // MARK: - 事件监听
-
-    private func setupEventMonitor() {
-        guard eventMonitor == nil else { return }
-        eventMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
-            guard let self = self, let window = self.window, window.isKeyWindow else { return event }
-
-            // Escape 关闭面板（仅空闲状态）
-            if event.keyCode == 53 {
-                self.hide()
-                return nil
-            }
-
-            return event
-        }
-    }
-
-    private func removeEventMonitor() {
-        if let monitor = eventMonitor {
-            NSEvent.removeMonitor(monitor)
-            eventMonitor = nil
-        }
-    }
-
-    @objc private func windowDidResignKey(_ notification: Notification) {
-        // 空闲状态下点击面板外部可关闭
-        // 会话期间不自动关闭（与 menu-bar-executor 的关键区别）
-        guard let engine = BreathingEngine.shared as BreathingEngine?,
-              !engine.isSessionActive else { return }
-        hide()
     }
 }

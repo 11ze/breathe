@@ -5,6 +5,7 @@ import SwiftUI
 struct BreathingCircle: View {
     let phase: BreathingPhase
     let progress: Double // 0.0~1.0
+    var secondsText: String? = nil
 
     /// 圆环基础大小
     private let baseSize: CGFloat = 200
@@ -36,6 +37,14 @@ struct BreathingCircle: View {
                     )
                 )
                 .frame(width: baseSize * scale, height: baseSize * scale)
+
+            // 秒数文字
+            if let text = secondsText {
+                Text(text)
+                    .font(.system(size: 36, weight: .bold, design: .rounded))
+                    .foregroundColor(.white)
+                    .shadow(color: .black.opacity(0.3), radius: 2)
+            }
         }
         .animation(.easeInOut(duration: 0.15), value: progress)
         .animation(.easeInOut(duration: 0.3), value: phase)
@@ -71,10 +80,10 @@ struct BreathingCircle_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 40) {
             BreathingCircle(phase: .idle, progress: 0)
-            BreathingCircle(phase: .countdown(3), progress: 0.5)
-            BreathingCircle(phase: .inhale, progress: 0.7)
-            BreathingCircle(phase: .exhale, progress: 0.4)
-            BreathingCircle(phase: .paused(.inhale), progress: 0.5)
+            BreathingCircle(phase: .countdown(3), progress: 0.5, secondsText: "3")
+            BreathingCircle(phase: .inhale, progress: 0.7, secondsText: "2")
+            BreathingCircle(phase: .exhale, progress: 0.4, secondsText: "4")
+            BreathingCircle(phase: .paused(.inhale), progress: 0.5, secondsText: "‖")
         }
         .frame(width: 300, height: 800)
         .background(Color.black)

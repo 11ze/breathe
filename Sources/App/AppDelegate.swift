@@ -7,7 +7,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem?
 
     // 菜单项引用（需要动态更新标题）
+    private var statusLineItem: NSMenuItem?      // "吸气 · 4s"
+    private var infoLineItem: NSMenuItem?        // "已完成 3 次 · 剩余 2:35"
     private var startMenuItem: NSMenuItem?
+    private var pauseMenuItem: NSMenuItem?
     private var muteMenuItem: NSMenuItem?
     private var presetSubmenu: NSMenu?
 
@@ -52,6 +55,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let menu = NSMenu()
         menu.delegate = self
 
+        // 状态行：阶段 + 秒数（会话中显示）
+        let statusItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+        statusItem.isEnabled = false
+        statusLineItem = statusItem
+        menu.addItem(statusItem)
+
+        // 状态行：呼吸次数 + 剩余时间（会话中显示）
+        let infoItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+        infoItem.isEnabled = false
+        infoLineItem = infoItem
+        menu.addItem(infoItem)
+
         // 开始/停止呼吸
         let startItem = NSMenuItem(
             title: "开始呼吸",
@@ -61,6 +76,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         startItem.target = self
         startMenuItem = startItem
         menu.addItem(startItem)
+
+        // 暂停/继续（会话中显示）
+        let pauseItem = NSMenuItem(title: "暂停", action: #selector(togglePause), keyEquivalent: "")
+        pauseItem.target = self
+        pauseMenuItem = pauseItem
+        menu.addItem(pauseItem)
 
         menu.addItem(NSMenuItem.separator())
 
@@ -155,6 +176,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // 恢复图标
             self?.updateStatusBarIcon(isActive: false)
 
+            // 隐藏呼吸球
+            BreathingPanelWindowController.shared.hide()
+
             // 发送通知
             NotificationManager.shared.showSessionComplete(
                 breaths: record.breaths,
@@ -165,9 +189,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             if AppSettingsManager.shared.settings.logSessions {
                 SessionLogger.shared.log(record)
             }
-
-            // 刷新面板
-            self?.refreshPanel()
         }
     }
 
@@ -198,17 +219,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - 状态栏点击
 
     @objc private func statusBarButtonClicked(_ sender: NSStatusBarButton) {
-        guard let event = NSApp.currentEvent else { return }
-        if event.type == .leftMouseUp {
-            BreathingPanelWindowController.shared.toggle()
-        } else if event.type == .rightMouseUp {
-            guard let menu = sender.menu else { return }
-            menu.popUp(positioning: nil, at: NSPoint(x: 0, y: sender.bounds.height + 5), in: sender)
-        }
+        guard let menu = sender.menu else { return }
+        menu.popUp(positioning: nil, at: NSPoint(x: 0, y: sender.bounds.height + 5), in: sender)
     }
 
     @objc private func toggleMute() {
         AudioManager.shared.toggleMute()
+    }
+
+    @objc private func togglePause() {
+        BreathingEngine.shared.togglePause()
     }
 
     @objc private func selectPresetAuto() {
@@ -293,10 +313,44 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 extension AppDelegate: NSMenuDelegate {
     func menuNeedsUpdate(_ menu: NSMenu) {
         let engine = BreathingEngine.shared
-        startMenuItem?.title = engine.isSessionActive ? "停止呼吸" : "开始呼吸"
+        let isSessionActive = engine.isSessionActive
+
+        // 状态行：会话中显示，空闲时隐藏
+        statusLineItem?.isHidden = !isSessionActive
+        infoLineItem?.isHidden = !isSessionActive
+        pauseMenuItem?.isHidden = !isSessionActive
+
+        if isSessionActive {
+            statusLineItem?.title = statusText(for: engine.phase, seconds: engine.currentPhaseSecondsRemaining)
+            infoLineItem?.title = "已完成 \(engine.breathsCompleted) 次呼吸 · 剩余 \(formatTime(engine.remainingSeconds))"
+            pauseMenuItem?.title = engine.isPaused ? "继续" : "暂停"
+            startMenuItem?.title = "停止呼吸"
+        } else {
+            startMenuItem?.title = "开始呼吸"
+        }
 
         let isMuted = AudioManager.shared.isMuted
         muteMenuItem?.title = isMuted ? "取消静音" : "静音"
         muteMenuItem?.state = isMuted ? .on : .off
+    }
+}
+
+// MARK: - 菜单辅助方法
+
+extension AppDelegate {
+    private func statusText(for phase: BreathingPhase, seconds: Int) -> String {
+        switch phase {
+        case .countdown: return "准备 · \(seconds)"
+        case .inhale:    return "吸气 · \(seconds)s"
+        case .exhale:    return "呼气 · \(seconds)s"
+        case .paused:    return "‖ 已暂停"
+        default:         return ""
+        }
+    }
+
+    private func formatTime(_ seconds: Int) -> String {
+        let m = seconds / 60
+        let s = seconds % 60
+        return String(format: "%d:%02d", m, s)
     }
 }
