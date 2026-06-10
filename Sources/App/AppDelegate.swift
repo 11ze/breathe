@@ -1,4 +1,5 @@
 import AppKit
+import Combine
 import SwiftUI
 
 @MainActor
@@ -7,12 +8,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem?
 
     // 菜单项引用（需要动态更新标题）
-    private var statusLineItem: NSMenuItem?      // "吸气 · 4s"
-    private var infoLineItem: NSMenuItem?        // "已完成 3 次 · 剩余 2:35"
     private var startMenuItem: NSMenuItem?
     private var pauseMenuItem: NSMenuItem?
     private var muteMenuItem: NSMenuItem?
     private var presetSubmenu: NSMenu?
+    private var cancellables = Set<AnyCancellable>()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         Self.shared = self
@@ -49,18 +49,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         let menu = NSMenu()
         menu.delegate = self
-
-        // 状态行：阶段 + 秒数（会话中显示）
-        let statusItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
-        statusItem.isEnabled = false
-        statusLineItem = statusItem
-        menu.addItem(statusItem)
-
-        // 状态行：呼吸次数 + 剩余时间（会话中显示）
-        let infoItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
-        infoItem.isEnabled = false
-        infoLineItem = infoItem
-        menu.addItem(infoItem)
 
         // 开始/停止呼吸
         let startItem = NSMenuItem(
@@ -157,9 +145,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupEngineCallbacks() {
         let engine = BreathingEngine.shared
 
-        engine.onSessionStart = { [weak self] in
-            self?.updateStatusBarIcon(isActive: true)
-        }
+        // 监听会话状态 + 剩余时间，更新状态栏图标和标题
+        Publishers.CombineLatest(engine.$isSessionActive, engine.$remainingSeconds)
+            .sink { [weak self] isActive, remaining in
+                self?.updateStatusBarContent(isActive: isActive, remaining: remaining)
+            }
+            .store(in: &cancellables)
 
         engine.onInhaleStart = {
             AudioManager.shared.playInhale()
@@ -170,9 +161,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         engine.onSessionComplete = { [weak self] record in
-            // 恢复图标
-            self?.updateStatusBarIcon(isActive: false)
-
             // 隐藏呼吸球
             BreathingPanelWindowController.shared.hide()
 
@@ -259,9 +247,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: - 辅助
 
-    private func updateStatusBarIcon(isActive: Bool) {
+    /// 更新状态栏图标和剩余时长标题
+    private func updateStatusBarContent(isActive: Bool, remaining: Int) {
         guard let button = statusItem?.button else { return }
         button.image = makeStatusBarIcon(isActive: isActive)
+        button.title = isActive ? " \(formatTime(remaining))" : ""
+    }
+
+    private func formatTime(_ seconds: Int) -> String {
+        let m = seconds / 60
+        let s = seconds % 60
+        return String(format: "%d:%02d", m, s)
     }
 
     /// 创建菜单栏图标（回退链：自定义资源 → SF Symbol）
@@ -303,14 +299,10 @@ extension AppDelegate: NSMenuDelegate {
         let engine = BreathingEngine.shared
         let isSessionActive = engine.isSessionActive
 
-        // 状态行：会话中显示，空闲时隐藏
-        statusLineItem?.isHidden = !isSessionActive
-        infoLineItem?.isHidden = !isSessionActive
+        // 暂停项：会话中显示，空闲时隐藏
         pauseMenuItem?.isHidden = !isSessionActive
 
         if isSessionActive {
-            statusLineItem?.title = statusText(for: engine.phase, seconds: engine.currentPhaseSecondsRemaining)
-            infoLineItem?.title = "已完成 \(engine.breathsCompleted) 次呼吸 · 剩余 \(formatTime(engine.remainingSeconds))"
             pauseMenuItem?.title = engine.isPaused ? "继续" : "暂停"
             startMenuItem?.title = "停止呼吸"
         } else {
@@ -320,25 +312,5 @@ extension AppDelegate: NSMenuDelegate {
         let isMuted = AudioManager.shared.isMuted
         muteMenuItem?.title = isMuted ? "取消静音" : "静音"
         muteMenuItem?.state = isMuted ? .on : .off
-    }
-}
-
-// MARK: - 菜单辅助方法
-
-extension AppDelegate {
-    private func statusText(for phase: BreathingPhase, seconds: Int) -> String {
-        switch phase {
-        case .countdown: return "准备 · \(seconds)"
-        case .inhale:    return "吸气 · \(seconds)s"
-        case .exhale:    return "呼气 · \(seconds)s"
-        case .paused:    return "‖ 已暂停"
-        default:         return ""
-        }
-    }
-
-    private func formatTime(_ seconds: Int) -> String {
-        let m = seconds / 60
-        let s = seconds % 60
-        return String(format: "%d:%02d", m, s)
     }
 }
