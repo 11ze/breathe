@@ -23,26 +23,12 @@ final class SessionLogger {
 
             // 追加数据行
             let row = record.csvRow + "\n"
-            if let handle = try? FileHandle(forWritingTo: fileURL) {
-                handle.seekToEndOfFile()
-                if let data = row.data(using: .utf8) {
-                    handle.write(data)
-                }
-                handle.closeFile()
-            } else {
-                // fallback：追加模式写入
-                if let output = FileHandle(forUpdatingAtPath: fileURL.path) {
-                    output.seekToEndOfFile()
-                    if let data = row.data(using: .utf8) {
-                        output.write(data)
-                    }
-                    output.closeFile()
-                } else {
-                    // 最后的 fallback：整体重写
-                    let existing = (try? String(contentsOf: fileURL, encoding: .utf8)) ?? ""
-                    try (existing + row).write(to: fileURL, atomically: true, encoding: .utf8)
-                }
+            guard let handle = FileHandle(forUpdatingAtPath: fileURL.path) else { return }
+            handle.seekToEndOfFile()
+            if let data = row.data(using: .utf8) {
+                handle.write(data)
             }
+            handle.closeFile()
         } catch {
             // 日志写入失败不影响用户体验（与 breathe-cli 一致）
         }

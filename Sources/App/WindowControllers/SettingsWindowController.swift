@@ -5,8 +5,6 @@ import SwiftUI
 final class SettingsWindowController: NSWindowController {
     static let shared = SettingsWindowController()
 
-    private var eventMonitor: Any?
-
     private init() {
         let contentView = SettingsView()
         let window = NSWindow(
@@ -21,13 +19,6 @@ final class SettingsWindowController: NSWindowController {
         window.isReleasedWhenClosed = false
 
         super.init(window: window)
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(windowWillClose),
-            name: NSWindow.willCloseNotification,
-            object: window
-        )
     }
 
     required init?(coder: NSCoder) {
@@ -37,9 +28,5 @@ final class SettingsWindowController: NSWindowController {
     func showWindow() {
         window?.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
-    }
-
-    @objc private func windowWillClose() {
-        // 清理
     }
 }

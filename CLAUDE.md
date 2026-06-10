@@ -104,7 +104,8 @@ Tests/
 ├── SessionRecordTests.swift                  # CSV 序列化兼容性
 ├── BreathingEngineTests.swift                # 引擎状态机
 ├── AppSettingsTests.swift                    # 配置序列化
-└── SessionLoggerTests.swift                  # 日志记录
+├── SessionLoggerTests.swift                  # 日志记录
+└── TimeOfDayTests.swift                      # 时段预设选择
 
 scripts/
 └── update_build_number.sh                    # 自动更新构建号
@@ -128,7 +129,7 @@ release.sh                                    # 自动化发布
 - **文件监听**: `DispatchSource.makeFileSystemObjectSource`，300ms 防抖
 - **面板**: `NSPanel`（无标题栏，floating 级别），会话期间不自动关闭
 - **Dock 隐藏**: `LSUIElement = true`
-- **引擎**: 20Hz Timer，时间连续性（phaseStartTime = 上一阶段起始 + 时长）
+- **引擎**: 20Hz Timer，时间连续性（phaseStartTime = 上一阶段起始 + 时长），暂停时停止 Timer，`isCompleting` 防定格期间双触发
 - **安全验证**: 与 breathe-cli 相同的 5 条规则，验证顺序一致
 
 ## 构建

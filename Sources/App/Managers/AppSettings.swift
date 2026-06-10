@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import os
 
 // MARK: - 配置模型
 
@@ -53,6 +54,7 @@ extension Notification.Name {
 @MainActor
 final class AppSettingsManager: ObservableObject {
     static let shared = AppSettingsManager()
+    private static let logger = Logger(subsystem: "com.cai.breathe", category: "AppSettings")
 
     @Published var settings: AppSettings = AppSettings()
 
@@ -150,7 +152,6 @@ final class AppSettingsManager: ObservableObject {
         do {
             let data = try Data(contentsOf: filePath)
             let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601
             settings = try decoder.decode(AppSettings.self, from: data)
             isLoaded = true
         } catch {
@@ -174,7 +175,6 @@ final class AppSettingsManager: ObservableObject {
             try AppPaths.ensureDirectoryExists()
             let encoder = JSONEncoder()
             encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-            encoder.dateEncodingStrategy = .iso8601
             let data = try encoder.encode(settings)
 
             let fileManager = FileManager.default
@@ -189,7 +189,7 @@ final class AppSettingsManager: ObservableObject {
 
             restartFileMonitoring()
         } catch {
-            // 保存失败静默忽略
+            Self.logger.error("保存配置失败: \(error.localizedDescription)")
         }
     }
 

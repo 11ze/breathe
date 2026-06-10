@@ -40,6 +40,8 @@ final class BreathingEngine: ObservableObject {
     private var phaseStartTime: Date = .distantPast
     private var breathingBase: Int = 0 // 已完成的呼吸周期总秒数
     private var sessionStartTime: Date = .distantPast
+    /// 会话正在完成中（防止定格期间 stop() 重复触发 onSessionComplete）
+    private var isCompleting = false
 
     /// 帧率 20Hz，与 breathe-cli 一致
     private let frameInterval: TimeInterval = 0.05
@@ -81,7 +83,7 @@ final class BreathingEngine: ObservableObject {
 
     /// 停止会话（用户主动）
     func stop() {
-        guard isSessionActive else { return }
+        guard isSessionActive, !isCompleting else { return }
         let record = buildRecord(completed: false)
         cleanup()
         onSessionComplete?(record)
@@ -92,7 +94,7 @@ final class BreathingEngine: ObservableObject {
         switch phase {
         case .inhale, .exhale:
             phase = .paused(phase)
-            // 不停止 timer，暂停状态下继续 tick 但不推进状态
+            stopTimer()
         case .paused:
             resume()
         default:
@@ -109,6 +111,7 @@ final class BreathingEngine: ObservableObject {
 
     private func resume() {
         guard case .paused = phase else { return }
+        startTimer()
 
         // 边界条件：如果 breathingBase >= duration，直接完成（移植自 breathe-cli）
         if let config = config, breathingBase >= config.durationSeconds {
@@ -126,7 +129,7 @@ final class BreathingEngine: ObservableObject {
 
     private func startTimer() {
         let t = Timer(timeInterval: frameInterval, repeats: true) { [weak self] _ in
-            Task { @MainActor in
+            MainActor.assumeIsolated {
                 self?.tick()
             }
         }
@@ -156,7 +159,7 @@ final class BreathingEngine: ObservableObject {
             tickExhale()
 
         case .paused:
-            // 暂停状态不推进，但保持 timer 运行以响应恢复
+            // Timer 已在 togglePause() 中停止，此分支为防御性保留
             break
         }
     }
@@ -275,15 +278,18 @@ final class BreathingEngine: ObservableObject {
     private func completeSession() {
         guard let config = config else { return }
 
+        // 防止定格期间 stop() 重复触发 onSessionComplete
+        isCompleting = true
+
         // 0.4 秒定格（移植自 breathe-cli 的视觉停顿）
         phaseProgress = 1.0
         remainingSeconds = 0
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
-            guard let self = self else { return }
-            let record = self.buildRecord(completed: true)
-            self.cleanup()
-            self.onSessionComplete?(record)
+        Task {
+            try? await Task.sleep(nanoseconds: 400_000_000)
+            let record = buildRecord(completed: true)
+            cleanup()
+            onSessionComplete?(record)
         }
     }
 
@@ -295,15 +301,21 @@ final class BreathingEngine: ObservableObject {
         phaseProgress = 0.0
         currentPhaseSecondsRemaining = 0
         isSessionActive = false
+        isCompleting = false
         config = nil
     }
 
     // MARK: - 记录构建
 
+    private static let recordDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
+        return f
+    }()
+
     private func buildRecord(completed: Bool) -> SessionRecord {
         let now = sessionStartTime
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
+        let formatter = Self.recordDateFormatter
 
         formatter.dateFormat = "yyyy-MM-dd"
         let date = formatter.string(from: now)

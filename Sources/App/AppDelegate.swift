@@ -19,13 +19,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
         if let button = statusItem?.button {
-            if let image = NSImage(named: "MenuBarIcon") {
-                image.isTemplate = true
-                button.image = image
-            } else if let sfImage = NSImage(systemSymbolName: "wind", accessibilityDescription: "Breathe") {
-                let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .regular)
-                sfImage.isTemplate = true
-                button.image = sfImage.withSymbolConfiguration(config)
+            if let icon = makeStatusBarIcon(isActive: false) {
+                button.image = icon
             } else {
                 button.title = "◎"
             }
@@ -92,11 +87,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         presetMenu.addItem(NSMenuItem(title: "自动 (按时段)", action: #selector(selectPresetAuto), keyEquivalent: ""))
         presetMenu.addItem(NSMenuItem.separator())
         for preset in Preset.allCases {
-            presetMenu.addItem(NSMenuItem(
+            let item = NSMenuItem(
                 title: "\(preset.displayName) (\(preset.ratioString), \(preset.durationMinutes)分钟)",
                 action: #selector(selectPreset(_:)),
                 keyEquivalent: ""
-            ))
+            )
+            item.representedObject = preset.rawValue
+            presetMenu.addItem(item)
         }
         presetMenu.addItem(NSMenuItem.separator())
         presetMenu.addItem(NSMenuItem(title: "自定义...", action: #selector(selectPresetCustom), keyEquivalent: ""))
@@ -237,14 +234,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func selectPreset(_ sender: NSMenuItem) {
-        let presets: [Preset] = [.balanced, .calm, .extended]
-        let index = presetSubmenu?.items.firstIndex(of: sender)
-        // 跳过第一项（自动）和分隔符
-        if let idx = index, idx >= 2 && idx <= 4 {
-            let preset = presets[idx - 2]
-            AppSettingsManager.shared.settings.defaultPreset = preset.rawValue
-            AppSettingsManager.shared.save()
-        }
+        guard let rawValue = sender.representedObject as? String else { return }
+        AppSettingsManager.shared.settings.defaultPreset = rawValue
+        AppSettingsManager.shared.save()
     }
 
     @objc private func selectPresetCustom() {
@@ -269,25 +261,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func updateStatusBarIcon(isActive: Bool) {
         guard let button = statusItem?.button else { return }
+        button.image = makeStatusBarIcon(isActive: isActive)
+    }
 
+    /// 创建菜单栏图标（回退链：自定义资源 → SF Symbol）
+    private func makeStatusBarIcon(isActive: Bool) -> NSImage? {
         if isActive {
-            // 手动着色 SF Symbol — contentTintColor 对菜单栏图标无效
-            if let sfImage = NSImage(systemSymbolName: "wind", accessibilityDescription: "Breathe Active") {
-                let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .bold)
-                if let configured = sfImage.withSymbolConfiguration(config) {
-                    button.image = tint(image: configured, with: .systemCyan)
-                }
-            }
+            guard let sfImage = NSImage(systemSymbolName: "wind", accessibilityDescription: "Breathe Active") else { return nil }
+            let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .bold)
+            guard let configured = sfImage.withSymbolConfiguration(config) else { return nil }
+            return tint(image: configured, with: .systemCyan)
         } else {
-            // 恢复原始 template 图标
             if let image = NSImage(named: "MenuBarIcon") {
                 image.isTemplate = true
-                button.image = image
-            } else if let sfImage = NSImage(systemSymbolName: "wind", accessibilityDescription: "Breathe") {
-                let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .regular)
-                sfImage.isTemplate = true
-                button.image = sfImage.withSymbolConfiguration(config)
+                return image
             }
+            guard let sfImage = NSImage(systemSymbolName: "wind", accessibilityDescription: "Breathe") else { return nil }
+            let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .regular)
+            sfImage.isTemplate = true
+            return sfImage.withSymbolConfiguration(config)
         }
     }
 
@@ -301,10 +293,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         rect.fill(using: .sourceAtop)
         tinted.unlockFocus()
         return tinted
-    }
-
-    private func refreshPanel() {
-        // 面板视图通过 @ObservedObject 自动刷新
     }
 }
 

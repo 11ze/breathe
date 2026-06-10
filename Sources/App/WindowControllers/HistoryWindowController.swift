@@ -6,7 +6,6 @@ final class HistoryWindowController: NSObject {
     static let shared = HistoryWindowController()
 
     private var window: NSWindow?
-    private var hasWindowObserver = false
 
     private override init() {
         super.init()
@@ -33,21 +32,7 @@ final class HistoryWindowController: NSObject {
         window?.isReleasedWhenClosed = false
         window?.center()
 
-        if let window = window, !hasWindowObserver {
-            NotificationCenter.default.addObserver(
-                self,
-                selector: #selector(windowWillClose),
-                name: NSWindow.willCloseNotification,
-                object: window
-            )
-            hasWindowObserver = true
-        }
-
         window?.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
-    }
-
-    @objc private func windowWillClose() {
-        // 清理
     }
 }

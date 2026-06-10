@@ -3,7 +3,6 @@ import SwiftUI
 /// 设置视图
 struct SettingsView: View {
     @ObservedObject private var settingsManager = AppSettingsManager.shared
-    @ObservedObject private var audioManager = AudioManager.shared
 
     var body: some View {
         TabView {
@@ -154,8 +153,7 @@ struct SettingsView: View {
             Section("提醒") {
                 Toggle("每日提醒", isOn: bindingFor(\.dailyReminderEnabled))
                 if settingsManager.settings.dailyReminderEnabled {
-                    TextField("提醒时间", text: bindingFor(\.dailyReminderTime))
-                        .textFieldStyle(.roundedBorder)
+                    DatePicker("提醒时间", selection: reminderTimeBinding, displayedComponents: .hourAndMinute)
                 }
             }
         }
@@ -169,6 +167,23 @@ struct SettingsView: View {
             get: { settingsManager.settings[keyPath: keyPath] },
             set: { newValue in
                 settingsManager.settings[keyPath: keyPath] = newValue
+                settingsManager.save()
+            }
+        )
+    }
+
+    /// 将 "HH:mm" String 与 DatePicker 的 Date 互转
+    private var reminderTimeBinding: Binding<Date> {
+        Binding(
+            get: {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "HH:mm"
+                return formatter.date(from: settingsManager.settings.dailyReminderTime) ?? Date()
+            },
+            set: { newDate in
+                let formatter = DateFormatter()
+                formatter.dateFormat = "HH:mm"
+                settingsManager.settings.dailyReminderTime = formatter.string(from: newDate)
                 settingsManager.save()
             }
         )

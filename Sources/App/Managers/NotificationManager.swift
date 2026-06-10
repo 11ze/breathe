@@ -1,10 +1,12 @@
 import Foundation
 import UserNotifications
+import os
 
 /// 通知管理器 — 会话完成通知 + 每日提醒
 @MainActor
 final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     static let shared = NotificationManager()
+    private static let logger = Logger(subsystem: "com.cai.breathe", category: "Notification")
 
     private static let dailyReminderId = "com.cai.breathe.daily-reminder"
 
@@ -15,7 +17,13 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     }
 
     private func requestAuthorization() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
+            if let error {
+                Self.logger.error("通知授权请求失败: \(error.localizedDescription)")
+            } else if !granted {
+                Self.logger.info("用户未授予通知权限")
+            }
+        }
     }
 
     nonisolated func userNotificationCenter(

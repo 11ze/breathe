@@ -1,8 +1,10 @@
 import ServiceManagement
+import os
 
 @MainActor
 final class LaunchAtLoginManager {
     static let shared = LaunchAtLoginManager()
+    private static let logger = Logger(subsystem: "com.cai.breathe", category: "LaunchAtLogin")
 
     /// 是否支持自启动功能（macOS 13+）
     let isSupported: Bool
@@ -22,7 +24,7 @@ final class LaunchAtLoginManager {
                     try SMAppService.mainApp.unregister()
                 }
             } catch {
-                print("Failed to \(newValue ? "enable" : "disable") launch at login: \(error)")
+                Self.logger.error("开机自启\(newValue ? "启用" : "禁用")失败: \(error.localizedDescription)")
             }
         }
     }

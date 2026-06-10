@@ -13,7 +13,7 @@ struct HistoryView: View {
                 tableView
             }
         }
-        .frame(width: 600, height: 400)
+        .frame(minWidth: 600, minHeight: 400)
         .onAppear { loadRecords() }
     }
 

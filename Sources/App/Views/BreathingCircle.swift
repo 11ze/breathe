@@ -48,6 +48,7 @@ struct BreathingCircle: View {
         }
         .animation(.easeInOut(duration: 0.15), value: progress)
         .animation(.easeInOut(duration: 0.3), value: phase)
+        .drawingGroup() // 将 20Hz 渐变圆环渲染卸载到 GPU
     }
 
     /// 根据阶段返回 (缩放比例, 渐变颜色对)
