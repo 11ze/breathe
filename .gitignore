@@ -22,6 +22,10 @@ Package.resolved
 *.swp
 *~
 
+# IDE
+.vscode/
+.idea/
+
 # 发布产物
 Release/
 *.app

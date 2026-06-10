@@ -1,6 +1,6 @@
 # Breathe
 
-macOS 菜单栏呼吸练习应用 —— 基于 [breathe-cli](https://github.com/marekkowalczyk/breathe-cli) 的共振呼吸引导，移植为原生 macOS 应用。
+macOS 呼吸练习应用 —— 基于 [breathe-cli](https://github.com/marekkowalczyk/breathe-cli) 的共振呼吸引导，移植为原生 macOS 应用。
 
 ```
   菜单栏图标 → 呼吸面板 → 动画圆环引导 → 完成 → 查看历史

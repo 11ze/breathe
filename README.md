@@ -1,6 +1,6 @@
 # 🌬️ Breathe
 
-macOS 菜单栏呼吸练习应用，基于科学验证的共振呼吸（Resonance Breathing）方法。
+自用 macOS 呼吸练习应用，基于科学验证的共振呼吸（Resonance Breathing）方法。
 
 ## 什么是共振呼吸？
 
