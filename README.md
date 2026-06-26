@@ -41,7 +41,10 @@ brew install xcodegen
 git clone https://github.com/user/breathe.git
 cd breathe
 xcodegen generate
-xcodebuild -project breathe.xcodeproj -scheme Breathe -configuration Release build
+# 构建到 /tmp 而非 ./build：项目位于 iCloud 同步路径下，
+# iCloud 注入的扩展属性会导致 codesign 失败（见 release.sh 同理）。
+xcodebuild -project breathe.xcodeproj -scheme Breathe -configuration Release \
+  -derivedDataPath /tmp/breathe-build build
 ```
 
 ## 使用
