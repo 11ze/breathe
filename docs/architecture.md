@@ -18,7 +18,7 @@ AppSettingsManager.shared ──── 配置持久化 (~/.config/breathe/settin
     ├── SettingsWindowController.shared ── 设置窗口
     ├── HistoryWindowController.shared ── 历史窗口
     ├── LaunchAtLoginManager.shared ── 开机自启 (macOS 13+)
-    └── NotificationManager.shared ── 会话完成 + 每日提醒
+    └── NotificationManager.shared ── 会话完成通知
 ```
 
 ## 项目结构
@@ -44,7 +44,7 @@ Sources/App/
 │   ├── AudioManager.swift                    # NSSound 音频播放
 │   ├── SessionLogger.swift                   # CSV 日志 + 旧版导入
 │   ├── LaunchAtLoginManager.swift            # SMAppService (macOS 13+)
-│   └── NotificationManager.swift             # 会话完成 + 每日提醒通知
+│   └── NotificationManager.swift             # 会话完成通知
 │
 ├── Views/
 │   ├── BreathingPanelView.swift              # 呼吸面板主视图

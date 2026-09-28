@@ -18,8 +18,6 @@ final class AppSettingsTests: XCTestCase {
         XCTAssertTrue(settings.soundEnabled)
         XCTAssertTrue(settings.logSessions)
         XCTAssertFalse(settings.launchAtLogin)
-        XCTAssertFalse(settings.dailyReminderEnabled)
-        XCTAssertEqual(settings.dailyReminderTime, "08:00")
     }
 
     // MARK: - JSON 序列化 round-trip
@@ -30,8 +28,6 @@ final class AppSettingsTests: XCTestCase {
         settings.soundEnabled = false
         settings.customInhaleSeconds = 4
         settings.customExhaleSeconds = 6
-        settings.dailyReminderEnabled = true
-        settings.dailyReminderTime = "09:30"
 
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
@@ -44,6 +40,20 @@ final class AppSettingsTests: XCTestCase {
     }
 
     // MARK: - 旧版预设名迁移
+
+    /// 每日提醒功能已删除；旧配置文件残留的 dailyReminder* 字段应被忽略而非解码失败
+    func testLegacyDailyReminderFieldsIgnoredOnDecoding() {
+        let json = """
+        {
+            "dailyReminderEnabled": true,
+            "dailyReminderTime": "09:30"
+        }
+        """
+        let data = json.data(using: .utf8)!
+        let settings = try! JSONDecoder().decode(AppSettings.self, from: data)
+
+        XCTAssertEqual(settings, AppSettings())
+    }
 
     /// 上游 v1.11 把预设改为 morning/midday/evening/night，
     /// 旧配置里的 balanced/calm/extended 按参数对应迁移，不丢失用户选择

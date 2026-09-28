@@ -20,10 +20,6 @@ struct AppSettings: Codable, Equatable {
     var logSessions: Bool = true
     /// 开机自启
     var launchAtLogin: Bool = false
-    /// 每日提醒
-    var dailyReminderEnabled: Bool = false
-    /// 每日提醒时间 "HH:mm"
-    var dailyReminderTime: String = "08:00"
 
     init() {}
 
@@ -39,8 +35,6 @@ struct AppSettings: Codable, Equatable {
         soundEnabled = try container.decodeIfPresent(Bool.self, forKey: .soundEnabled) ?? true
         logSessions = try container.decodeIfPresent(Bool.self, forKey: .logSessions) ?? true
         launchAtLogin = try container.decodeIfPresent(Bool.self, forKey: .launchAtLogin) ?? false
-        dailyReminderEnabled = try container.decodeIfPresent(Bool.self, forKey: .dailyReminderEnabled) ?? false
-        dailyReminderTime = try container.decodeIfPresent(String.self, forKey: .dailyReminderTime) ?? "08:00"
     }
 }
 

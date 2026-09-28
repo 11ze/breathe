@@ -38,8 +38,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // 配置音频和通知
         setupAudioAndNotifications()
 
-        // 配置每日提醒
-        scheduleDailyReminderIfNeeded()
+        // 清理已删除的每日提醒功能遗留的系统通知
+        NotificationManager.shared.removeLegacyDailyReminder()
     }
 
     // MARK: - 菜单构建
@@ -177,13 +177,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupAudioAndNotifications() {
         let settings = AppSettingsManager.shared.settings
         AudioManager.shared.setMuted(!settings.soundEnabled)
-    }
-
-    private func scheduleDailyReminderIfNeeded() {
-        let settings = AppSettingsManager.shared.settings
-        if settings.dailyReminderEnabled {
-            NotificationManager.shared.scheduleDailyReminder(at: settings.dailyReminderTime)
-        }
     }
 
     // MARK: - 菜单动作

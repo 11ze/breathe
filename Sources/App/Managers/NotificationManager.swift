@@ -2,13 +2,11 @@ import Foundation
 import UserNotifications
 import os
 
-/// 通知管理器 — 会话完成通知 + 每日提醒
+/// 通知管理器 — 会话完成通知
 @MainActor
 final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     static let shared = NotificationManager()
     private static let logger = Logger(subsystem: "com.cai.breathe", category: "Notification")
-
-    private static let dailyReminderId = "com.cai.breathe.daily-reminder"
 
     private override init() {
         super.init()
@@ -59,36 +57,13 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         UNUserNotificationCenter.current().add(request)
     }
 
-    // MARK: - 每日提醒
+    // MARK: - 遗留清理
 
-    func scheduleDailyReminder(at time: String) {
+    /// 每日提醒功能已删除；移除旧版本注册的重复通知，
+    /// 否则它会每天触发且无法再通过应用关闭
+    func removeLegacyDailyReminder() {
         let center = UNUserNotificationCenter.current()
-        center.removePendingNotificationRequests(withIdentifiers: [Self.dailyReminderId])
-
-        let parts = time.split(separator: ":")
-        guard parts.count == 2, let hour = Int(parts[0]), let minute = Int(parts[1]) else { return }
-
-        let content = UNMutableNotificationContent()
-        content.title = "Breathe"
-        content.body = "是时候做一次呼吸练习了 🌬️"
-        content.sound = .default
-
-        var dateComponents = DateComponents()
-        dateComponents.hour = hour
-        dateComponents.minute = minute
-
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-        let request = UNNotificationRequest(
-            identifier: Self.dailyReminderId,
-            content: content,
-            trigger: trigger
-        )
-        center.add(request)
-    }
-
-    func cancelDailyReminder() {
-        UNUserNotificationCenter.current().removePendingNotificationRequests(
-            withIdentifiers: [Self.dailyReminderId]
-        )
+        center.removePendingNotificationRequests(withIdentifiers: ["com.cai.breathe.daily-reminder"])
+        center.removeDeliveredNotifications(withIdentifiers: ["com.cai.breathe.daily-reminder"])
     }
 }

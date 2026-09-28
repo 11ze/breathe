@@ -150,13 +150,6 @@ struct SettingsView: View {
                         .font(.caption)
                 }
             }
-
-            Section("提醒") {
-                Toggle("每日提醒", isOn: bindingFor(\.dailyReminderEnabled))
-                if settingsManager.settings.dailyReminderEnabled {
-                    DatePicker("提醒时间", selection: reminderTimeBinding, displayedComponents: .hourAndMinute)
-                }
-            }
         }
         .padding()
     }
@@ -180,23 +173,6 @@ struct SettingsView: View {
             set: { newValue in
                 let finalState = LaunchAtLoginManager.shared.setEnabled(newValue)
                 settingsManager.settings.launchAtLogin = finalState
-                settingsManager.save()
-            }
-        )
-    }
-
-    /// 将 "HH:mm" String 与 DatePicker 的 Date 互转
-    private var reminderTimeBinding: Binding<Date> {
-        Binding(
-            get: {
-                let formatter = DateFormatter()
-                formatter.dateFormat = "HH:mm"
-                return formatter.date(from: settingsManager.settings.dailyReminderTime) ?? Date()
-            },
-            set: { newDate in
-                let formatter = DateFormatter()
-                formatter.dateFormat = "HH:mm"
-                settingsManager.settings.dailyReminderTime = formatter.string(from: newDate)
                 settingsManager.save()
             }
         )
