@@ -7,19 +7,22 @@ final class KeyPanel: NSPanel {
     override var canBecomeMain: Bool { true }
 }
 
+/// 允许按住拖动窗口的 HostingView
+/// 新版 macOS 上 NSHostingView 面板的背景拖动判定失效，
+/// mouseDown 直接转为窗口拖动，绕开系统判定
+final class DraggableHostingView: NSHostingView<BreathingPanelView> {
+    override func mouseDown(with event: NSEvent) {
+        window?.performDrag(with: event)
+    }
+}
+
 /// 呼吸球窗口控制器
 /// 桌面浮动呼吸球，会话期间始终可见，空闲时隐藏
 @MainActor
 final class BreathingPanelWindowController: NSWindowController {
     static let shared = BreathingPanelWindowController()
 
-    private var hostingController: NSHostingController<BreathingPanelView>?
-
     private init() {
-        let contentView = BreathingPanelView()
-        let hostingCtrl = NSHostingController(rootView: contentView)
-        hostingController = hostingCtrl
-
         let panel = KeyPanel(
             contentRect: NSRect(x: 0, y: 0, width: 260, height: 260),
             styleMask: [.nonactivatingPanel, .fullSizeContentView],
@@ -35,7 +38,7 @@ final class BreathingPanelWindowController: NSWindowController {
         panel.titleVisibility = .hidden
         panel.titlebarAppearsTransparent = true
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-        panel.contentViewController = hostingCtrl
+        panel.contentView = DraggableHostingView(rootView: BreathingPanelView())
 
         super.init(window: panel)
     }
