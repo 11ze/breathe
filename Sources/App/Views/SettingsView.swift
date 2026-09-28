@@ -21,9 +21,10 @@ struct SettingsView: View {
             Section("默认预设") {
                 Picker("模式", selection: bindingFor(\.defaultPreset)) {
                     Text("自动（按时段）").tag("auto")
-                    Text("balanced (5-5, 10分钟)").tag("balanced")
-                    Text("calm (4-6, 15分钟)").tag("calm")
-                    Text("extended (4-6, 20分钟)").tag("extended")
+                    Text("morning (5-5, 10分钟)").tag("morning")
+                    Text("midday (4-6, 20分钟)").tag("midday")
+                    Text("evening (4-6, 15分钟)").tag("evening")
+                    Text("night (3-7, 20分钟)").tag("night")
                     Text("自定义...").tag("custom")
                 }
             }
@@ -38,22 +39,22 @@ struct SettingsView: View {
                 HStack {
                     Label("早晨 (6-12)", systemImage: "sunrise")
                     Spacer()
-                    Text("balanced").foregroundColor(.secondary)
+                    Text("morning").foregroundColor(.secondary)
                 }
                 HStack {
-                    Label("下午 (12-18)", systemImage: "sun.max")
+                    Label("下午 (12-17)", systemImage: "sun.max")
                     Spacer()
-                    Text("extended").foregroundColor(.secondary)
+                    Text("midday").foregroundColor(.secondary)
                 }
                 HStack {
-                    Label("傍晚 (18-22)", systemImage: "sunset")
+                    Label("傍晚 (17-22)", systemImage: "sunset")
                     Spacer()
-                    Text("calm").foregroundColor(.secondary)
+                    Text("evening").foregroundColor(.secondary)
                 }
                 HStack {
                     Label("夜间 (22-6)", systemImage: "moon")
                     Spacer()
-                    Text("calm").foregroundColor(.secondary)
+                    Text("night").foregroundColor(.secondary)
                 }
             }
         }

@@ -165,10 +165,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             BreathingPanelWindowController.shared.hide()
 
             // 发送通知
-            NotificationManager.shared.showSessionComplete(
-                breaths: record.breaths,
-                duration: record.durationActualSeconds
-            )
+            NotificationManager.shared.showSessionComplete(record: record)
 
             // 记录日志
             if AppSettingsManager.shared.settings.logSessions {

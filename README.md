@@ -13,8 +13,8 @@
 
 ## 功能
 
-- 🫁 **三种预设**：balanced (5-5)、calm (4-6)、extended (4-6)，全部 6.0 bpm
-- 🕐 **按时段自动选择**：早晨 balanced、下午 extended、傍晚/夜间 calm
+- 🫁 **四种预设**：morning (5-5, 10分钟)、midday (4-6, 20分钟)、evening (4-6, 15分钟)、night (3-7, 20分钟)，全部 6.0 bpm
+- 🕐 **按时段自动选择**：早晨 morning、下午 midday、傍晚 evening、夜间 night
 - ⭕ **动画呼吸圆环**：吸气膨胀（青色）、呼气收缩（绿色）
 - 🔊 **音频提示**：系统音效引导呼吸节奏
 - 📊 **会话记录**：CSV 格式，与 [breathe-cli](https://github.com/marekkowalczyk/breathe-cli) 兼容
@@ -76,7 +76,6 @@ xcodebuild -project breathe.xcodeproj -scheme Breathe -configuration Release \
 | 禁止快速呼吸 | 总周期 ≥ 8 秒 |
 | 吸气范围 | 3~10 秒 |
 | 呼气范围 | 3~10 秒 |
-| 呼气上限 | 呼气 ≤ 2×吸气 |
 
 ## 数据存储
 

@@ -121,23 +121,18 @@ final class RatioValidatorTests: XCTestCase {
         }
     }
 
-    // MARK: - 呼气 ≤ 2× 吸气
+    // MARK: - 偏呼气比例（上游 night 预设）
 
-    /// 呼气过长会导致空气饥饿感，造成焦虑而非放松
-    func testExhaleExceedsDoubleInhale() {
+    /// 3-7 是上游 night 预设的比例：总周期 10 秒、吸呼各在 3-10 范围内，应通过验证
+    /// 上游 parse_ratio 已无"呼气≤2×吸气"限制
+    func testNightRatio37IsValid() {
         let result = RatioValidator.validate("3-7")
-        if case .failure(.exhaleTooLong(let exhale, let max)) = result {
+        switch result {
+        case .success(let (inhale, exhale)):
+            XCTAssertEqual(inhale, 3)
             XCTAssertEqual(exhale, 7)
-            XCTAssertEqual(max, 6) // 2 * 3
-        } else {
-            XCTFail("呼气 7 > 2×吸气 3 应被拒绝")
-        }
-    }
-
-    func testExhaleExactlyDoubleInhaleIsValid() {
-        let result = RatioValidator.validate("3-6")
-        if case .failure = result {
-            XCTFail("呼气 6 = 2×吸气 3 应刚好通过")
+        case .failure:
+            XCTFail("3-7（night 预设比例）应通过验证")
         }
     }
 

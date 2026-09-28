@@ -34,7 +34,7 @@ final class SessionLoggerTests: XCTestCase {
     func testCompletedStatus() {
         let record = SessionRecord(
             date: "2026-06-05", time: "08:00:00",
-            preset: "balanced", ratio: "5-5",
+            preset: "morning", ratio: "5-5",
             durationTargetSeconds: 600, durationActualSeconds: 600,
             breaths: 60, completionPercent: 100, status: "completed"
         )

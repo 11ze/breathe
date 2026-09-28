@@ -36,10 +36,19 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
 
     // MARK: - 会话完成通知
 
-    func showSessionComplete(breaths: Int, duration: Int) {
+    /// 秒 → 秒级精度时长文案（对齐上游会话总结的 Completed 行）
+    static func formatDuration(_ seconds: Int) -> String {
+        let minutes = seconds / 60
+        let secs = seconds % 60
+        if minutes == 0 { return "\(secs) 秒" }
+        if secs == 0 { return "\(minutes) 分钟" }
+        return "\(minutes) 分 \(secs) 秒"
+    }
+
+    func showSessionComplete(record: SessionRecord) {
         let content = UNMutableNotificationContent()
         content.title = "Breathe"
-        content.body = "呼吸练习完成！完成了 \(breaths) 个呼吸周期，时长 \(duration / 60) 分钟"
+        content.body = "\(record.preset) \(record.ratio) · \(record.breaths) 个呼吸周期 · \(Self.formatDuration(record.durationActualSeconds)) · 完成 \(record.completionPercent)%"
         content.sound = .default
 
         let request = UNNotificationRequest(

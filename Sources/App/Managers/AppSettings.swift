@@ -6,7 +6,7 @@ import os
 
 /// 应用配置（JSON 持久化到 ~/.config/breathe/settings.json）
 struct AppSettings: Codable, Equatable {
-    /// 默认预设：auto（按时段）/ balanced / calm / extended / custom
+    /// 默认预设：auto（按时段）/ morning / midday / evening / night / custom
     var defaultPreset: String = "auto"
     /// 自定义吸气秒数
     var customInhaleSeconds: Int = 5
@@ -29,7 +29,10 @@ struct AppSettings: Codable, Equatable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        defaultPreset = try container.decodeIfPresent(String.self, forKey: .defaultPreset) ?? "auto"
+        // 旧版预设名迁移（上游 v1.11 改为按时段命名，按参数一一对应）
+        let legacyPresetMap = ["balanced": "morning", "calm": "evening", "extended": "midday"]
+        let rawPreset = try container.decodeIfPresent(String.self, forKey: .defaultPreset) ?? "auto"
+        defaultPreset = legacyPresetMap[rawPreset] ?? rawPreset
         customInhaleSeconds = try container.decodeIfPresent(Int.self, forKey: .customInhaleSeconds) ?? 5
         customExhaleSeconds = try container.decodeIfPresent(Int.self, forKey: .customExhaleSeconds) ?? 5
         customDurationMinutes = try container.decodeIfPresent(Int.self, forKey: .customDurationMinutes) ?? 10

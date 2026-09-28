@@ -29,7 +29,7 @@ Sources/App/
 ├── AppDelegate.swift                         # 菜单栏 + 左右键分发 + 引擎回调
 │
 ├── Models/
-│   ├── Preset.swift                          # 预设枚举 (balanced/calm/extended)
+│   ├── Preset.swift                          # 预设枚举 (morning/midday/evening/night)
 │   ├── BreathingConfig.swift                 # 会话配置 (比例、时长、取整算术)
 │   └── SessionRecord.swift                   # CSV 可记录的会话结果
 │

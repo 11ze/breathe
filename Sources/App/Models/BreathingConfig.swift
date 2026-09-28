@@ -61,11 +61,11 @@ struct BreathingConfig: Equatable {
                 inhale: settings.customInhaleSeconds,
                 exhale: settings.customExhaleSeconds,
                 durationMinutes: settings.customDurationMinutes
-            ) ?? BreathingConfig(preset: .balanced)
+            ) ?? BreathingConfig(preset: .morning)
         } else if let preset = Preset(rawValue: settings.defaultPreset) {
             return BreathingConfig(preset: preset)
         } else {
-            return BreathingConfig(preset: .balanced)
+            return BreathingConfig(preset: .morning)
         }
     }
 

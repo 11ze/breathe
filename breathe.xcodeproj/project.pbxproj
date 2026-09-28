@@ -26,6 +26,7 @@
 		899DF036A84EA016F13D40CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE5E420EC5A6D6A8D36E2F3 /* AppDelegate.swift */; };
 		89C25D5AD8D8049754CA23B0 /* BreathingPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93473953D606736CC8248084 /* BreathingPanelView.swift */; };
 		9CD127CCAD0BAB7F4FC0A549 /* SettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0807B159CAF60EC334FBAB93 /* SettingsWindowController.swift */; };
+		A3AB93FBDA682E66F41AEBE9 /* NotificationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C708BD851FA88E1DD249DF6 /* NotificationManagerTests.swift */; };
 		A64D12CD7DDF4DABA857DB38 /* PresetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DD1EA05414E687FE9AECF0 /* PresetTests.swift */; };
 		A8BB27AE0D42EAA99140B646 /* BreathingEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8A96B4E73308B83FC0D2A3 /* BreathingEngineTests.swift */; };
 		B56F599D6F807AC1A54370A2 /* Preset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F817F2E6D6AD9DACB1DC904 /* Preset.swift */; };
@@ -56,6 +57,7 @@
 		190B7C79107946EB7C429189 /* SessionLoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionLoggerTests.swift; sourceTree = "<group>"; };
 		210FE12C45115A2009D72487 /* TimeOfDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeOfDay.swift; sourceTree = "<group>"; };
 		2EDFFBA996DCE1E524A82EA5 /* BreathingConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingConfigTests.swift; sourceTree = "<group>"; };
+		4C708BD851FA88E1DD249DF6 /* NotificationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManagerTests.swift; sourceTree = "<group>"; };
 		511EA9652A94F91FC727E733 /* HistoryWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryWindowController.swift; sourceTree = "<group>"; };
 		58F63F913E9A9EDA2A0E6D11 /* BreatheTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BreatheTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F817F2E6D6AD9DACB1DC904 /* Preset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preset.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 				903B4A0C7313747E2000A0DA /* AppSettingsTests.swift */,
 				2EDFFBA996DCE1E524A82EA5 /* BreathingConfigTests.swift */,
 				CF8A96B4E73308B83FC0D2A3 /* BreathingEngineTests.swift */,
+				4C708BD851FA88E1DD249DF6 /* NotificationManagerTests.swift */,
 				84DD1EA05414E687FE9AECF0 /* PresetTests.swift */,
 				DBA6C7665E0742443F79874B /* RatioValidatorTests.swift */,
 				190B7C79107946EB7C429189 /* SessionLoggerTests.swift */,
@@ -326,6 +329,7 @@
 				1293184E0107893159A09C8C /* AppSettingsTests.swift in Sources */,
 				E74C7A7539A48310AD501567 /* BreathingConfigTests.swift in Sources */,
 				A8BB27AE0D42EAA99140B646 /* BreathingEngineTests.swift in Sources */,
+				A3AB93FBDA682E66F41AEBE9 /* NotificationManagerTests.swift in Sources */,
 				A64D12CD7DDF4DABA857DB38 /* PresetTests.swift in Sources */,
 				1E4FD64C5A0F07E54A423CD1 /* RatioValidatorTests.swift in Sources */,
 				663BB0DEA477EDEE89274CAA /* SessionLoggerTests.swift in Sources */,

@@ -6,7 +6,7 @@ struct SessionRecord: Equatable, Identifiable {
     var id: String { csvRow }
     let date: String          // YYYY-MM-DD
     let time: String          // HH:MM:SS
-    let preset: String        // balanced / calm / extended / custom
+    let preset: String        // morning / midday / evening / night / custom（历史记录可能含旧名 balanced/calm/extended）
     let ratio: String         // "5-5"
     let durationTargetSeconds: Int
     let durationActualSeconds: Int

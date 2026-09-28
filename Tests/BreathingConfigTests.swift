@@ -8,17 +8,17 @@ final class BreathingConfigTests: XCTestCase {
     // MARK: - 从预设创建
 
     func testFromPresetBalanced() {
-        let config = BreathingConfig(preset: .balanced)
+        let config = BreathingConfig(preset: .morning)
         XCTAssertEqual(config.inhaleSeconds, 5)
         XCTAssertEqual(config.exhaleSeconds, 5)
         XCTAssertEqual(config.durationSeconds, 600) // 10 分钟 = 600 秒
         XCTAssertEqual(config.cycleSeconds, 10)
         XCTAssertEqual(config.totalBreaths, 60)
-        XCTAssertEqual(config.presetName, "balanced")
+        XCTAssertEqual(config.presetName, "morning")
     }
 
     func testFromPresetCalm() {
-        let config = BreathingConfig(preset: .calm)
+        let config = BreathingConfig(preset: .evening)
         XCTAssertEqual(config.durationSeconds, 900) // 15 分钟 = 900 秒
         XCTAssertEqual(config.totalBreaths, 90)
     }
@@ -87,7 +87,7 @@ final class BreathingConfigTests: XCTestCase {
     // MARK: - ratioString
 
     func testRatioString() {
-        let config = BreathingConfig(preset: .calm)
+        let config = BreathingConfig(preset: .evening)
         XCTAssertEqual(config.ratioString, "4-6")
     }
 }

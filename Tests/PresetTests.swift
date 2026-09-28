@@ -55,8 +55,8 @@ final class PresetTests: XCTestCase {
 
     // MARK: - 各预设具体值
 
-    func testBalancedValues() {
-        let p = Preset.balanced
+    func testMorningValues() {
+        let p = Preset.morning
         XCTAssertEqual(p.inhaleSeconds, 5)
         XCTAssertEqual(p.exhaleSeconds, 5)
         XCTAssertEqual(p.durationMinutes, 10)
@@ -64,17 +64,8 @@ final class PresetTests: XCTestCase {
         XCTAssertEqual(p.ratioString, "5-5")
     }
 
-    func testCalmValues() {
-        let p = Preset.calm
-        XCTAssertEqual(p.inhaleSeconds, 4)
-        XCTAssertEqual(p.exhaleSeconds, 6)
-        XCTAssertEqual(p.durationMinutes, 15)
-        XCTAssertEqual(p.cycleSeconds, 10)
-        XCTAssertEqual(p.ratioString, "4-6")
-    }
-
-    func testExtendedValues() {
-        let p = Preset.extended
+    func testMiddayValues() {
+        let p = Preset.midday
         XCTAssertEqual(p.inhaleSeconds, 4)
         XCTAssertEqual(p.exhaleSeconds, 6)
         XCTAssertEqual(p.durationMinutes, 20)
@@ -82,10 +73,28 @@ final class PresetTests: XCTestCase {
         XCTAssertEqual(p.ratioString, "4-6")
     }
 
+    func testEveningValues() {
+        let p = Preset.evening
+        XCTAssertEqual(p.inhaleSeconds, 4)
+        XCTAssertEqual(p.exhaleSeconds, 6)
+        XCTAssertEqual(p.durationMinutes, 15)
+        XCTAssertEqual(p.cycleSeconds, 10)
+        XCTAssertEqual(p.ratioString, "4-6")
+    }
+
+    func testNightValues() {
+        let p = Preset.night
+        XCTAssertEqual(p.inhaleSeconds, 3)
+        XCTAssertEqual(p.exhaleSeconds, 7)
+        XCTAssertEqual(p.durationMinutes, 20)
+        XCTAssertEqual(p.cycleSeconds, 10)
+        XCTAssertEqual(p.ratioString, "3-7")
+    }
+
     // MARK: - CaseIterable 完整性
 
     func testAllCases() {
-        XCTAssertEqual(Preset.allCases.count, 3)
-        XCTAssertEqual(Preset.allCases, [.balanced, .calm, .extended])
+        XCTAssertEqual(Preset.allCases.count, 4)
+        XCTAssertEqual(Preset.allCases, [.morning, .midday, .evening, .night])
     }
 }

@@ -33,7 +33,7 @@ final class BreathingEngineTests: XCTestCase {
     // MARK: - 开始会话
 
     func testStartSetsInitialState() {
-        let config = BreathingConfig(preset: .balanced)
+        let config = BreathingConfig(preset: .morning)
         engine.start(config: config)
 
         XCTAssertTrue(engine.isSessionActive)
@@ -44,10 +44,10 @@ final class BreathingEngineTests: XCTestCase {
     }
 
     func testStartWhileActiveIsIgnored() {
-        let config = BreathingConfig(preset: .balanced)
+        let config = BreathingConfig(preset: .morning)
         engine.start(config: config)
 
-        let config2 = BreathingConfig(preset: .calm)
+        let config2 = BreathingConfig(preset: .evening)
         engine.start(config: config2)
         XCTAssertEqual(engine.totalDurationSeconds, 600, "不应被第二次 start 覆盖")
     }
@@ -55,7 +55,7 @@ final class BreathingEngineTests: XCTestCase {
     // MARK: - 停止会话
 
     func testStopCleansUp() {
-        let config = BreathingConfig(preset: .balanced)
+        let config = BreathingConfig(preset: .morning)
         engine.start(config: config)
         engine.stop()
 
@@ -71,7 +71,7 @@ final class BreathingEngineTests: XCTestCase {
     // MARK: - 停止触发回调
 
     func testStopTriggersCallbackWithEndedEarly() {
-        let config = BreathingConfig(preset: .balanced)
+        let config = BreathingConfig(preset: .morning)
         engine.start(config: config)
 
         var receivedRecord: SessionRecord?
@@ -83,7 +83,7 @@ final class BreathingEngineTests: XCTestCase {
 
         XCTAssertNotNil(receivedRecord)
         XCTAssertEqual(receivedRecord?.status, "ended early (user)")
-        XCTAssertEqual(receivedRecord?.preset, "balanced")
+        XCTAssertEqual(receivedRecord?.preset, "morning")
         XCTAssertEqual(receivedRecord?.ratio, "5-5")
         XCTAssertEqual(receivedRecord?.durationTargetSeconds, 600)
     }
@@ -91,7 +91,7 @@ final class BreathingEngineTests: XCTestCase {
     // MARK: - 暂停/恢复
 
     func testPauseFromCountdownDoesNothing() {
-        let config = BreathingConfig(preset: .balanced)
+        let config = BreathingConfig(preset: .morning)
         engine.start(config: config)
 
         // 倒计时阶段不能暂停
@@ -100,7 +100,7 @@ final class BreathingEngineTests: XCTestCase {
     }
 
     func testIsPausedReturnsFalseWhenNotPaused() {
-        let config = BreathingConfig(preset: .balanced)
+        let config = BreathingConfig(preset: .morning)
         engine.start(config: config)
         XCTAssertFalse(engine.isPaused)
     }
@@ -150,7 +150,7 @@ final class BreathingEngineTests: XCTestCase {
     // MARK: - 会话记录包含正确信息
 
     func testStoppedSessionRecordFormat() {
-        let config = BreathingConfig(preset: .calm)
+        let config = BreathingConfig(preset: .evening)
         engine.start(config: config)
 
         var receivedRecord: SessionRecord?
@@ -160,7 +160,7 @@ final class BreathingEngineTests: XCTestCase {
         engine.stop()
 
         XCTAssertNotNil(receivedRecord)
-        XCTAssertEqual(receivedRecord?.preset, "calm")
+        XCTAssertEqual(receivedRecord?.preset, "evening")
         XCTAssertEqual(receivedRecord?.ratio, "4-6")
         XCTAssertEqual(receivedRecord?.durationTargetSeconds, 900)
     }
@@ -176,7 +176,7 @@ final class BreathingEngineTests: XCTestCase {
     /// 验证 start() 触发 onSessionStart 回调
     /// 这个回调驱动菜单栏图标的更新，如果没触发，图标不会变
     func testOnSessionStartCallbackFiredOnStart() {
-        let config = BreathingConfig(preset: .balanced)
+        let config = BreathingConfig(preset: .morning)
 
         var startFired = false
         engine.onSessionStart = {
@@ -190,7 +190,7 @@ final class BreathingEngineTests: XCTestCase {
 
     /// 验证 stop() 不触发 onSessionStart（只有 start 才触发）
     func testOnSessionStartNotFiredOnStop() {
-        let config = BreathingConfig(preset: .balanced)
+        let config = BreathingConfig(preset: .morning)
         engine.start(config: config)
 
         var startCount = 0
@@ -208,7 +208,7 @@ final class BreathingEngineTests: XCTestCase {
     /// 验证 3 秒倒计时后引擎自动进入吸气阶段
     /// 如果引擎 timer 不工作或 phaseStartTime 未正确初始化，此测试会失败
     func testCountdownTransitionsToInhale() {
-        let config = BreathingConfig(preset: .balanced)
+        let config = BreathingConfig(preset: .morning)
         engine.start(config: config)
         XCTAssertEqual(engine.phase, .countdown(3))
 
@@ -237,7 +237,7 @@ final class BreathingEngineTests: XCTestCase {
     /// 验证吸气阶段 phaseProgress 持续增长
     /// 这是呼吸动画的核心驱动——如果 progress 不变，SwiftUI 圆环就不会动
     func testPhaseProgressChangesDuringInhale() {
-        let config = BreathingConfig(preset: .balanced)
+        let config = BreathingConfig(preset: .morning)
         engine.start(config: config)
 
         let expectation = expectation(description: "吸气阶段 progress 发生变化")
@@ -274,7 +274,7 @@ final class BreathingEngineTests: XCTestCase {
     /// 验证吸气→呼气的自动转换
     /// 完整的呼吸循环才能让用户看到"膨胀-收缩"动画
     func testInhaleTransitionsToExhale() {
-        let config = BreathingConfig(preset: .balanced)
+        let config = BreathingConfig(preset: .morning)
         engine.start(config: config)
 
         let expectation = expectation(description: "吸气结束后进入呼气阶段")

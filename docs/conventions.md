@@ -6,4 +6,4 @@
 - **面板**: `NSPanel`（无标题栏，floating 级别），会话期间不自动关闭；拖动靠 `DraggableHostingView` 的 `mouseDown` 直接 `performDrag`（新版 macOS 对 HostingView 面板的背景拖动判定已失效，不能只靠 `isMovableByWindowBackground`）
 - **Dock 隐藏**: `LSUIElement = true`
 - **引擎**: 20Hz Timer，时间连续性（phaseStartTime = 上一阶段起始 + 时长），暂停时停止 Timer，`isCompleting` 防定格期间双触发
-- **安全验证**: 与 breathe-cli 相同的 5 条规则，验证顺序一致
+- **安全验证**: 与 breathe-cli 相同的规则，验证顺序一致（禁止屏息、周期≥8秒、吸气 3~10 秒、呼气 3~10 秒）

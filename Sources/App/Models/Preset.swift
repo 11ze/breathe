@@ -1,38 +1,44 @@
 import Foundation
 
 /// 呼吸预设（全部 6.0 bpm）
+/// 与上游 breathe-cli v1.11+ 的预设体系对齐
 enum Preset: String, CaseIterable, Codable {
-    /// 5-5 比例，10 分钟（早晨推荐）
-    case balanced
-    /// 4-6 比例，15 分钟（傍晚推荐）
-    case calm
-    /// 4-6 比例，20 分钟（下午推荐）
-    case extended
+    /// 5-5 比例，10 分钟（06-12 点）
+    case morning
+    /// 4-6 比例，20 分钟（12-17 点）
+    case midday
+    /// 4-6 比例，15 分钟（17-22 点）
+    case evening
+    /// 3-7 比例，20 分钟（22-06 点）
+    case night
 
     /// 吸气秒数
     var inhaleSeconds: Int {
         switch self {
-        case .balanced: return 5
-        case .calm: return 4
-        case .extended: return 4
+        case .morning: return 5
+        case .midday: return 4
+        case .evening: return 4
+        case .night: return 3
         }
     }
 
     /// 呼气秒数
     var exhaleSeconds: Int {
         switch self {
-        case .balanced: return 5
-        case .calm: return 6
-        case .extended: return 6
+        case .morning: return 5
+        case .midday: return 6
+        case .evening: return 6
+        case .night: return 7
         }
     }
 
     /// 默认时长（分钟）
     var durationMinutes: Int {
         switch self {
-        case .balanced: return 10
-        case .calm: return 15
-        case .extended: return 20
+        case .morning: return 10
+        case .midday: return 20
+        case .evening: return 15
+        case .night: return 20
         }
     }
 
@@ -49,9 +55,10 @@ enum Preset: String, CaseIterable, Codable {
     /// 人类可读的显示名
     var displayName: String {
         switch self {
-        case .balanced: return "balanced"
-        case .calm: return "calm"
-        case .extended: return "extended"
+        case .morning: return "morning"
+        case .midday: return "midday"
+        case .evening: return "evening"
+        case .night: return "night"
         }
     }
 
