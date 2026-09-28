@@ -143,7 +143,7 @@ struct SettingsView: View {
 
             Section("启动") {
                 if LaunchAtLoginManager.shared.isSupported {
-                    Toggle("开机自动启动", isOn: bindingFor(\.launchAtLogin))
+                    Toggle("开机自动启动", isOn: launchAtLoginBinding)
                 } else {
                     Text("需要 macOS 13 或更高版本")
                         .foregroundColor(.secondary)
@@ -168,6 +168,18 @@ struct SettingsView: View {
             get: { settingsManager.settings[keyPath: keyPath] },
             set: { newValue in
                 settingsManager.settings[keyPath: keyPath] = newValue
+                settingsManager.save()
+            }
+        )
+    }
+
+    /// 开机自启动：先注册系统服务，配置同步为系统最终状态（注册失败时开关回弹）
+    private var launchAtLoginBinding: Binding<Bool> {
+        Binding(
+            get: { settingsManager.settings.launchAtLogin },
+            set: { newValue in
+                let finalState = LaunchAtLoginManager.shared.setEnabled(newValue)
+                settingsManager.settings.launchAtLogin = finalState
                 settingsManager.save()
             }
         )

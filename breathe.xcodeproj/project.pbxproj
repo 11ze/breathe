@@ -16,6 +16,7 @@
 		21510A81EFD629F1599007C6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7190917332FBC8C0FAA77539 /* Assets.xcassets */; };
 		2907922623B6314E56AACEEE /* BreatheApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE541BCAE9699B54AEA4222 /* BreatheApp.swift */; };
 		293229611D4BBDD3783FE389 /* BreathingConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7100736003BF5786081E696 /* BreathingConfig.swift */; };
+		3857AA01100ADECD6B278FD4 /* LaunchAtLoginManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFE246DE2D44DDBD99D8AD15 /* LaunchAtLoginManagerTests.swift */; };
 		48C14A836A401EFAAECB2312 /* SessionRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6884FF96EA5D920DF4E25A6 /* SessionRecord.swift */; };
 		53223B62B5473E6873DD1779 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BE827E152A257975C9F1B1 /* AudioManager.swift */; };
 		663BB0DEA477EDEE89274CAA /* SessionLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190B7C79107946EB7C429189 /* SessionLoggerTests.swift */; };
@@ -83,6 +84,7 @@
 		E182A693A254C3FC4694DF06 /* RatioValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatioValidator.swift; sourceTree = "<group>"; };
 		E6884FF96EA5D920DF4E25A6 /* SessionRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRecord.swift; sourceTree = "<group>"; };
 		E7B7E057DA3C6E4D7380BE34 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		EFE246DE2D44DDBD99D8AD15 /* LaunchAtLoginManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginManagerTests.swift; sourceTree = "<group>"; };
 		F5EEC46121DF8355AC87C3DA /* TimeOfDayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeOfDayTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -103,6 +105,7 @@
 				903B4A0C7313747E2000A0DA /* AppSettingsTests.swift */,
 				2EDFFBA996DCE1E524A82EA5 /* BreathingConfigTests.swift */,
 				CF8A96B4E73308B83FC0D2A3 /* BreathingEngineTests.swift */,
+				EFE246DE2D44DDBD99D8AD15 /* LaunchAtLoginManagerTests.swift */,
 				4C708BD851FA88E1DD249DF6 /* NotificationManagerTests.swift */,
 				84DD1EA05414E687FE9AECF0 /* PresetTests.swift */,
 				DBA6C7665E0742443F79874B /* RatioValidatorTests.swift */,
@@ -329,6 +332,7 @@
 				1293184E0107893159A09C8C /* AppSettingsTests.swift in Sources */,
 				E74C7A7539A48310AD501567 /* BreathingConfigTests.swift in Sources */,
 				A8BB27AE0D42EAA99140B646 /* BreathingEngineTests.swift in Sources */,
+				3857AA01100ADECD6B278FD4 /* LaunchAtLoginManagerTests.swift in Sources */,
 				A3AB93FBDA682E66F41AEBE9 /* NotificationManagerTests.swift in Sources */,
 				A64D12CD7DDF4DABA857DB38 /* PresetTests.swift in Sources */,
 				1E4FD64C5A0F07E54A423CD1 /* RatioValidatorTests.swift in Sources */,
