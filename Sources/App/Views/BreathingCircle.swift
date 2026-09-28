@@ -61,13 +61,13 @@ struct BreathingCircle: View {
             // 50% 蓝色脉动
             return (0.5, (Color.blue.opacity(0.5), Color.blue.opacity(0.2)))
         case .inhale:
-            // 30% → 100% 青色渐变（吸气膨胀）
+            // 30% → 100% 绿色渐变（吸气膨胀）
             let scale = CGFloat(0.3 + 0.7 * progress)
-            return (scale, (Color.cyan.opacity(0.8), Color.teal.opacity(0.4)))
+            return (scale, (Color.green.opacity(0.8), Color.mint.opacity(0.4)))
         case .exhale:
-            // 100% → 30% 绿色渐变（呼气收缩）
+            // 100% → 30% 红色渐变（呼气收缩），与吸气的绿色形成冷暖对比
             let scale = CGFloat(1.0 - 0.7 * progress)
-            return (scale, (Color.green.opacity(0.7), Color.mint.opacity(0.3)))
+            return (scale, (Color.red.opacity(0.7), Color.orange.opacity(0.3)))
         case .paused:
             // 50% 琥珀色（暂停）
             return (0.5, (Color.orange.opacity(0.6), Color.yellow.opacity(0.3)))

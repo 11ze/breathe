@@ -266,7 +266,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             guard let sfImage = NSImage(systemSymbolName: "wind", accessibilityDescription: "Breathe Active") else { return nil }
             let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .bold)
             guard let configured = sfImage.withSymbolConfiguration(config) else { return nil }
-            return tint(image: configured, with: .systemCyan)
+            return tint(image: configured, with: .systemGreen)
         } else {
             if let image = NSImage(named: "MenuBarIcon") {
                 image.isTemplate = true
