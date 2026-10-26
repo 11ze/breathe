@@ -11,6 +11,12 @@ final class KeyPanel: NSPanel {
 /// 新版 macOS 上 NSHostingView 面板的背景拖动判定失效，
 /// mouseDown 直接转为窗口拖动，绕开系统判定
 final class DraggableHostingView: NSHostingView<BreathingPanelView> {
+    /// 窗口非 key 时首次按下默认只用于激活窗口、不派发事件；
+    /// 返回 true 让焦点在别的窗口时第一次按下就直接开始拖拽
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
+        true
+    }
+
     override func mouseDown(with event: NSEvent) {
         window?.performDrag(with: event)
     }
