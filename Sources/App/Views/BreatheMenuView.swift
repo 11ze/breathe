@@ -113,7 +113,8 @@ struct BreatheMenuView: View {
 
     private var header: some View {
         HStack(spacing: 8) {
-            BreatheWavesMark(color: BreatheStyle.green, width: 24, height: 15, horizontalInset: 2)
+            BreatheWavesMark(color: BreatheStyle.green, fontSize: 24)
+                .frame(height: 16)
             Text("Breathe")
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundColor(BreatheStyle.ink)

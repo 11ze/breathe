@@ -29,6 +29,7 @@
 		792F806069B3A4F72E2C57A6 /* BreatheDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA25C659C0B8658DF01D669F /* BreatheDesign.swift */; };
 		7A7A1B5504AD0CFF6853C735 /* SessionLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7367B98F283F5CD05E9C82 /* SessionLogger.swift */; };
 		7D55EFA5AD5F478D8DB1072B /* AudioManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91F049694C846E0927BA483 /* AudioManagerTests.swift */; };
+		87ECFAF098EA63109B18E267 /* BreatheStatusIconTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D9710DA4412700CE4F0AF50 /* BreatheStatusIconTests.swift */; };
 		899DF036A84EA016F13D40CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE5E420EC5A6D6A8D36E2F3 /* AppDelegate.swift */; };
 		89C25D5AD8D8049754CA23B0 /* BreathingPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93473953D606736CC8248084 /* BreathingPanelView.swift */; };
 		9CD127CCAD0BAB7F4FC0A549 /* SettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0807B159CAF60EC334FBAB93 /* SettingsWindowController.swift */; };
@@ -61,6 +62,7 @@
 		13C7FFBB82B35D34E5214240 /* BreathingPanelWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingPanelWindowController.swift; sourceTree = "<group>"; };
 		179E6074418D679AE947A273 /* LaunchAtLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginManager.swift; sourceTree = "<group>"; };
 		190B7C79107946EB7C429189 /* SessionLoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionLoggerTests.swift; sourceTree = "<group>"; };
+		1D9710DA4412700CE4F0AF50 /* BreatheStatusIconTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreatheStatusIconTests.swift; sourceTree = "<group>"; };
 		210FE12C45115A2009D72487 /* TimeOfDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeOfDay.swift; sourceTree = "<group>"; };
 		2EDFFBA996DCE1E524A82EA5 /* BreathingConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingConfigTests.swift; sourceTree = "<group>"; };
 		4C708BD851FA88E1DD249DF6 /* NotificationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManagerTests.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 			children = (
 				903B4A0C7313747E2000A0DA /* AppSettingsTests.swift */,
 				C91F049694C846E0927BA483 /* AudioManagerTests.swift */,
+				1D9710DA4412700CE4F0AF50 /* BreatheStatusIconTests.swift */,
 				2EDFFBA996DCE1E524A82EA5 /* BreathingConfigTests.swift */,
 				CF8A96B4E73308B83FC0D2A3 /* BreathingEngineTests.swift */,
 				EFE246DE2D44DDBD99D8AD15 /* LaunchAtLoginManagerTests.swift */,
@@ -350,6 +353,7 @@
 			files = (
 				1293184E0107893159A09C8C /* AppSettingsTests.swift in Sources */,
 				7D55EFA5AD5F478D8DB1072B /* AudioManagerTests.swift in Sources */,
+				87ECFAF098EA63109B18E267 /* BreatheStatusIconTests.swift in Sources */,
 				E74C7A7539A48310AD501567 /* BreathingConfigTests.swift in Sources */,
 				A8BB27AE0D42EAA99140B646 /* BreathingEngineTests.swift in Sources */,
 				3857AA01100ADECD6B278FD4 /* LaunchAtLoginManagerTests.swift in Sources */,

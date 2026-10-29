@@ -1,4 +1,5 @@
 import AppKit
+import CoreText
 import SwiftUI
 
 // MARK: - 设计令牌
@@ -393,27 +394,23 @@ struct BreatheSelect<Value: Hashable>: View {
 /// 状态栏使用的 ≋ 模板图标。
 enum BreatheStatusIcon {
     static func make() -> NSImage {
-        let size = NSSize(width: 20, height: 15)
+        let glyph = NSAttributedString(string: "≋", attributes: [
+            .font: NSFont.systemFont(ofSize: 29, weight: .regular),
+            .foregroundColor: NSColor.black
+        ])
+        let line = CTLineCreateWithAttributedString(glyph)
+        let bounds = CTLineGetImageBounds(line, nil)
+        let size = NSSize(width: ceil(glyph.size().width), height: 20)
         let image = NSImage(size: size, flipped: false) { _ in
-            NSColor.black.setStroke()
-            for index in 0..<3 {
-                let y = 2.0 + CGFloat(index) * 5.5
-                let path = NSBezierPath()
-                path.lineWidth = 1.5
-                path.lineCapStyle = .round
-                path.move(to: NSPoint(x: 1, y: y))
-                path.curve(
-                    to: NSPoint(x: 10, y: y),
-                    controlPoint1: NSPoint(x: 3.8, y: y + 2.4),
-                    controlPoint2: NSPoint(x: 7.2, y: y + 2.4)
-                )
-                path.curve(
-                    to: NSPoint(x: 19, y: y),
-                    controlPoint1: NSPoint(x: 12.8, y: y - 2.4),
-                    controlPoint2: NSPoint(x: 16.2, y: y - 2.4)
-                )
-                path.stroke()
-            }
+            guard let context = NSGraphicsContext.current?.cgContext else { return false }
+            context.saveGState()
+            context.textMatrix = .identity
+            context.textPosition = CGPoint(
+                x: (size.width - bounds.width) / 2 - bounds.minX,
+                y: (size.height - bounds.height) / 2 - bounds.minY
+            )
+            CTLineDraw(line, context)
+            context.restoreGState()
             return true
         }
         image.isTemplate = true
@@ -421,43 +418,17 @@ enum BreatheStatusIcon {
     }
 }
 
-/// 设计稿品牌符号 ≋ 的矢量版本，用于分类标签、菜单与状态栏。
+/// 使用设计稿的系统字体 ≋ 字形，字号分别由菜单与分类标签指定。
 struct BreatheWavesMark: View {
     var color: Color = BreatheStyle.green
-    var width: CGFloat = 18
-    var height: CGFloat = 13
-    /// 字体字形左右留白，用于让墨迹尺寸与设计稿的 ≋ 一致。
-    var horizontalInset: CGFloat = 0
+    var fontSize: CGFloat = 18
 
     var body: some View {
-        Canvas { context, size in
-            let inset = min(horizontalInset, size.width / 2)
-            let drawWidth = size.width - inset * 2
-            let amplitude = size.height * 0.16
-            let lineWidth = max(1, size.height * 0.10)
-            for index in 0..<3 {
-                let y = size.height * (0.2 + Double(index) * 0.3)
-                var path = Path()
-                path.move(to: CGPoint(x: inset, y: y))
-                path.addCurve(
-                    to: CGPoint(x: inset + drawWidth * 0.5, y: y),
-                    control1: CGPoint(x: inset + drawWidth * 0.18, y: y - amplitude),
-                    control2: CGPoint(x: inset + drawWidth * 0.32, y: y - amplitude)
-                )
-                path.addCurve(
-                    to: CGPoint(x: inset + drawWidth, y: y),
-                    control1: CGPoint(x: inset + drawWidth * 0.68, y: y + amplitude),
-                    control2: CGPoint(x: inset + drawWidth * 0.82, y: y + amplitude)
-                )
-                context.stroke(
-                    path,
-                    with: .color(color),
-                    style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
-                )
-            }
-        }
-        .frame(width: width, height: height)
-        .accessibilityHidden(true)
+        Text("≋")
+            .font(.system(size: fontSize, weight: .regular))
+            .foregroundColor(color)
+            .fixedSize()
+            .accessibilityHidden(true)
     }
 }
 

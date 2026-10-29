@@ -86,10 +86,9 @@ struct SettingsView: View {
             tabButton(.preset) {
                 BreatheWavesMark(
                     color: selectedTab == .preset ? BreatheStyle.green : BreatheStyle.ink,
-                    width: 18,
-                    height: 12,
-                    horizontalInset: 3
+                    fontSize: 18
                 )
+                .frame(height: 18)
                 Text("预设")
                     .font(.system(size: 12))
             }
