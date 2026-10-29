@@ -129,34 +129,35 @@ struct BreatheWindowAccessor: NSViewRepresentable {
 
 struct BreatheWindowTitlebar: View {
     let title: String
-    let onClose: () -> Void
-    let onMinimize: () -> Void
-    let onZoom: () -> Void
+    let onAction: (BreatheWindowAction) -> Void
 
     @State private var hoveringLights = false
 
     var body: some View {
         ZStack {
             HStack(spacing: 0) {
-                HStack(spacing: 8) {
+                HStack(spacing: BreatheTitlebarMetrics.dotSpacing) {
                     trafficLight(
                         color: Color(hex: 0xEF6A60),
                         symbol: "xmark",
-                        label: "关闭",
-                        action: onClose
-                    )
+                        label: "关闭"
+                    ) {
+                        onAction(.close)
+                    }
                     trafficLight(
                         color: Color(hex: 0xEDC052),
                         symbol: "minus",
-                        label: "最小化",
-                        action: onMinimize
-                    )
+                        label: "最小化"
+                    ) {
+                        onAction(.minimize)
+                    }
                     trafficLight(
                         color: Color(hex: 0x62BE67),
                         symbol: "plus",
-                        label: "缩放",
-                        action: onZoom
-                    )
+                        label: "缩放"
+                    ) {
+                        onAction(.zoom)
+                    }
                 }
                 .onHover { hoveringLights = $0 }
 
@@ -173,8 +174,8 @@ struct BreatheWindowTitlebar: View {
                 .foregroundColor(BreatheStyle.ink)
                 .allowsHitTesting(false)
         }
-        .padding(.horizontal, 16)
-        .frame(height: 47)
+        .padding(.horizontal, BreatheTitlebarMetrics.horizontalPadding)
+        .frame(height: BreatheTitlebarMetrics.height)
         .background(BreatheStyle.titlebar)
         .overlay(alignment: .bottom) {
             Rectangle()
@@ -200,7 +201,7 @@ struct BreatheWindowTitlebar: View {
                         .foregroundColor(Color.black.opacity(0.55))
                 }
             }
-            .frame(width: 12, height: 12)
+            .frame(width: BreatheTitlebarMetrics.dotSize, height: BreatheTitlebarMetrics.dotSize)
             .contentShape(Circle())
         }
         .buttonStyle(.plain)

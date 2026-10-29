@@ -33,12 +33,9 @@ struct SettingsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            BreatheWindowTitlebar(
-                title: "设置",
-                onClose: { windowBox.window?.performClose(nil) },
-                onMinimize: { windowBox.window?.miniaturize(nil) },
-                onZoom: { windowBox.window?.zoom(nil) }
-            )
+            BreatheWindowTitlebar(title: "设置") { action in
+                BreatheWindowActionHandler.perform(action, on: windowBox.window)
+            }
 
             tabBar
 
@@ -188,26 +185,30 @@ struct SettingsView: View {
                 }
 
                 validationLine
-            } else {
-                BreatheSectionTitle(title: "时段映射")
-                    .padding(.top, 20)
-                    .padding(.bottom, 8)
+            } else if settingsManager.settings.defaultPreset == "auto" {
+                TimelineView(.periodic(from: .now, by: 60)) { _ in
+                    VStack(alignment: .leading, spacing: 0) {
+                        BreatheSectionTitle(title: "时段映射")
+                            .padding(.top, 20)
+                            .padding(.bottom, 8)
 
-                BreatheGroup {
-                    periodRow("早晨", time: "06:00 – 12:00", symbol: "sunrise", preset: .morning)
-                    BreatheDivider()
-                    periodRow("下午", time: "12:00 – 17:00", symbol: "sun.max", preset: .midday)
-                    BreatheDivider()
-                    periodRow("傍晚", time: "17:00 – 22:00", symbol: "circle.lefthalf.filled", preset: .evening)
-                    BreatheDivider()
-                    periodRow("夜间", time: "22:00 – 06:00", symbol: "moon", preset: .night)
+                        BreatheGroup {
+                            periodRow("早晨", time: "06:00 – 12:00", symbol: "sunrise", preset: .morning, current: currentPreset)
+                            BreatheDivider()
+                            periodRow("下午", time: "12:00 – 17:00", symbol: "sun.max", preset: .midday, current: currentPreset)
+                            BreatheDivider()
+                            periodRow("傍晚", time: "17:00 – 22:00", symbol: "circle.lefthalf.filled", preset: .evening, current: currentPreset)
+                            BreatheDivider()
+                            periodRow("夜间", time: "22:00 – 06:00", symbol: "moon", preset: .night, current: currentPreset)
+                        }
+
+                        Text("全部预设均为每分钟 6 次呼吸。")
+                            .font(.system(size: 10))
+                            .foregroundColor(BreatheStyle.muted)
+                            .padding(.top, 12)
+                            .padding(.leading, 3)
+                    }
                 }
-
-                Text("全部预设均为每分钟 6 次呼吸。")
-                    .font(.system(size: 10))
-                    .foregroundColor(BreatheStyle.muted)
-                    .padding(.top, 12)
-                    .padding(.leading, 3)
             }
         }
     }
@@ -272,30 +273,44 @@ struct SettingsView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
+    private var currentPreset: Preset {
+        TimeOfDay.current().recommendedPreset
+    }
+
     private func periodRow(
         _ title: String,
         time: String,
         symbol: String,
-        preset: Preset
+        preset: Preset,
+        current: Preset
     ) -> some View {
         HStack(spacing: 10) {
             Image(systemName: symbol)
                 .font(.system(size: 18))
-                .foregroundColor(Color(hex: 0x708370))
+                .foregroundColor(preset == current ? BreatheStyle.accent : Color(hex: 0x708370))
                 .frame(width: 23, alignment: .leading)
             VStack(alignment: .leading, spacing: 3) {
-                Text(title)
-                    .font(.system(size: 12))
-                    .foregroundColor(BreatheStyle.ink)
+                HStack(spacing: 6) {
+                    Text(title)
+                        .font(.system(size: 12))
+                        .foregroundColor(BreatheStyle.ink)
+                    if preset == current {
+                        Text("当前")
+                            .font(.system(size: 9, weight: .medium))
+                            .foregroundColor(BreatheStyle.statusGreen)
+                            .padding(.horizontal, 4)
+                            .padding(.vertical, 1)
+                            .background(
+                                RoundedRectangle(cornerRadius: 3, style: .continuous)
+                                    .fill(BreatheStyle.statusGreenBackground)
+                            )
+                    }
+                }
                 Text(time)
                     .font(.system(size: 10))
                     .foregroundColor(BreatheStyle.muted)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            Text(preset.displayName)
-                .font(.system(size: 11))
-                .foregroundColor(Color(hex: 0x5D6E61))
-                .frame(width: 78, alignment: .leading)
             VStack(alignment: .trailing, spacing: 3) {
                 Text(preset.displayRatio)
                     .font(.system(size: 12).monospacedDigit())

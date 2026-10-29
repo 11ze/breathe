@@ -34,9 +34,12 @@ const records = [
 ];
 const formatTime = (seconds) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 const localHour = () => Number(new Intl.DateTimeFormat("en-GB", { hour: "numeric", hourCycle: "h23", timeZone: "Asia/Shanghai" }).format(new Date()));
-function selectedConfig() {
+function autoPreset() {
   const hour = localHour();
-  const name = state.preset === "auto" ? (hour >= 6 && hour < 12 ? "morning" : hour >= 12 && hour < 17 ? "midday" : hour >= 17 && hour < 22 ? "evening" : "night") : state.preset;
+  return hour >= 6 && hour < 12 ? "morning" : hour >= 12 && hour < 17 ? "midday" : hour >= 17 && hour < 22 ? "evening" : "night";
+}
+function selectedConfig() {
+  const name = state.preset === "auto" ? autoPreset() : state.preset;
   const config = { ...(name === "custom" ? state.custom : presets[name]), name };
   config.cycle = config.inhale + config.exhale;
   config.total = Math.ceil(config.minutes * 60 / config.cycle) * config.cycle;
@@ -83,7 +86,11 @@ function renderSettings() {
   const displayPreset = custom ? "自定义" : presetLabel(config.name);
   $("preset-name").textContent = state.preset === "auto" ? "自动" : displayPreset;
   $("custom-settings").hidden = !custom;
-  $("time-mapping").hidden = custom;
+  $("time-mapping").hidden = state.preset !== "auto";
+  const currentAuto = autoPreset();
+  document.querySelectorAll(".mapping-row").forEach((row) => {
+    row.classList.toggle("current", row.dataset.period === currentAuto);
+  });
   $("preset-summary").hidden = !!error;
   $("preset-summary").innerHTML = `<div><small>${state.preset === "auto" ? "当前预设" : "所选预设"}</small><strong style="font-size:15px">${displayPreset}</strong></div><div><small>吸气 / 呼气</small><strong>${config.inhale} / ${config.exhale}</strong><span class="unit">秒</span></div><div><small>练习时长</small><strong>${config.minutes}</strong><span class="unit">分钟</span></div>`;
   $("validation").classList.toggle("error", !!error);
@@ -288,4 +295,5 @@ window.addEventListener("resize", () => {
 function renderClock() { $("clock").textContent = new Intl.DateTimeFormat("zh-CN", { timeZone: "Asia/Shanghai", month: "long", day: "numeric", weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date()); }
 renderClock(); setInterval(renderClock, 10000);
 renderSettings(); renderHistory(); showScene("settings"); renderSession();
+setInterval(renderSettings, 60000);
 if (window.matchMedia("(max-width: 720px)").matches) setMenu(false);

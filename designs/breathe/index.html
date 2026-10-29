@@ -57,10 +57,10 @@
           <h3>自定义比例</h3><div class="group custom-group"><div class="setting-row"><label for="inhale">吸气</label><div class="number-control"><input id="inhale" type="number" min="3" max="10" step="1" value="5"><span>秒</span></div></div><div class="setting-row"><label for="exhale">呼气</label><div class="number-control"><input id="exhale" type="number" min="3" max="10" step="1" value="5"><span>秒</span></div></div><div class="setting-row"><label for="duration">练习时长</label><div class="number-control"><input id="duration" type="number" min="1" max="60" step="1" value="10"><span>分钟</span></div></div></div><p class="validation" id="validation" role="status"></p>
         </div>
         <div id="time-mapping"><h3>时段映射</h3><div class="group mapping">
-          <div class="mapping-row"><span class="period-icon">☼</span><span>早晨 <small>06:00 – 12:00</small></span><span class="mapping-preset">晨间</span><span>5–5 <small>10 分钟</small></span></div>
-          <div class="mapping-row"><span class="period-icon">☀</span><span>下午 <small>12:00 – 17:00</small></span><span class="mapping-preset">午间</span><span>4–6 <small>20 分钟</small></span></div>
-          <div class="mapping-row"><span class="period-icon">◒</span><span>傍晚 <small>17:00 – 22:00</small></span><span class="mapping-preset">晚间</span><span>4–6 <small>15 分钟</small></span></div>
-          <div class="mapping-row"><span class="period-icon">☾</span><span>夜间 <small>22:00 – 06:00</small></span><span class="mapping-preset">深夜</span><span>3–7 <small>20 分钟</small></span></div>
+          <div class="mapping-row" data-period="morning"><span class="period-icon">☼</span><span class="mapping-title">早晨 <b class="current-badge">当前</b><small>06:00 – 12:00</small></span><span>5–5 <small>10 分钟</small></span></div>
+          <div class="mapping-row" data-period="midday"><span class="period-icon">☀</span><span class="mapping-title">下午 <b class="current-badge">当前</b><small>12:00 – 17:00</small></span><span>4–6 <small>20 分钟</small></span></div>
+          <div class="mapping-row" data-period="evening"><span class="period-icon">◒</span><span class="mapping-title">傍晚 <b class="current-badge">当前</b><small>17:00 – 22:00</small></span><span>4–6 <small>15 分钟</small></span></div>
+          <div class="mapping-row" data-period="night"><span class="period-icon">☾</span><span class="mapping-title">夜间 <b class="current-badge">当前</b><small>22:00 – 06:00</small></span><span>3–7 <small>20 分钟</small></span></div>
         </div><p class="footnote">全部预设均为每分钟 6 次呼吸。</p></div>
       </div>
       <div class="settings-content" id="general-panel" role="tabpanel" aria-labelledby="general-tab" hidden>

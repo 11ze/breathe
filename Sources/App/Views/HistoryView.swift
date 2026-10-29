@@ -14,12 +14,9 @@ struct HistoryView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            BreatheWindowTitlebar(
-                title: "历史记录",
-                onClose: { windowBox.window?.performClose(nil) },
-                onMinimize: { windowBox.window?.miniaturize(nil) },
-                onZoom: { windowBox.window?.zoom(nil) }
-            )
+            BreatheWindowTitlebar(title: "历史记录") { action in
+                BreatheWindowActionHandler.perform(action, on: windowBox.window)
+            }
 
             heading
             toolbar
