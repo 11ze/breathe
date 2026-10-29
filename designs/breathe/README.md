@@ -12,6 +12,16 @@ python3 -m http.server 4311 --bind 127.0.0.1 --directory designs
 
 浏览器打开 <http://localhost:4311/breathe/>。无外部依赖，不需要联网；所有文件都在当前目录。
 
+## 在线预览与发布
+
+发布地址：<https://11ze.github.io/breathe/>。
+
+`.github/workflows/pages.yml` 将整个 `designs/breathe/` 目录交给 `actions/upload-pages-artifact` 发布。`index.html`、`style.css` 和 `prototype.js` 使用相对引用，可在 Pages 的 `/breathe/` 子路径下加载，不需要构建或复制文件。
+
+首次发布前，将仓库 Settings → Pages → Build and deployment → Source 设为 GitHub Actions。工作流提交并推送到 `main` 后会触发部署；之后只有原型目录或该工作流变更时自动发布，也可手动运行 Deploy design preview。手动发布仅允许 `main` 分支。首次部署成功前，在线地址不可用。
+
+发布后确认 Actions 中部署成功，再逐个核对在线 `index.html`、`style.css`、`prototype.js` 与仓库版本一致，并执行下方的交互验收。部署失败时可继续使用本地预览；恢复上一版原型或工作流后重新部署即可回退，不影响应用配置和会话日志。
+
 ## 范围与来源
 
 | 界面 | 功能依据 |

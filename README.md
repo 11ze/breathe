@@ -1,93 +1,76 @@
-# 🌬️ Breathe
+# Breathe
 
-自用 macOS 呼吸练习应用，基于科学验证的共振呼吸（Resonance Breathing）方法。
+macOS 菜单栏呼吸练习应用。开始练习后，跟随桌面浮动球和声音提示吸气、呼气。
 
-## 什么是共振呼吸？
+[下载](https://github.com/11ze/breathe/releases/latest) · [原型预览](https://11ze.github.io/breathe/)
 
-共振呼吸以每分钟 **6 次** 的频率引导呼吸，通过激活迷走神经（vagal tone）来：
-- 降低心率和血压
-- 减少焦虑和压力
-- 提高专注力和情绪调节能力
+- 四种按时段选择的预设，每分钟 6 次呼吸，支持自定义吸呼比例与练习时长。
+- 可拖动的呼吸球，绿色吸气、橙红色呼气，支持暂停与继续。
+- 声音开关与菜单静音同步，会话记录保存为与 breathe-cli 兼容的 CSV。
+- 原生深浅色界面，支持开机自启（macOS 13+）。
 
-> 科学依据：6 次/分钟的呼吸频率能最大化心率变异性（HRV），是自主神经系统训练的最佳频率。
+macOS 12.0+ · SwiftUI + AppKit · 无外部依赖
 
-## 功能
+在线原型使用演示数据，不读取本地配置或日志，不更改系统设置。
 
-- 🫁 **四种预设**：morning (5-5, 10分钟)、midday (4-6, 20分钟)、evening (4-6, 15分钟)、night (3-7, 20分钟)，全部 6.0 bpm
-- 🕐 **按时段自动选择**：早晨 morning、下午 midday、傍晚 evening、夜间 night
-- ⭕ **动画呼吸圆环**：吸气膨胀（绿色）、呼气收缩（橙红色），桌面浮动球支持拖动
-- **原生界面**：分组设置、预设摘要、会话历史表格，跟随系统明暗模式
-- 🔊 **音频提示**：系统音效引导呼吸节奏，设置中的声音开关与菜单静音即时同步并保存
-- 📊 **会话记录**：CSV 格式，与 [breathe-cli](https://github.com/marekkowalczyk/breathe-cli) 兼容
-- 🚀 **开机自启**：macOS 13+ 原生支持
+## 界面
 
-## 截图
+以下为交互原型截图，可通过[在线原型](https://11ze.github.io/breathe/)体验菜单、设置和历史记录。
 
-*待补充*
+<img src="designs/breathe/preview.png" alt="Breathe 交互原型的设置界面" width="420">
 
-## 安装
+## 安装与使用
 
-### 下载
+1. 从 [Releases](https://github.com/11ze/breathe/releases/latest) 下载并解压，将 `Breathe.app` 拖入应用程序文件夹。
+2. 启动应用，点击菜单栏图标，选择“开始呼吸”。
+3. 跟随呼吸球练习；通过菜单暂停、继续、停止或切换静音。
+4. 从菜单打开“设置…”调整预设，或打开“历史记录”查看会话。
 
-从 [Releases](../../releases) 下载最新版本，解压后拖入「应用程序」文件夹。
+菜单提供开始/停止、静音、历史、设置与退出的快捷键，以菜单显示为准。
 
-### 从源码构建
+## 自定义练习
+
+内置预设为 morning（5-5，10 分钟）、midday（4-6，20 分钟）、evening（4-6，15 分钟）、night（3-7，20 分钟）。自动模式按当前时段选择。
+
+自定义吸气和呼气各为 3 至 10 秒，总周期至少 8 秒，练习时长为 1 至 60 分钟。不支持屏息；实际时长向上取整到完整呼吸周期。
+
+配置位于 `~/.config/breathe/settings.json`，会话记录位于 `~/.config/breathe/sessions.csv`。
+
+## 从源码构建
+
+需要 Xcode 15.0+ 和 [XcodeGen](https://github.com/yonaskolb/XcodeGen)。
 
 ```bash
-# 需要安装 XcodeGen
-brew install xcodegen
-
-# 克隆并构建
-git clone https://github.com/user/breathe.git
+git clone https://github.com/11ze/breathe.git
 cd breathe
+brew install xcodegen
 xcodegen generate
-# 构建到 /tmp 而非 ./build：项目位于 iCloud 同步路径下，
-# iCloud 注入的扩展属性会导致 codesign 失败（见 release.sh 同理）。
-xcodebuild -project breathe.xcodeproj -scheme Breathe -configuration Release \
-  -derivedDataPath /tmp/breathe-build build
+xcodebuild -project breathe.xcodeproj \
+  -scheme Breathe \
+  -configuration Release \
+  -derivedDataPath /tmp/breathe-build \
+  CODE_SIGN_IDENTITY="-" build
+open /tmp/breathe-build/Build/Products/Release/Breathe.app
 ```
 
-## 使用
+派生数据放在 `/tmp`，避免 iCloud 同步目录的扩展属性导致签名失败。修改 `project.yml` 或增删源文件后需重新运行 `xcodegen generate`。
 
-1. 启动后菜单栏出现风图标 🌬️
-2. **左键或右键**点击图标打开菜单
-3. 选择「开始呼吸」或使用菜单快捷键 `⌘B` 开始，桌面出现呼吸球
-4. 跟随圆环动画和音频提示呼吸
-5. 从菜单打开「设置…」调整预设，或打开「历史记录」查看会话
+运行测试：
 
-### 快捷键
-
-| 快捷键 | 功能 |
-|--------|------|
-| `⌘B` | 开始/停止呼吸 |
-| `Space` | 暂停/继续 |
-| `S` | 静音切换 |
-| `⌘H` | 历史记录 |
-| `⌘,` | 设置 |
-| `⌘Q` | 退出 |
-
-## 安全约束
-
-应用对自定义呼吸比例有严格的安全限制（移植自 breathe-cli）：
-
-| 规则 | 约束 |
-|------|------|
-| 禁止屏息 | 拒绝三段比例如 4-7-8 |
-| 禁止快速呼吸 | 总周期 ≥ 8 秒 |
-| 吸气范围 | 3~10 秒 |
-| 呼气范围 | 3~10 秒 |
-
-## 数据存储
-
+```bash
+xcodebuild test -project breathe.xcodeproj \
+  -scheme BreatheTests \
+  -configuration Debug \
+  -destination 'platform=macOS' \
+  -derivedDataPath /tmp/breathe-build \
+  CODE_SIGN_IDENTITY="-"
 ```
-~/.config/breathe/
-├── settings.json     # 应用配置
-└── sessions.csv      # 会话记录（与 breathe-cli 兼容）
-```
+
+开发约定见[开发规范](docs/conventions.md)与[架构说明](docs/architecture.md)。原型的本地预览和 Pages 发布方式见[设计说明](designs/breathe/README.md#在线预览与发布)。
 
 ## 致谢
 
-- [breathe-cli](https://github.com/marekkowalczyk/breathe-cli) — 原始 CLI 工具，呼吸算术和安全规则的来源
+[breathe-cli](https://github.com/marekkowalczyk/breathe-cli) 提供了原始呼吸预设、安全规则和会话记录格式。
 
 ## 许可
 
