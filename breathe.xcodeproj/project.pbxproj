@@ -16,13 +16,17 @@
 		21510A81EFD629F1599007C6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7190917332FBC8C0FAA77539 /* Assets.xcassets */; };
 		2907922623B6314E56AACEEE /* BreatheApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE541BCAE9699B54AEA4222 /* BreatheApp.swift */; };
 		293229611D4BBDD3783FE389 /* BreathingConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7100736003BF5786081E696 /* BreathingConfig.swift */; };
+		2E1820A1DD2999B6EC26DD6A /* BreatheMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F6034768AE898D4F94708A6 /* BreatheMenuView.swift */; };
 		3857AA01100ADECD6B278FD4 /* LaunchAtLoginManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFE246DE2D44DDBD99D8AD15 /* LaunchAtLoginManagerTests.swift */; };
 		48C14A836A401EFAAECB2312 /* SessionRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6884FF96EA5D920DF4E25A6 /* SessionRecord.swift */; };
+		519D6AEC942EB93219CACAF1 /* BreatheMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62DD1485DF306F99FD4A2A3 /* BreatheMenuController.swift */; };
 		53223B62B5473E6873DD1779 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BE827E152A257975C9F1B1 /* AudioManager.swift */; };
+		600ECCD62EF79C7A4494E285 /* BreatheWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E94F1D528D58A7BECDF76FB /* BreatheWindow.swift */; };
 		663BB0DEA477EDEE89274CAA /* SessionLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190B7C79107946EB7C429189 /* SessionLoggerTests.swift */; };
 		6B809A8929E4B091C1576013 /* BreathingCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBD956F8F453E5C5392591D /* BreathingCircle.swift */; };
 		716FF4DB0EBC8E59680754F4 /* TimeOfDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210FE12C45115A2009D72487 /* TimeOfDay.swift */; };
 		78D85B02423A8EAD6EDAE56E /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD90835F015617E89BBCA96 /* NotificationManager.swift */; };
+		792F806069B3A4F72E2C57A6 /* BreatheDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA25C659C0B8658DF01D669F /* BreatheDesign.swift */; };
 		7A7A1B5504AD0CFF6853C735 /* SessionLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7367B98F283F5CD05E9C82 /* SessionLogger.swift */; };
 		7D55EFA5AD5F478D8DB1072B /* AudioManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91F049694C846E0927BA483 /* AudioManagerTests.swift */; };
 		899DF036A84EA016F13D40CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE5E420EC5A6D6A8D36E2F3 /* AppDelegate.swift */; };
@@ -73,7 +77,11 @@
 		8EE5E420EC5A6D6A8D36E2F3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		903B4A0C7313747E2000A0DA /* AppSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsTests.swift; sourceTree = "<group>"; };
 		93473953D606736CC8248084 /* BreathingPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingPanelView.swift; sourceTree = "<group>"; };
+		9E94F1D528D58A7BECDF76FB /* BreatheWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreatheWindow.swift; sourceTree = "<group>"; };
+		9F6034768AE898D4F94708A6 /* BreatheMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreatheMenuView.swift; sourceTree = "<group>"; };
 		B05F43E5F56F86AAEB272D29 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B62DD1485DF306F99FD4A2A3 /* BreatheMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreatheMenuController.swift; sourceTree = "<group>"; };
+		BA25C659C0B8658DF01D669F /* BreatheDesign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreatheDesign.swift; sourceTree = "<group>"; };
 		BBBD956F8F453E5C5392591D /* BreathingCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingCircle.swift; sourceTree = "<group>"; };
 		BD4F41373F0652B5D48A035D /* SessionRecordTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRecordTests.swift; sourceTree = "<group>"; };
 		C3B86DEEE9A9C05F8FFBD4D0 /* Breathe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Breathe.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -139,6 +147,8 @@
 		2CA008E4F9A9D771C8E9278B /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				BA25C659C0B8658DF01D669F /* BreatheDesign.swift */,
+				9F6034768AE898D4F94708A6 /* BreatheMenuView.swift */,
 				BBBD956F8F453E5C5392591D /* BreathingCircle.swift */,
 				93473953D606736CC8248084 /* BreathingPanelView.swift */,
 				E7B7E057DA3C6E4D7380BE34 /* HistoryView.swift */,
@@ -195,6 +205,8 @@
 		DA924134B79EC57BB32FC528 /* WindowControllers */ = {
 			isa = PBXGroup;
 			children = (
+				B62DD1485DF306F99FD4A2A3 /* BreatheMenuController.swift */,
+				9E94F1D528D58A7BECDF76FB /* BreatheWindow.swift */,
 				13C7FFBB82B35D34E5214240 /* BreathingPanelWindowController.swift */,
 				511EA9652A94F91FC727E733 /* HistoryWindowController.swift */,
 				0807B159CAF60EC334FBAB93 /* SettingsWindowController.swift */,
@@ -309,6 +321,10 @@
 				D7BD06D9C0B9E6D1AE112D93 /* AppSettings.swift in Sources */,
 				53223B62B5473E6873DD1779 /* AudioManager.swift in Sources */,
 				2907922623B6314E56AACEEE /* BreatheApp.swift in Sources */,
+				792F806069B3A4F72E2C57A6 /* BreatheDesign.swift in Sources */,
+				519D6AEC942EB93219CACAF1 /* BreatheMenuController.swift in Sources */,
+				2E1820A1DD2999B6EC26DD6A /* BreatheMenuView.swift in Sources */,
+				600ECCD62EF79C7A4494E285 /* BreatheWindow.swift in Sources */,
 				6B809A8929E4B091C1576013 /* BreathingCircle.swift in Sources */,
 				293229611D4BBDD3783FE389 /* BreathingConfig.swift in Sources */,
 				11111CC7DBFFC6FC2FB0AEDD /* BreathingEngine.swift in Sources */,

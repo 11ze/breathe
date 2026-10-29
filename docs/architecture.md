@@ -4,15 +4,17 @@
 
 ## 原生界面
 
-界面参照 `designs/breathe/` 原型，使用 SwiftUI/AppKit 实现。原型外层的场景导航和桌面背景不属于应用界面。
+界面按 `designs/breathe/` 原型一比一实现，使用 SwiftUI/AppKit。原型外层的场景导航、桌面背景和演示标签不属于应用界面。
 
-- 设置：默认 560×640，最小 540×560；顶部切换预设与通用，内容可滚动。预设摘要复用 `BreathingConfig`，自动模式每分钟刷新时段；无效自定义比例显示原有安全校验反馈。
-- 历史记录：默认 860×520，最小 800×400；保留全部 CSV 字段，状态显示“已完成”或“提前结束”。空状态仍可刷新和导入旧日志。
-- 菜单：保留原生 NSMenu 的键盘操作与系统高亮，标题区显示 Breathe 和当前呼吸阶段，预设子菜单标记当前选项。
+- 窗口：设置与历史使用隐藏系统标题栏与交通灯的自定义窗口（`BreatheWindow` + `fullSizeContentView`），系统红黄绿按钮隐藏，`BreatheWindowTitlebar` 绘制标题、品牌和交通灯。`BreatheHostingView` 把 `safeAreaInsets` 置零，避免系统标题栏把内容下推 32pt；`BreatheTrafficLightMonitor` 在事件派发前接管 47pt 标题栏：三个圆点执行窗口动作，其余区域拖动或双击缩放。窗口强制浅色外观以匹配设计稿调色板。
+- 设置：默认 540×640，最小 540×560；顶部为 `≋`/通用分类，内容可滚动。预设摘要复用 `BreathingConfig`，自动模式每分钟刷新时段；自定义比例使用文本输入，直接展示周期、实际时长与原有安全校验反馈，无效时隐藏摘要。
+- 历史记录：默认 860×560，最小 860×540；自定义表头与行，保留全部 CSV 字段，状态显示“已完成”或“提前结束”。空状态隐藏表头，仍可刷新和导入旧日志。原型中的“演示数据”徽标不进入原生界面，数据来自本地 CSV。
+- 菜单：`BreatheMenuController` 用 260pt 自定义面板替代 NSMenu，锚定状态栏按钮，包含品牌头部、动态开始/暂停、预设内联子菜单、静音与窗口入口；点击面板外、切换到其他应用或按 Esc 关闭。⌘B/⌘H/⌘,/⌘Q 由隐藏主菜单分发，Space/S 在面板显示时由事件监听处理。
+- 状态栏：自绘 `≋` 模板图标；会话中在图标后显示绿色等宽剩余时间。
 - 声音状态以 `AppSettings.soundEnabled` 为准。`AudioManager` 持续订阅配置（包括启动与文件重载）；菜单静音通过同一配置入口更新并保存，设置开关和音频状态即时同步。音频测试注入内存配置流，避免操作真实配置文件。
-- 颜色：系统背景与系统字体，`BreatheStyle` 提供随系统明暗模式调整的绿色强调色；呼吸球使用原型的绿色吸气、橙红色呼气、蓝色倒计时与琥珀色暂停。
+- 颜色与字体：`BreatheStyle` 固定设计稿的浅色调色板、边框和分组表面；呼吸球使用设计稿的绿色吸气、橙红色呼气、蓝色倒计时与琥珀色暂停，尺寸 240、球体 200、文字 36。
 
-原生验证：在正常尺寸与最小尺寸分别打开设置的两个标签、选择自定义比例并检查错误反馈；打开历史记录检查空状态与表格；启动练习检查菜单标题、暂停状态、呼吸球颜色与拖动。此类布局修改使用构建、现有业务测试及实际窗口检查，不使用字符串或视图结构快照作为业务测试。
+原生验证：设置页检查预设、自定义有效/无效、通用开关与日志路径；历史页检查表格、空状态、刷新与导入；菜单检查空闲/会话中、预设展开、静音与退出；呼吸球检查四种阶段颜色、暂停符号与拖动。此类布局修改使用构建、业务测试及离屏渲染截图检查，不使用视图结构快照作为业务测试。
 
 ## 单例关系
 
@@ -26,6 +28,7 @@ AppSettingsManager.shared ──── 配置持久化 (~/.config/breathe/settin
     │       ├── AudioManager.shared ──── NSSound 音频提示
     │       └── SessionLogger.shared ──── CSV 会话记录
     │
+    ├── BreatheMenuController.shared ── 状态栏菜单面板
     ├── BreathingPanelWindowController.shared ── 呼吸面板窗口
     ├── SettingsWindowController.shared ── 设置窗口
     ├── HistoryWindowController.shared ── 历史窗口
@@ -41,7 +44,7 @@ Sources/App/
 ├── AppDelegate.swift                         # 菜单栏 + 左右键分发 + 引擎回调
 │
 ├── Models/
-│   ├── Preset.swift                          # 预设枚举 (morning/midday/evening/night)
+│   ├── Preset.swift                          # 预设枚举（内部 ID 英文，界面显示中文）
 │   ├── BreathingConfig.swift                 # 会话配置 (比例、时长、取整算术)
 │   └── SessionRecord.swift                   # CSV 可记录的会话结果
 │
@@ -59,15 +62,19 @@ Sources/App/
 │   └── NotificationManager.swift             # 会话完成通知
 │
 ├── Views/
+│   ├── BreatheDesign.swift                   # 设计令牌、标题栏与通用控件
+│   ├── BreatheMenuView.swift                 # 状态栏菜单内容
 │   ├── BreathingPanelView.swift              # 呼吸面板主视图
 │   ├── BreathingCircle.swift                 # 动画呼吸圆环
 │   ├── SettingsView.swift                    # 设置视图 (预设/通用)
-│   └── HistoryView.swift                     # 会话历史表格
+│   └── HistoryView.swift                     # 会话历史自定义表格
 │
 └── WindowControllers/
+    ├── BreatheWindow.swift                   # 自定义窗口与交通灯点击接管
+    ├── BreatheMenuController.swift           # 自定义状态栏菜单面板
     ├── BreathingPanelWindowController.swift  # NSPanel 呼吸面板
-    ├── SettingsWindowController.swift        # NSWindow 设置窗口
-    └── HistoryWindowController.swift         # NSWindow 历史窗口
+    ├── SettingsWindowController.swift        # BreatheWindow 设置窗口
+    └── HistoryWindowController.swift         # BreatheWindow 历史窗口
 
 Tests/
 ├── RatioValidatorTests.swift                 # 安全验证边界条件

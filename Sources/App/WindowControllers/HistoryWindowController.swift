@@ -19,21 +19,34 @@ final class HistoryWindowController: NSObject {
         }
 
         let contentView = HistoryView()
-        let hostingView = NSHostingView(rootView: contentView)
+        let hostingView = BreatheHostingView(rootView: contentView)
 
-        window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 860, height: 520),
-            styleMask: [.titled, .closable, .resizable, .miniaturizable],
+        let newWindow = BreatheWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 860, height: 560),
+            styleMask: [.titled, .closable, .resizable, .miniaturizable, .fullSizeContentView],
             backing: .buffered,
             defer: false
         )
-        window?.title = "历史记录"
-        window?.contentMinSize = NSSize(width: 800, height: 400)
-        window?.contentView = hostingView
-        window?.isReleasedWhenClosed = false
-        window?.center()
+        newWindow.title = "历史记录"
+        newWindow.contentMinSize = NSSize(width: 860, height: 540)
+        newWindow.contentView = hostingView
+        newWindow.setContentSize(NSSize(width: 860, height: 560))
+        newWindow.isReleasedWhenClosed = false
+        newWindow.isOpaque = false
+        newWindow.backgroundColor = .clear
+        newWindow.hasShadow = true
+        newWindow.appearance = NSAppearance(named: .aqua)
+        newWindow.titleVisibility = .hidden
+        newWindow.titlebarAppearsTransparent = true
+        newWindow.titlebarSeparatorStyle = .none
+        newWindow.standardWindowButton(.closeButton)?.isHidden = true
+        newWindow.standardWindowButton(.miniaturizeButton)?.isHidden = true
+        newWindow.standardWindowButton(.zoomButton)?.isHidden = true
+        newWindow.center()
+        window = newWindow
 
-        window?.makeKeyAndOrderFront(nil)
+        newWindow.makeKeyAndOrderFront(nil)
+        newWindow.setContentSize(NSSize(width: 860, height: 560))
         NSApp.activate(ignoringOtherApps: true)
     }
 }

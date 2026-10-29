@@ -6,8 +6,23 @@ const presets = {
   evening: { inhale: 4, exhale: 6, minutes: 15 },
   night: { inhale: 3, exhale: 7, minutes: 20 }
 };
+// 内部值沿用英文 preset id；界面显示用 presetLabel 转中文。
+const presetLabels = {
+  auto: "自动",
+  morning: "晨间",
+  midday: "午间",
+  evening: "晚间",
+  night: "深夜",
+  custom: "自定义",
+  balanced: "晨间",
+  extended: "午间",
+  calm: "晚间",
+  unknown: "未知"
+};
+const presetLabel = (name) => presetLabels[name] || name;
 const state = { preset: "auto", custom: { inhale: 5, exhale: 5, minutes: 10 }, sound: true, logging: true, launch: false, scene: "settings", active: false, paused: false, phase: "idle", phaseElapsed: 0, countdown: 3, breaths: 0, remaining: 0, config: null, started: null, quit: false };
 // Fixture records only. No filesystem access, import, or real session data.
+// preset 列保留 CSV 的英文 id，renderHistory 显示中文。
 const records = [
   ["2026-10-29", "07:30:12", "morning", "5-5", "10:00", "10:00", 60, 100, true],
   ["2026-10-28", "22:15:08", "night", "3-7", "20:00", "20:00", 120, 100, true],
@@ -65,11 +80,12 @@ function renderSettings() {
   const custom = state.preset === "custom";
   const error = custom ? validationError() : "";
   $("preset-select").value = state.preset;
-  $("preset-name").textContent = state.preset === "auto" ? "自动" : custom ? "自定义" : state.preset;
+  const displayPreset = custom ? "自定义" : presetLabel(config.name);
+  $("preset-name").textContent = state.preset === "auto" ? "自动" : displayPreset;
   $("custom-settings").hidden = !custom;
   $("time-mapping").hidden = custom;
   $("preset-summary").hidden = !!error;
-  $("preset-summary").innerHTML = `<div><small>${state.preset === "auto" ? "当前预设" : "所选预设"}</small><strong style="font-size:15px">${custom ? "自定义" : config.name}</strong></div><div><small>吸气 / 呼气</small><strong>${config.inhale} / ${config.exhale}</strong><span class="unit">秒</span></div><div><small>练习时长</small><strong>${config.minutes}</strong><span class="unit">分钟</span></div>`;
+  $("preset-summary").innerHTML = `<div><small>${state.preset === "auto" ? "当前预设" : "所选预设"}</small><strong style="font-size:15px">${displayPreset}</strong></div><div><small>吸气 / 呼气</small><strong>${config.inhale} / ${config.exhale}</strong><span class="unit">秒</span></div><div><small>练习时长</small><strong>${config.minutes}</strong><span class="unit">分钟</span></div>`;
   $("validation").classList.toggle("error", !!error);
   $("validation").textContent = error || `周期 ${config.cycle} 秒，实际时长 ${Math.floor(config.total / 60)} 分 ${config.total % 60} 秒`;
   $("start-button").disabled = !state.active && !!error;
@@ -101,7 +117,7 @@ function renderHistory() {
     const row = document.createElement("tr");
     record.slice(0, 8).forEach((value, index) => {
       const cell = document.createElement("td");
-      cell.textContent = index === 7 ? `${value}%` : value;
+      cell.textContent = index === 2 ? presetLabel(value) : index === 7 ? `${value}%` : value;
       row.appendChild(cell);
     });
     const cell = document.createElement("td");

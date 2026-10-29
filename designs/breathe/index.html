@@ -33,10 +33,10 @@
       <button class="menu-row" id="preset-button" aria-expanded="false"><span>预设</span><span class="menu-end"><span id="preset-name">自动</span><span>›</span></span></button>
       <div class="preset-menu" id="preset-menu" hidden>
         <button data-preset="auto">自动（按时段）</button>
-        <button data-preset="morning">morning <span>5–5 · 10 分钟</span></button>
-        <button data-preset="midday">midday <span>4–6 · 20 分钟</span></button>
-        <button data-preset="evening">evening <span>4–6 · 15 分钟</span></button>
-        <button data-preset="night">night <span>3–7 · 20 分钟</span></button>
+        <button data-preset="morning">晨间 <span>5–5 · 10 分钟</span></button>
+        <button data-preset="midday">午间 <span>4–6 · 20 分钟</span></button>
+        <button data-preset="evening">晚间 <span>4–6 · 15 分钟</span></button>
+        <button data-preset="night">深夜 <span>3–7 · 20 分钟</span></button>
         <button data-preset="custom">自定义…</button>
       </div>
       <button class="menu-row" id="mute-button"><span id="mute-label">静音</span><kbd>S</kbd></button>
@@ -52,15 +52,15 @@
       <div class="tabs" role="tablist" aria-label="设置分类"><button id="preset-tab" role="tab" aria-selected="true">≋ <span>预设</span></button><button id="general-tab" role="tab" aria-selected="false">⚙ <span>通用</span></button></div>
       <div class="settings-content" id="preset-panel" role="tabpanel" aria-labelledby="preset-tab">
         <h2>呼吸节奏</h2><p class="section-description">选择适合当前时段的呼吸预设。</p>
-        <div class="group"><div class="setting-row"><label for="preset-select">默认预设</label><select id="preset-select"><option value="auto">自动（按时段）</option><option value="morning">morning</option><option value="midday">midday</option><option value="evening">evening</option><option value="night">night</option><option value="custom">自定义…</option></select></div><div class="preset-summary" id="preset-summary"></div></div>
+        <div class="group"><div class="setting-row"><label for="preset-select">默认预设</label><select id="preset-select"><option value="auto">自动（按时段）</option><option value="morning">晨间</option><option value="midday">午间</option><option value="evening">晚间</option><option value="night">深夜</option><option value="custom">自定义…</option></select></div><div class="preset-summary" id="preset-summary"></div></div>
         <div id="custom-settings" hidden>
           <h3>自定义比例</h3><div class="group custom-group"><div class="setting-row"><label for="inhale">吸气</label><div class="number-control"><input id="inhale" type="number" min="3" max="10" step="1" value="5"><span>秒</span></div></div><div class="setting-row"><label for="exhale">呼气</label><div class="number-control"><input id="exhale" type="number" min="3" max="10" step="1" value="5"><span>秒</span></div></div><div class="setting-row"><label for="duration">练习时长</label><div class="number-control"><input id="duration" type="number" min="1" max="60" step="1" value="10"><span>分钟</span></div></div></div><p class="validation" id="validation" role="status"></p>
         </div>
         <div id="time-mapping"><h3>时段映射</h3><div class="group mapping">
-          <div class="mapping-row"><span class="period-icon">☼</span><span>早晨 <small>06:00 – 12:00</small></span><span class="mapping-preset">morning</span><span>5–5 <small>10 分钟</small></span></div>
-          <div class="mapping-row"><span class="period-icon">☀</span><span>下午 <small>12:00 – 17:00</small></span><span class="mapping-preset">midday</span><span>4–6 <small>20 分钟</small></span></div>
-          <div class="mapping-row"><span class="period-icon">◒</span><span>傍晚 <small>17:00 – 22:00</small></span><span class="mapping-preset">evening</span><span>4–6 <small>15 分钟</small></span></div>
-          <div class="mapping-row"><span class="period-icon">☾</span><span>夜间 <small>22:00 – 06:00</small></span><span class="mapping-preset">night</span><span>3–7 <small>20 分钟</small></span></div>
+          <div class="mapping-row"><span class="period-icon">☼</span><span>早晨 <small>06:00 – 12:00</small></span><span class="mapping-preset">晨间</span><span>5–5 <small>10 分钟</small></span></div>
+          <div class="mapping-row"><span class="period-icon">☀</span><span>下午 <small>12:00 – 17:00</small></span><span class="mapping-preset">午间</span><span>4–6 <small>20 分钟</small></span></div>
+          <div class="mapping-row"><span class="period-icon">◒</span><span>傍晚 <small>17:00 – 22:00</small></span><span class="mapping-preset">晚间</span><span>4–6 <small>15 分钟</small></span></div>
+          <div class="mapping-row"><span class="period-icon">☾</span><span>夜间 <small>22:00 – 06:00</small></span><span class="mapping-preset">深夜</span><span>3–7 <small>20 分钟</small></span></div>
         </div><p class="footnote">全部预设均为每分钟 6 次呼吸。</p></div>
       </div>
       <div class="settings-content" id="general-panel" role="tabpanel" aria-labelledby="general-tab" hidden>

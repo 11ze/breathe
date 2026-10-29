@@ -97,4 +97,26 @@ final class PresetTests: XCTestCase {
         XCTAssertEqual(Preset.allCases.count, 4)
         XCTAssertEqual(Preset.allCases, [.morning, .midday, .evening, .night])
     }
+
+    // MARK: - 中文显示名
+
+    /// 界面统一显示中文；CSV 与 settings.json 继续使用英文 rawValue。
+    func testDisplayNameMapsCurrentAndLegacyIDs() {
+        XCTAssertEqual(Preset.morning.displayName, "晨间")
+        XCTAssertEqual(Preset.midday.displayName, "午间")
+        XCTAssertEqual(Preset.evening.displayName, "晚间")
+        XCTAssertEqual(Preset.night.displayName, "深夜")
+
+        XCTAssertEqual(Preset.displayName(for: "morning"), "晨间")
+        XCTAssertEqual(Preset.displayName(for: "midday"), "午间")
+        XCTAssertEqual(Preset.displayName(for: "evening"), "晚间")
+        XCTAssertEqual(Preset.displayName(for: "night"), "深夜")
+        XCTAssertEqual(Preset.displayName(for: "balanced"), "晨间")
+        XCTAssertEqual(Preset.displayName(for: "extended"), "午间")
+        XCTAssertEqual(Preset.displayName(for: "calm"), "晚间")
+        XCTAssertEqual(Preset.displayName(for: "custom"), "自定义")
+        XCTAssertEqual(Preset.displayName(for: "unknown"), "未知")
+        XCTAssertEqual(Preset.displayName(for: "weird"), "weird")
+    }
+
 }

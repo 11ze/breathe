@@ -17,7 +17,7 @@ struct BreathingPanelView: View {
         switch engine.phase {
         case .countdown(let n): return "\(n)"
         case .inhale, .exhale:  return "\(engine.currentPhaseSecondsRemaining)"
-        case .paused:           return "‖"
+        case .paused:           return "Ⅱ"
         default:                return nil
         }
     }

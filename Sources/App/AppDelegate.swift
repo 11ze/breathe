@@ -1,17 +1,11 @@
 import AppKit
 import Combine
-import SwiftUI
 
 @MainActor
 class AppDelegate: NSObject, NSApplicationDelegate {
     static weak var shared: AppDelegate?
     var statusItem: NSStatusItem?
 
-    // 菜单项引用（需要动态更新标题）
-    private var startMenuItem: NSMenuItem?
-    private var pauseMenuItem: NSMenuItem?
-    private var muteMenuItem: NSMenuItem?
-    private var presetSubmenu: NSMenu?
     private var cancellables = Set<AnyCancellable>()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -19,15 +13,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
         if let button = statusItem?.button {
-            if let icon = makeStatusBarIcon(isActive: false) {
-                button.image = icon
-            } else {
-                button.title = "◎"
-            }
+            button.image = BreatheStatusIcon.make()
+            button.imagePosition = .imageLeading
+            button.title = ""
             button.toolTip = "Breathe"
+            button.setAccessibilityLabel("Breathe")
+            button.target = self
+            button.action = #selector(statusBarButtonClicked(_:))
+            button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         }
 
-        buildMenu()
+        installMainMenu()
+        BreatheTrafficLightMonitor.install()
 
         // 同步自启动状态
         LaunchAtLoginManager.shared.sync(withSettings: AppSettingsManager.shared.settings.launchAtLogin)
@@ -35,117 +32,61 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // 配置引擎回调
         setupEngineCallbacks()
 
-        // 配置音频和通知
-        setupAudioAndNotifications()
+        // 初始化音频订阅（声音状态跟随配置）
+        _ = AudioManager.shared
 
         // 清理已删除的每日提醒功能遗留的系统通知
         NotificationManager.shared.removeLegacyDailyReminder()
     }
 
-    // MARK: - 菜单构建
+    // MARK: - 快捷键
 
-    private func buildMenu() {
-        guard let button = statusItem?.button else { return }
+    /// LSUIElement 应用不显示主菜单，仅保留快捷键分发。
+    private func installMainMenu() {
+        let mainMenu = NSMenu()
+        let appMenuItem = NSMenuItem(title: "Breathe", action: nil, keyEquivalent: "")
+        mainMenu.addItem(appMenuItem)
 
-        let menu = NSMenu()
-        menu.delegate = self
+        let appMenu = NSMenu(title: "Breathe")
+        appMenuItem.submenu = appMenu
 
-        let header = NSMenuItem()
-        header.view = NSHostingView(rootView: BreatheMenuHeader())
-        header.view?.frame = NSRect(x: 0, y: 0, width: 260, height: 46)
-        menu.addItem(header)
-
-        // 开始/停止呼吸
         let startItem = NSMenuItem(
             title: "开始呼吸",
             action: #selector(toggleBreathing),
             keyEquivalent: "b"
         )
         startItem.target = self
-        startMenuItem = startItem
-        menu.addItem(startItem)
+        appMenu.addItem(startItem)
 
-        // 暂停/继续（会话中显示）
-        let pauseItem = NSMenuItem(title: "暂停", action: #selector(togglePause), keyEquivalent: "")
-        pauseItem.target = self
-        pauseMenuItem = pauseItem
-        menu.addItem(pauseItem)
+        appMenu.addItem(.separator())
 
-        menu.addItem(NSMenuItem.separator())
-
-        // 预设子菜单
-        let presetItem = NSMenuItem(title: "预设", action: nil, keyEquivalent: "")
-        let presetMenu = NSMenu()
-
-        presetMenu.addItem(NSMenuItem(title: "自动 (按时段)", action: #selector(selectPresetAuto), keyEquivalent: ""))
-        presetMenu.addItem(NSMenuItem.separator())
-        for preset in Preset.allCases {
-            let item = NSMenuItem(
-                title: "\(preset.displayName) (\(preset.ratioString), \(preset.durationMinutes)分钟)",
-                action: #selector(selectPreset(_:)),
-                keyEquivalent: ""
-            )
-            item.representedObject = preset.rawValue
-            presetMenu.addItem(item)
-        }
-        presetMenu.addItem(NSMenuItem.separator())
-        presetMenu.addItem(NSMenuItem(title: "自定义...", action: #selector(selectPresetCustom), keyEquivalent: ""))
-        presetMenu.items.first?.representedObject = "auto"
-        presetMenu.items.last?.representedObject = "custom"
-        presetMenu.delegate = self
-
-        presetSubmenu = presetMenu
-        presetItem.submenu = presetMenu
-        menu.addItem(presetItem)
-
-        menu.addItem(NSMenuItem.separator())
-
-        // 静音
-        let muteItem = NSMenuItem(
-            title: "静音",
-            action: #selector(toggleMute),
-            keyEquivalent: "s"
-        )
-        muteItem.target = self
-        muteMenuItem = muteItem
-        menu.addItem(muteItem)
-
-        menu.addItem(NSMenuItem.separator())
-
-        // 历史记录
         let historyItem = NSMenuItem(
             title: "历史记录",
             action: #selector(openHistory),
             keyEquivalent: "h"
         )
         historyItem.target = self
-        historyItem.keyEquivalentModifierMask = [.command]
-        menu.addItem(historyItem)
+        appMenu.addItem(historyItem)
 
-        // 设置
         let settingsItem = NSMenuItem(
-            title: "设置...",
+            title: "设置…",
             action: #selector(openSettings),
             keyEquivalent: ","
         )
         settingsItem.target = self
-        menu.addItem(settingsItem)
+        appMenu.addItem(settingsItem)
 
-        menu.addItem(NSMenuItem.separator())
+        appMenu.addItem(.separator())
 
-        // 退出
         let quitItem = NSMenuItem(
             title: "退出 Breathe",
             action: #selector(quitApp),
             keyEquivalent: "q"
         )
         quitItem.target = self
-        menu.addItem(quitItem)
+        appMenu.addItem(quitItem)
 
-        button.menu = menu
-        button.action = #selector(statusBarButtonClicked(_:))
-        button.target = self
-        button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+        NSApp.mainMenu = mainMenu
     }
 
     // MARK: - 引擎回调
@@ -168,7 +109,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             AudioManager.shared.playExhale()
         }
 
-        engine.onSessionComplete = { [weak self] record in
+        engine.onSessionComplete = { record in
             // 隐藏呼吸球
             BreathingPanelWindowController.shared.hide()
 
@@ -182,164 +123,83 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    private func setupAudioAndNotifications() {
-        // 初始化订阅，后续音频状态随声音配置更新。
-        _ = AudioManager.shared
-    }
-
     // MARK: - 菜单动作
 
-    @objc private func toggleBreathing() {
+    @objc func toggleBreathing() {
+        BreatheMenuController.shared.hide()
         let engine = BreathingEngine.shared
         if engine.isSessionActive {
             engine.stop()
         } else {
+            let settings = AppSettingsManager.shared.settings
+            if settings.defaultPreset == "custom",
+               BreathingConfig(
+                   inhale: settings.customInhaleSeconds,
+                   exhale: settings.customExhaleSeconds,
+                   durationMinutes: settings.customDurationMinutes
+               ) == nil {
+                NSSound.beep()
+                return
+            }
             engine.start(config: BreathingConfig.fromCurrentSettings())
             BreathingPanelWindowController.shared.show()
         }
     }
 
-    // MARK: - 状态栏点击
-
-    @objc private func statusBarButtonClicked(_ sender: NSStatusBarButton) {
-        guard let menu = sender.menu else { return }
-        menu.popUp(positioning: nil, at: NSPoint(x: 0, y: sender.bounds.height + 5), in: sender)
-    }
-
-    @objc private func toggleMute() {
-        AudioManager.shared.toggleMute()
-    }
-
-    @objc private func togglePause() {
+    @objc func togglePause() {
         BreathingEngine.shared.togglePause()
     }
 
-    @objc private func selectPresetAuto() {
-        AppSettingsManager.shared.settings.defaultPreset = "auto"
-        AppSettingsManager.shared.save()
+    @objc func toggleMute() {
+        AudioManager.shared.toggleMute()
     }
 
-    @objc private func selectPreset(_ sender: NSMenuItem) {
-        guard let rawValue = sender.representedObject as? String else { return }
-        AppSettingsManager.shared.settings.defaultPreset = rawValue
+    @objc func selectPreset(_ value: String) {
+        AppSettingsManager.shared.settings.defaultPreset = value
         AppSettingsManager.shared.save()
+        if value == "custom" {
+            SettingsWindowController.shared.showWindow(tab: .preset)
+        }
     }
 
-    @objc private func selectPresetCustom() {
-        AppSettingsManager.shared.settings.defaultPreset = "custom"
-        AppSettingsManager.shared.save()
+    @objc func openSettings() {
         SettingsWindowController.shared.showWindow()
     }
 
-    @objc private func openSettings() {
-        SettingsWindowController.shared.showWindow()
-    }
-
-    @objc private func openHistory() {
+    @objc func openHistory() {
         HistoryWindowController.shared.showWindow()
     }
 
-    @objc private func quitApp() {
+    @objc func quitApp() {
         NSApplication.shared.terminate(nil)
     }
 
-    // MARK: - 辅助
+    // MARK: - 状态栏
+
+    @objc private func statusBarButtonClicked(_ sender: NSStatusBarButton) {
+        BreatheMenuController.shared.toggle(from: sender)
+    }
 
     /// 更新状态栏图标和剩余时长标题
     private func updateStatusBarContent(isActive: Bool, remaining: Int) {
         guard let button = statusItem?.button else { return }
-        button.image = makeStatusBarIcon(isActive: isActive)
-        button.title = isActive ? " \(formatTime(remaining))" : ""
+        guard isActive else {
+            button.attributedTitle = NSAttributedString(string: "")
+            return
+        }
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .semibold),
+            .foregroundColor: NSColor(srgbRed: 0.149, green: 0.451, blue: 0.310, alpha: 1)
+        ]
+        button.attributedTitle = NSAttributedString(
+            string: " " + formatTime(remaining),
+            attributes: attributes
+        )
     }
 
     private func formatTime(_ seconds: Int) -> String {
         let m = seconds / 60
         let s = seconds % 60
         return String(format: "%d:%02d", m, s)
-    }
-
-    /// 创建菜单栏图标（回退链：自定义资源 → SF Symbol）
-    private func makeStatusBarIcon(isActive: Bool) -> NSImage? {
-        if isActive {
-            guard let sfImage = NSImage(systemSymbolName: "wind", accessibilityDescription: "Breathe Active") else { return nil }
-            let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .bold)
-            guard let configured = sfImage.withSymbolConfiguration(config) else { return nil }
-            return tint(image: configured, with: .systemGreen)
-        } else {
-            if let image = NSImage(named: "MenuBarIcon") {
-                image.isTemplate = true
-                return image
-            }
-            guard let sfImage = NSImage(systemSymbolName: "wind", accessibilityDescription: "Breathe") else { return nil }
-            let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .regular)
-            sfImage.isTemplate = true
-            return sfImage.withSymbolConfiguration(config)
-        }
-    }
-
-    /// 用 sourceAtop 合成模式将 template 图像着色
-    private func tint(image: NSImage, with color: NSColor) -> NSImage {
-        let tinted = NSImage(size: image.size)
-        tinted.lockFocus()
-        let rect = NSRect(origin: .zero, size: image.size)
-        image.draw(in: rect)
-        color.withAlphaComponent(0.9).setFill()
-        rect.fill(using: .sourceAtop)
-        tinted.unlockFocus()
-        return tinted
-    }
-}
-
-// MARK: - NSMenuDelegate（动态更新菜单项标题）
-
-extension AppDelegate: NSMenuDelegate {
-    func menuNeedsUpdate(_ menu: NSMenu) {
-        let engine = BreathingEngine.shared
-        let isSessionActive = engine.isSessionActive
-
-        // 暂停项：会话中显示，空闲时隐藏
-        pauseMenuItem?.isHidden = !isSessionActive
-
-        if isSessionActive {
-            pauseMenuItem?.title = engine.isPaused ? "继续" : "暂停"
-            startMenuItem?.title = "停止呼吸"
-        } else {
-            startMenuItem?.title = "开始呼吸"
-        }
-
-        let isMuted = AudioManager.shared.isMuted
-        muteMenuItem?.title = isMuted ? "取消静音" : "静音"
-        muteMenuItem?.state = isMuted ? .on : .off
-
-        for item in presetSubmenu?.items ?? [] {
-            item.state = (item.representedObject as? String) == AppSettingsManager.shared.settings.defaultPreset ? .on : .off
-        }
-    }
-}
-
-private struct BreatheMenuHeader: View {
-    @ObservedObject private var engine = BreathingEngine.shared
-
-    var body: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "wind").foregroundColor(BreatheStyle.accent)
-            Text("Breathe").fontWeight(.semibold)
-            Spacer()
-            Text(status).font(.caption).foregroundColor(.secondary)
-        }
-        .font(.system(size: 13))
-        .padding(.horizontal, 16)
-        .frame(width: 260, height: 46)
-        .accessibilityElement(children: .combine)
-    }
-
-    private var status: String {
-        switch engine.phase {
-        case .idle: return "准备就绪"
-        case .countdown: return "准备开始"
-        case .inhale: return "吸气"
-        case .exhale: return "呼气"
-        case .paused: return "已暂停"
-        }
     }
 }

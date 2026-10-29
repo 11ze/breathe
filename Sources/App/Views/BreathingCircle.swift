@@ -1,7 +1,6 @@
 import SwiftUI
 
-/// 动画呼吸圆环 — GUI 版本的标志性视觉元素
-/// 替代 CLI 的文字进度条，用缩放 + 渐变表示呼吸阶段
+/// 动画呼吸圆环 — 按设计稿的尺寸、配色与缩放曲线实现。
 struct BreathingCircle: View {
     let phase: BreathingPhase
     let progress: Double // 0.0~1.0
@@ -18,59 +17,62 @@ struct BreathingCircle: View {
             Circle()
                 .fill(
                     RadialGradient(
-                        colors: [colors.0.opacity(0.3), Color.clear],
+                        stops: [
+                            .init(color: Color(hex: 0x75B99B, opacity: 0.27), location: 0),
+                            .init(color: Color.clear, location: 0.68)
+                        ],
                         center: .center,
-                        startRadius: baseSize * scale * 0.3,
-                        endRadius: baseSize * scale * 0.6
+                        startRadius: 0,
+                        endRadius: 108
                     )
                 )
-                .frame(width: baseSize * 1.2, height: baseSize * 1.2)
+                .frame(width: 216, height: 216)
 
-            // 主圆环
+            // 主圆球
             Circle()
                 .fill(
                     RadialGradient(
                         colors: [colors.0, colors.1],
-                        center: .center,
+                        center: UnitPoint(x: 0.42, y: 0.36),
                         startRadius: 0,
-                        endRadius: baseSize * scale * 0.5
+                        endRadius: baseSize * scale * 0.72
                     )
+                )
+                .overlay(
+                    Circle()
+                        .strokeBorder(Color.white.opacity(0.19), lineWidth: 20)
+                        .blur(radius: 10)
+                        .clipShape(Circle())
                 )
                 .frame(width: baseSize * scale, height: baseSize * scale)
 
             // 秒数文字
             if let text = secondsText {
                 Text(text)
-                    .font(.system(size: 36, weight: .bold, design: .rounded))
+                    .font(.system(size: 36, weight: .bold))
                     .foregroundColor(.white)
-                    .shadow(color: .black.opacity(0.3), radius: 2)
+                    .shadow(color: .black.opacity(0.27), radius: 4, y: 1)
             }
         }
-        .animation(.easeInOut(duration: 0.15), value: progress)
-        .animation(.easeInOut(duration: 0.3), value: phase)
-        .drawingGroup() // 将 20Hz 渐变圆环渲染卸载到 GPU
+        .frame(width: 240, height: 240)
+        .drawingGroup() // 将 20Hz 渐变圆球渲染卸载到 GPU
     }
 
     /// 根据阶段返回 (缩放比例, 渐变颜色对)
     private var stateStyle: (CGFloat, (Color, Color)) {
         switch phase {
         case .idle:
-            // 30% 灰色，静止
             return (0.3, (Color.gray.opacity(0.6), Color.gray.opacity(0.3)))
         case .countdown:
-            // 50% 蓝色脉动
-            return (0.5, (Color(red: 0.44, green: 0.66, blue: 0.85), Color(red: 0.56, green: 0.75, blue: 0.86).opacity(0.5)))
+            return (0.5, (Color(hex: 0x71A8D9), Color(hex: 0x8FC0DC, opacity: 0.53)))
         case .inhale:
-            // 30% → 100% 绿色渐变（吸气膨胀）
             let scale = CGFloat(0.3 + 0.7 * progress)
-            return (scale, (Color(red: 0.29, green: 0.79, blue: 0.52), Color(red: 0.42, green: 0.77, blue: 0.68).opacity(0.5)))
+            return (scale, (Color(hex: 0x67D79C), Color(hex: 0x58BCA3, opacity: 0.48)))
         case .exhale:
-            // 100% → 30% 红色渐变（呼气收缩），与吸气的绿色形成冷暖对比
             let scale = CGFloat(1.0 - 0.7 * progress)
-            return (scale, (Color(red: 0.92, green: 0.55, blue: 0.44), Color(red: 0.91, green: 0.67, blue: 0.47).opacity(0.5)))
+            return (scale, (Color(hex: 0xEA8C6F), Color(hex: 0xE8AB79, opacity: 0.53)))
         case .paused:
-            // 50% 琥珀色（暂停）
-            return (0.5, (Color(red: 0.87, green: 0.64, blue: 0.31), Color(red: 0.91, green: 0.80, blue: 0.47).opacity(0.5)))
+            return (0.5, (Color(hex: 0xDDA44F), Color(hex: 0xE9CB78, opacity: 0.53)))
         }
     }
 }
@@ -84,9 +86,9 @@ struct BreathingCircle_Previews: PreviewProvider {
             BreathingCircle(phase: .countdown(3), progress: 0.5, secondsText: "3")
             BreathingCircle(phase: .inhale, progress: 0.7, secondsText: "2")
             BreathingCircle(phase: .exhale, progress: 0.4, secondsText: "4")
-            BreathingCircle(phase: .paused(.inhale), progress: 0.5, secondsText: "‖")
+            BreathingCircle(phase: .paused(.inhale), progress: 0.5, secondsText: "Ⅱ")
         }
         .frame(width: 300, height: 800)
-        .background(Color.black)
+        .background(Color(hex: 0xDDE5DF))
     }
 }

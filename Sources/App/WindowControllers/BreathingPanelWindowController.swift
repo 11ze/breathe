@@ -40,7 +40,7 @@ final class BreathingPanelWindowController: NSWindowController {
         panel.becomesKeyOnlyIfNeeded = false
         panel.backgroundColor = .clear
         panel.isOpaque = false
-        panel.hasShadow = true
+        panel.hasShadow = false
         panel.titleVisibility = .hidden
         panel.titlebarAppearsTransparent = true
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]

@@ -52,13 +52,26 @@ enum Preset: String, CaseIterable, Codable {
         60.0 / Double(cycleSeconds)
     }
 
-    /// 人类可读的显示名
+    /// 界面显示名。CSV 与配置文件仍使用英文 rawValue。
     var displayName: String {
         switch self {
-        case .morning: return "morning"
-        case .midday: return "midday"
-        case .evening: return "evening"
-        case .night: return "night"
+        case .morning: return "晨间"
+        case .midday: return "午间"
+        case .evening: return "晚间"
+        case .night: return "深夜"
+        }
+    }
+
+    /// 把历史记录与配置中的英文预设名转成中文显示名。
+    /// 兼容旧版 CSV 的 balanced / calm / extended。
+    static func displayName(for rawValue: String) -> String {
+        switch rawValue {
+        case "balanced": return Preset.morning.displayName
+        case "extended": return Preset.midday.displayName
+        case "calm": return Preset.evening.displayName
+        case "custom": return "自定义"
+        case "unknown": return "未知"
+        default: return Preset(rawValue: rawValue)?.displayName ?? rawValue
         }
     }
 
