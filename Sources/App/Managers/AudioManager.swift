@@ -1,4 +1,5 @@
 import AppKit
+import Combine
 
 /// 音频管理器 — 使用 NSSound 播放系统音效
 /// 移植自 breathe-cli 的 afplay -v 0.3 调用
@@ -16,16 +17,34 @@ final class AudioManager: ObservableObject {
     /// 呼气音效（Pop = CLI 的 /System/Library/Sounds/Pop.aiff）
     private let exhaleSoundName = "Pop"
 
-    private init() {}
+    private let updateSoundEnabled: (Bool) -> Void
+    private var soundSubscription: AnyCancellable?
+
+    private convenience init() {
+        self.init(
+            soundEnabled: AppSettingsManager.shared.$settings.map(\.soundEnabled).eraseToAnyPublisher(),
+            updateSoundEnabled: { enabled in
+                AppSettingsManager.shared.settings.soundEnabled = enabled
+                AppSettingsManager.shared.save()
+            }
+        )
+    }
+
+    init(soundEnabled: AnyPublisher<Bool, Never>, updateSoundEnabled: @escaping (Bool) -> Void) {
+        self.updateSoundEnabled = updateSoundEnabled
+        soundSubscription = soundEnabled.removeDuplicates().sink { [weak self] enabled in
+            self?.isMuted = !enabled
+        }
+    }
 
     /// 切换静音
     func toggleMute() {
-        isMuted.toggle()
+        setMuted(!isMuted)
     }
 
     /// 设置静音状态
     func setMuted(_ muted: Bool) {
-        isMuted = muted
+        updateSoundEnabled(!muted)
     }
 
     /// 播放吸气音效

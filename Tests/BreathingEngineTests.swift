@@ -1,3 +1,4 @@
+import Combine
 import XCTest
 @testable import Breathe
 
@@ -108,19 +109,31 @@ final class BreathingEngineTests: XCTestCase {
     // MARK: - AudioManager 集成
 
     func testAudioManagerToggleMute() {
-        let audioManager = AudioManager.shared
-        let wasMuted = audioManager.isMuted
+        let soundEnabled = CurrentValueSubject<Bool, Never>(true)
+        let audioManager = AudioManager(
+            soundEnabled: soundEnabled.eraseToAnyPublisher(),
+            updateSoundEnabled: { soundEnabled.send($0) }
+        )
         audioManager.toggleMute()
-        XCTAssertEqual(audioManager.isMuted, !wasMuted)
-        audioManager.toggleMute() // 恢复
+        XCTAssertTrue(audioManager.isMuted)
+        XCTAssertFalse(soundEnabled.value, "菜单静音应同步关闭设置中的声音提示")
+        audioManager.toggleMute()
+        XCTAssertFalse(audioManager.isMuted)
+        XCTAssertTrue(soundEnabled.value, "取消静音应同步开启设置中的声音提示")
     }
 
     func testAudioManagerSetMuted() {
-        let audioManager = AudioManager.shared
+        let soundEnabled = CurrentValueSubject<Bool, Never>(true)
+        let audioManager = AudioManager(
+            soundEnabled: soundEnabled.eraseToAnyPublisher(),
+            updateSoundEnabled: { soundEnabled.send($0) }
+        )
         audioManager.setMuted(true)
         XCTAssertTrue(audioManager.isMuted)
+        XCTAssertFalse(soundEnabled.value)
         audioManager.setMuted(false)
         XCTAssertFalse(audioManager.isMuted)
+        XCTAssertTrue(soundEnabled.value)
     }
 
     // MARK: - BreathingConfig 集成

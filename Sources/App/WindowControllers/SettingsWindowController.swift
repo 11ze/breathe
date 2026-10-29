@@ -8,13 +8,14 @@ final class SettingsWindowController: NSWindowController {
     private init() {
         let contentView = SettingsView()
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 450, height: 350),
+            contentRect: NSRect(x: 0, y: 0, width: 560, height: 640),
             styleMask: [.titled, .closable, .resizable, .miniaturizable],
             backing: .buffered,
             defer: false
         )
         window.center()
-        window.title = "Breathe 设置"
+        window.title = "设置"
+        window.contentMinSize = NSSize(width: 540, height: 560)
         window.contentView = NSHostingView(rootView: contentView)
         window.isReleasedWhenClosed = false
 

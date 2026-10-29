@@ -24,6 +24,7 @@
 		716FF4DB0EBC8E59680754F4 /* TimeOfDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210FE12C45115A2009D72487 /* TimeOfDay.swift */; };
 		78D85B02423A8EAD6EDAE56E /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD90835F015617E89BBCA96 /* NotificationManager.swift */; };
 		7A7A1B5504AD0CFF6853C735 /* SessionLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7367B98F283F5CD05E9C82 /* SessionLogger.swift */; };
+		7D55EFA5AD5F478D8DB1072B /* AudioManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91F049694C846E0927BA483 /* AudioManagerTests.swift */; };
 		899DF036A84EA016F13D40CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE5E420EC5A6D6A8D36E2F3 /* AppDelegate.swift */; };
 		89C25D5AD8D8049754CA23B0 /* BreathingPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93473953D606736CC8248084 /* BreathingPanelView.swift */; };
 		9CD127CCAD0BAB7F4FC0A549 /* SettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0807B159CAF60EC334FBAB93 /* SettingsWindowController.swift */; };
@@ -78,6 +79,7 @@
 		C3B86DEEE9A9C05F8FFBD4D0 /* Breathe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Breathe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4BE827E152A257975C9F1B1 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		C7100736003BF5786081E696 /* BreathingConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingConfig.swift; sourceTree = "<group>"; };
+		C91F049694C846E0927BA483 /* AudioManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManagerTests.swift; sourceTree = "<group>"; };
 		CAE541BCAE9699B54AEA4222 /* BreatheApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreatheApp.swift; sourceTree = "<group>"; };
 		CF8A96B4E73308B83FC0D2A3 /* BreathingEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingEngineTests.swift; sourceTree = "<group>"; };
 		DBA6C7665E0742443F79874B /* RatioValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatioValidatorTests.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				903B4A0C7313747E2000A0DA /* AppSettingsTests.swift */,
+				C91F049694C846E0927BA483 /* AudioManagerTests.swift */,
 				2EDFFBA996DCE1E524A82EA5 /* BreathingConfigTests.swift */,
 				CF8A96B4E73308B83FC0D2A3 /* BreathingEngineTests.swift */,
 				EFE246DE2D44DDBD99D8AD15 /* LaunchAtLoginManagerTests.swift */,
@@ -330,6 +333,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1293184E0107893159A09C8C /* AppSettingsTests.swift in Sources */,
+				7D55EFA5AD5F478D8DB1072B /* AudioManagerTests.swift in Sources */,
 				E74C7A7539A48310AD501567 /* BreathingConfigTests.swift in Sources */,
 				A8BB27AE0D42EAA99140B646 /* BreathingEngineTests.swift in Sources */,
 				3857AA01100ADECD6B278FD4 /* LaunchAtLoginManagerTests.swift in Sources */,

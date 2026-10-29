@@ -6,14 +6,43 @@ struct HistoryView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            HStack {
+                VStack(alignment: .leading, spacing: 7) {
+                    Text("会话记录")
+                        .font(.system(size: 20, weight: .semibold))
+                    Text("每一次呼吸练习，都留在这里。")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                Spacer()
+            }
+            .padding(26)
+
+            Divider()
+            toolbar
+            Divider()
+
             if records.isEmpty {
                 emptyView
             } else {
-                toolbar
                 tableView
             }
+
+            Divider()
+            HStack {
+                Text("CSV · 与 breathe-cli 兼容")
+                Spacer()
+                Text("~/.config/breathe/sessions.csv")
+                    .textSelection(.enabled)
+            }
+            .font(.caption)
+            .foregroundColor(.secondary)
+            .padding(.horizontal, 24)
+            .padding(.vertical, 13)
         }
-        .frame(minWidth: 600, minHeight: 400)
+        .frame(minWidth: 800, minHeight: 400)
+        .background(BreatheStyle.background)
+        .tint(BreatheStyle.accent)
         .onAppear { loadRecords() }
     }
 
@@ -42,9 +71,8 @@ struct HistoryView: View {
             Button("刷新") { loadRecords() }
             Button("导入旧版日志") { importLegacy() }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 8)
-        .background(Color(nsColor: .controlBackgroundColor))
+        .padding(.horizontal, 24)
+        .padding(.vertical, 10)
     }
 
     // MARK: - 表格
@@ -55,57 +83,62 @@ struct HistoryView: View {
                 Text(record.date)
                     .font(.caption.monospacedDigit())
             }
-            .width(min: 90)
+            .width(min: 90, ideal: 95, max: 110)
 
             TableColumn("时间") { record in
                 Text(record.time)
                     .font(.caption.monospacedDigit())
             }
-            .width(min: 70)
+            .width(min: 65, ideal: 70, max: 85)
 
             TableColumn("预设") { record in
                 Text(record.preset)
                     .font(.caption)
+                    .foregroundColor(BreatheStyle.accent)
             }
-            .width(min: 70)
+            .width(min: 65, ideal: 75, max: 95)
 
             TableColumn("比例") { record in
                 Text(record.ratio)
                     .font(.caption)
             }
-            .width(min: 50)
+            .width(min: 45, ideal: 50, max: 65)
 
             TableColumn("目标") { record in
                 Text("\(record.durationTargetSeconds / 60):\(String(format: "%02d", record.durationTargetSeconds % 60))")
                     .font(.caption.monospacedDigit())
             }
-            .width(min: 50)
+            .width(min: 50, ideal: 55, max: 65)
 
             TableColumn("实际") { record in
                 Text("\(record.durationActualSeconds / 60):\(String(format: "%02d", record.durationActualSeconds % 60))")
                     .font(.caption.monospacedDigit())
             }
-            .width(min: 50)
+            .width(min: 50, ideal: 55, max: 65)
 
             TableColumn("呼吸") { record in
                 Text("\(record.breaths)")
                     .font(.caption)
             }
-            .width(min: 40)
+            .width(min: 40, ideal: 45, max: 55)
 
             TableColumn("完成") { record in
                 Text("\(record.completionPercent)%")
                     .font(.caption)
                     .foregroundColor(record.completionPercent == 100 ? .green : .orange)
             }
-            .width(min: 45)
+            .width(min: 45, ideal: 50, max: 60)
 
             TableColumn("状态") { record in
-                Text(record.status == "completed" ? "✓" : "✗")
-                    .font(.caption)
-                    .foregroundColor(record.status == "completed" ? .green : .red)
+                Text(record.status == "completed" ? "已完成" : "提前结束")
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundColor(record.status == "completed" ? BreatheStyle.accent : .orange)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 3)
+                    .background((record.status == "completed" ? BreatheStyle.accent : .orange).opacity(0.10))
+                    .cornerRadius(4)
             }
-            .width(min: 30)
+            .width(min: 75, ideal: 80, max: 95)
         }
     }
 

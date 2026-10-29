@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Breathe · macOS 交互原型</title>
+  <!-- 设计依据：AppDelegate、SettingsView、HistoryView、BreathingCircle。
+       保留菜单栏应用结构；轻灰窗口、系统字体、绿色重点色。历史数据为演示数据。
+       外层导航属于原型工具；不增加应用功能，不访问系统配置或用户日志。 -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="preview-header">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">≋</span><div><h1>Breathe</h1><p>macOS · 交互原型</p></div></div>
+    <nav class="scene-nav" aria-label="原型场景">
+      <button data-scene="desktop">呼吸桌面</button>
+      <button data-scene="settings" aria-pressed="true">设置</button>
+      <button data-scene="history">历史记录</button>
+    </nav>
+    <span class="version">基于现有功能 <span class="live-dot"></span></span>
+  </header>
+  <main class="desktop" id="desktop" data-screen-label="macOS 桌面">
+    <div class="system-bar">
+      <div class="system-left"><span class="apple" aria-hidden="true">●</span><strong>访达</strong><span>文件</span><span>编辑</span><span>显示</span><span>前往</span><span>窗口</span><span>帮助</span></div>
+      <div class="system-right"><button id="status-button" aria-label="Breathe 菜单栏" aria-expanded="true"><span class="wind">≋</span><span id="remaining"></span></button><span class="system-clock" id="clock"></span></div>
+    </div>
+
+    <section class="app-menu" id="app-menu" aria-label="Breathe 菜单" data-screen-label="菜单栏菜单">
+      <div class="menu-brand"><span class="mini-mark">≋</span><strong>Breathe</strong><span id="menu-state">准备就绪</span></div>
+      <button class="menu-row start-row" id="start-button"><span id="start-label">开始呼吸</span><kbd>⌘ B</kbd></button>
+      <button class="menu-row" id="pause-button" hidden><span id="pause-label">暂停</span><kbd>Space</kbd></button>
+      <div class="menu-rule"></div>
+      <button class="menu-row" id="preset-button" aria-expanded="false"><span>预设</span><span class="menu-end"><span id="preset-name">自动</span><span>›</span></span></button>
+      <div class="preset-menu" id="preset-menu" hidden>
+        <button data-preset="auto">自动（按时段）</button>
+        <button data-preset="morning">morning <span>5–5 · 10 分钟</span></button>
+        <button data-preset="midday">midday <span>4–6 · 20 分钟</span></button>
+        <button data-preset="evening">evening <span>4–6 · 15 分钟</span></button>
+        <button data-preset="night">night <span>3–7 · 20 分钟</span></button>
+        <button data-preset="custom">自定义…</button>
+      </div>
+      <button class="menu-row" id="mute-button"><span id="mute-label">静音</span><kbd>S</kbd></button>
+      <div class="menu-rule"></div>
+      <button class="menu-row" data-open="history"><span>历史记录</span><kbd>⌘ H</kbd></button>
+      <button class="menu-row" data-open="settings"><span>设置…</span><kbd>⌘ ,</kbd></button>
+      <div class="menu-rule"></div>
+      <button class="menu-row" id="quit-button"><span>退出 Breathe</span><kbd>⌘ Q</kbd></button>
+    </section>
+
+    <section class="window settings-window" id="settings-window" aria-label="Breathe 设置" data-screen-label="设置">
+      <div class="titlebar"><div class="traffic"><button data-close="settings" aria-label="关闭设置"></button><span></span><span></span></div><strong>设置</strong><span class="title-end">Breathe</span></div>
+      <div class="tabs" role="tablist" aria-label="设置分类"><button id="preset-tab" role="tab" aria-selected="true">≋ <span>预设</span></button><button id="general-tab" role="tab" aria-selected="false">⚙ <span>通用</span></button></div>
+      <div class="settings-content" id="preset-panel" role="tabpanel" aria-labelledby="preset-tab">
+        <h2>呼吸节奏</h2><p class="section-description">选择适合当前时段的呼吸预设。</p>
+        <div class="group"><div class="setting-row"><label for="preset-select">默认预设</label><select id="preset-select"><option value="auto">自动（按时段）</option><option value="morning">morning</option><option value="midday">midday</option><option value="evening">evening</option><option value="night">night</option><option value="custom">自定义…</option></select></div><div class="preset-summary" id="preset-summary"></div></div>
+        <div id="custom-settings" hidden>
+          <h3>自定义比例</h3><div class="group custom-group"><div class="setting-row"><label for="inhale">吸气</label><div class="number-control"><input id="inhale" type="number" min="3" max="10" step="1" value="5"><span>秒</span></div></div><div class="setting-row"><label for="exhale">呼气</label><div class="number-control"><input id="exhale" type="number" min="3" max="10" step="1" value="5"><span>秒</span></div></div><div class="setting-row"><label for="duration">练习时长</label><div class="number-control"><input id="duration" type="number" min="1" max="60" step="1" value="10"><span>分钟</span></div></div></div><p class="validation" id="validation" role="status"></p>
+        </div>
+        <div id="time-mapping"><h3>时段映射</h3><div class="group mapping">
+          <div class="mapping-row"><span class="period-icon">☼</span><span>早晨 <small>06:00 – 12:00</small></span><span class="mapping-preset">morning</span><span>5–5 <small>10 分钟</small></span></div>
+          <div class="mapping-row"><span class="period-icon">☀</span><span>下午 <small>12:00 – 17:00</small></span><span class="mapping-preset">midday</span><span>4–6 <small>20 分钟</small></span></div>
+          <div class="mapping-row"><span class="period-icon">◒</span><span>傍晚 <small>17:00 – 22:00</small></span><span class="mapping-preset">evening</span><span>4–6 <small>15 分钟</small></span></div>
+          <div class="mapping-row"><span class="period-icon">☾</span><span>夜间 <small>22:00 – 06:00</small></span><span class="mapping-preset">night</span><span>3–7 <small>20 分钟</small></span></div>
+        </div><p class="footnote">全部预设均为每分钟 6 次呼吸。</p></div>
+      </div>
+      <div class="settings-content" id="general-panel" role="tabpanel" aria-labelledby="general-tab" hidden>
+        <h2>通用</h2><p class="section-description">声音、会话记录与启动选项。</p>
+        <h3>音频</h3><div class="group"><label class="setting-row" for="sound"><span>声音提示<small>在吸气和呼气开始时播放提示音</small></span><input class="switch" id="sound" type="checkbox" role="switch" checked></label></div>
+        <h3>数据</h3><div class="group"><label class="setting-row" for="logging"><span>记录会话日志</span><input class="switch" id="logging" type="checkbox" role="switch" checked></label><div class="log-path" id="log-path"><span>日志路径</span><code>~/.config/breathe/sessions.csv</code></div></div>
+        <h3>启动</h3><div class="group"><label class="setting-row" for="launch"><span>开机自动启动<small>登录 macOS 时启动 Breathe</small></span><input class="switch" id="launch" type="checkbox" role="switch"></label></div>
+        <p class="footnote">演示开关仅保存在当前页面，不会更改系统设置。</p>
+      </div>
+    </section>
+
+    <section class="window history-window" id="history-window" aria-label="会话历史" data-screen-label="历史记录" hidden>
+      <div class="titlebar"><div class="traffic"><button data-close="history" aria-label="关闭历史记录"></button><span></span><span></span></div><strong>历史记录</strong><span class="title-end">Breathe</span></div>
+      <div class="history-heading"><div><h2>会话记录</h2><p>每一次呼吸练习，都留在这里。</p></div><span class="demo-badge">演示数据</span></div>
+      <div class="history-toolbar"><span id="record-count"></span><div><button class="native-button" id="refresh-button">刷新</button><button class="native-button" id="import-button">导入旧版日志</button></div></div>
+      <div class="table-scroll"><table><thead><tr><th>日期</th><th>时间</th><th>预设</th><th>比例</th><th>目标</th><th>实际</th><th>呼吸</th><th>完成</th><th>状态</th></tr></thead><tbody id="history-body"></tbody></table></div>
+      <div class="empty-history" id="empty-history" hidden><span>◷</span><p>暂无会话记录</p></div>
+      <div class="history-footer"><span>CSV · 与 breathe-cli 兼容</span><span>仅展示浏览器内的演示记录</span></div>
+    </section>
+
+    <div class="orb-container" id="orb-container" aria-label="可拖动的呼吸球" hidden><div class="orb-glow"></div><div class="orb" id="orb"><span id="orb-text"></span></div></div>
+    <div class="desktop-hint" id="desktop-hint" hidden><span>≋</span><p>点击右上角的 Breathe，开始呼吸。</p></div>
+    <div class="quit-message" id="quit-message" hidden><span>≋</span><h2>Breathe 已退出</h2><button class="native-button" id="restart-button">重新打开演示</button></div>
+    <div class="toast" id="toast" role="status" hidden></div>
+  </main>
+  <footer class="preview-footer"><span><span class="live-dot"></span>可交互 · 点击菜单栏开始，呼吸球可拖动</span><span>浏览器演示，不读取本地数据</span></footer>
+  <script src="prototype.js"></script>
+</body>
+</html>

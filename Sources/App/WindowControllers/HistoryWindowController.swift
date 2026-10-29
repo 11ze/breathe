@@ -22,12 +22,13 @@ final class HistoryWindowController: NSObject {
         let hostingView = NSHostingView(rootView: contentView)
 
         window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 650, height: 400),
+            contentRect: NSRect(x: 0, y: 0, width: 860, height: 520),
             styleMask: [.titled, .closable, .resizable, .miniaturizable],
             backing: .buffered,
             defer: false
         )
-        window?.title = "呼吸历史"
+        window?.title = "历史记录"
+        window?.contentMinSize = NSSize(width: 800, height: 400)
         window?.contentView = hostingView
         window?.isReleasedWhenClosed = false
         window?.center()

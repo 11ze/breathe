@@ -50,6 +50,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let menu = NSMenu()
         menu.delegate = self
 
+        let header = NSMenuItem()
+        header.view = NSHostingView(rootView: BreatheMenuHeader())
+        header.view?.frame = NSRect(x: 0, y: 0, width: 260, height: 46)
+        menu.addItem(header)
+
         // 开始/停止呼吸
         let startItem = NSMenuItem(
             title: "开始呼吸",
@@ -85,6 +90,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         presetMenu.addItem(NSMenuItem.separator())
         presetMenu.addItem(NSMenuItem(title: "自定义...", action: #selector(selectPresetCustom), keyEquivalent: ""))
+        presetMenu.items.first?.representedObject = "auto"
+        presetMenu.items.last?.representedObject = "custom"
+        presetMenu.delegate = self
 
         presetSubmenu = presetMenu
         presetItem.submenu = presetMenu
@@ -127,7 +135,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // 退出
         let quitItem = NSMenuItem(
-            title: "退出",
+            title: "退出 Breathe",
             action: #selector(quitApp),
             keyEquivalent: "q"
         )
@@ -175,8 +183,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func setupAudioAndNotifications() {
-        let settings = AppSettingsManager.shared.settings
-        AudioManager.shared.setMuted(!settings.soundEnabled)
+        // 初始化订阅，后续音频状态随声音配置更新。
+        _ = AudioManager.shared
     }
 
     // MARK: - 菜单动作
@@ -302,5 +310,36 @@ extension AppDelegate: NSMenuDelegate {
         let isMuted = AudioManager.shared.isMuted
         muteMenuItem?.title = isMuted ? "取消静音" : "静音"
         muteMenuItem?.state = isMuted ? .on : .off
+
+        for item in presetSubmenu?.items ?? [] {
+            item.state = (item.representedObject as? String) == AppSettingsManager.shared.settings.defaultPreset ? .on : .off
+        }
+    }
+}
+
+private struct BreatheMenuHeader: View {
+    @ObservedObject private var engine = BreathingEngine.shared
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "wind").foregroundColor(BreatheStyle.accent)
+            Text("Breathe").fontWeight(.semibold)
+            Spacer()
+            Text(status).font(.caption).foregroundColor(.secondary)
+        }
+        .font(.system(size: 13))
+        .padding(.horizontal, 16)
+        .frame(width: 260, height: 46)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var status: String {
+        switch engine.phase {
+        case .idle: return "准备就绪"
+        case .countdown: return "准备开始"
+        case .inhale: return "吸气"
+        case .exhale: return "呼气"
+        case .paused: return "已暂停"
+        }
     }
 }
