@@ -257,7 +257,7 @@ struct BreathePushButton: View {
                 .font(.system(size: 11))
                 .foregroundColor(BreatheStyle.ink)
                 .padding(.horizontal, 11)
-                .frame(height: 24)
+                .frame(height: 25)
                 .background(
                     RoundedRectangle(cornerRadius: 5, style: .continuous)
                         .fill(hovering ? BreatheStyle.buttonHover : Color.white)

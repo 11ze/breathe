@@ -29,30 +29,32 @@ struct BreathingCircle: View {
                 .frame(width: 216, height: 216)
 
             // 主圆球
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [colors.0, colors.1],
-                        center: UnitPoint(x: 0.42, y: 0.36),
-                        startRadius: 0,
-                        endRadius: baseSize * scale * 0.72
+            ZStack {
+                Circle()
+                    .fill(
+                        RadialGradient(
+                            colors: [colors.0, colors.1],
+                            center: UnitPoint(x: 0.42, y: 0.36),
+                            startRadius: 0,
+                            endRadius: baseSize * 0.75 * hypot(0.58, 0.64)
+                        )
                     )
-                )
-                .overlay(
-                    Circle()
-                        .strokeBorder(Color.white.opacity(0.19), lineWidth: 20)
-                        .blur(radius: 10)
-                        .clipShape(Circle())
-                )
-                .frame(width: baseSize * scale, height: baseSize * scale)
+                    .overlay(
+                        Circle()
+                            .strokeBorder(Color.white.opacity(0.19), lineWidth: 20)
+                            .blur(radius: 10)
+                            .clipShape(Circle())
+                    )
 
-            // 秒数文字
-            if let text = secondsText {
-                Text(text)
-                    .font(.system(size: 36, weight: .bold))
-                    .foregroundColor(.white)
-                    .shadow(color: .black.opacity(0.27), radius: 4, y: 1)
+                if let text = secondsText {
+                    Text(text)
+                        .font(.system(size: 36, weight: .bold))
+                        .foregroundColor(.white)
+                        .shadow(color: .black.opacity(0.27), radius: 4, y: 1)
+                }
             }
+            .frame(width: baseSize, height: baseSize)
+            .scaleEffect(scale)
         }
         .frame(width: 240, height: 240)
         .drawingGroup() // 将 20Hz 渐变圆球渲染卸载到 GPU
@@ -67,7 +69,7 @@ struct BreathingCircle: View {
             return (0.5, (Color(hex: 0x71A8D9), Color(hex: 0x8FC0DC, opacity: 0.53)))
         case .inhale:
             let scale = CGFloat(0.3 + 0.7 * progress)
-            return (scale, (Color(hex: 0x67D79C), Color(hex: 0x58BCA3, opacity: 0.48)))
+            return (scale, (Color(hex: 0x4BC984), Color(hex: 0x6CC5AD, opacity: 0.53)))
         case .exhale:
             let scale = CGFloat(1.0 - 0.7 * progress)
             return (scale, (Color(hex: 0xEA8C6F), Color(hex: 0xE8AB79, opacity: 0.53)))

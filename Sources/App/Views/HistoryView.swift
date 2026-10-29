@@ -97,11 +97,11 @@ struct HistoryView: View {
             cell("完成", width: HistoryColumn.complete)
             cell("状态", width: nil)
         }
-        .font(.system(size: 11))
+        .font(.system(size: 11, weight: .medium))
         .foregroundColor(BreatheStyle.tableHeaderText)
         .padding(.leading, 24)
         .padding(.trailing, 10)
-        .frame(height: 34)
+        .frame(height: 35.5)
         .background(BreatheStyle.tableHeader)
         .overlay(alignment: .bottom) {
             Rectangle().fill(BreatheStyle.tableHeaderLine).frame(height: 1)
@@ -220,7 +220,7 @@ private struct HistoryRow: View {
         .foregroundColor(BreatheStyle.ink)
         .padding(.leading, 24)
         .padding(.trailing, 10)
-        .frame(height: 40)
+        .frame(height: 39.5)
         .background(rowBackground)
         .contentShape(Rectangle())
         .onHover { hovering = $0 }

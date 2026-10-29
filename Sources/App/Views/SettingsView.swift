@@ -193,13 +193,13 @@ struct SettingsView: View {
                             .padding(.bottom, 8)
 
                         BreatheGroup {
-                            periodRow("早晨", time: "06:00 – 12:00", symbol: "sunrise", preset: .morning, current: currentPreset)
-                            BreatheDivider()
-                            periodRow("下午", time: "12:00 – 17:00", symbol: "sun.max", preset: .midday, current: currentPreset)
-                            BreatheDivider()
-                            periodRow("傍晚", time: "17:00 – 22:00", symbol: "circle.lefthalf.filled", preset: .evening, current: currentPreset)
-                            BreatheDivider()
-                            periodRow("夜间", time: "22:00 – 06:00", symbol: "moon", preset: .night, current: currentPreset)
+                            periodRow("早晨", time: "06:00 – 12:00", symbol: "☼", preset: .morning, current: currentPreset)
+                            BreatheDivider(inset: 14)
+                            periodRow("下午", time: "12:00 – 17:00", symbol: "☀", preset: .midday, current: currentPreset)
+                            BreatheDivider(inset: 14)
+                            periodRow("傍晚", time: "17:00 – 22:00", symbol: "◒", preset: .evening, current: currentPreset)
+                            BreatheDivider(inset: 14)
+                            periodRow("夜间", time: "22:00 – 06:00", symbol: "☾", preset: .night, current: currentPreset)
                         }
 
                         Text("全部预设均为每分钟 6 次呼吸。")
@@ -285,8 +285,8 @@ struct SettingsView: View {
         current: Preset
     ) -> some View {
         HStack(spacing: 10) {
-            Image(systemName: symbol)
-                .font(.system(size: 18))
+            Text(symbol)
+                .font(.system(size: 21))
                 .foregroundColor(preset == current ? BreatheStyle.accent : Color(hex: 0x708370))
                 .frame(width: 23, alignment: .leading)
             VStack(alignment: .leading, spacing: 3) {
