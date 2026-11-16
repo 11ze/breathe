@@ -44,6 +44,7 @@
 		DCE64AD25F692779E9482B58 /* BreathingPanelWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C7FFBB82B35D34E5214240 /* BreathingPanelWindowController.swift */; };
 		DE6842B444EA21C3FB12E8E7 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B7E057DA3C6E4D7380BE34 /* HistoryView.swift */; };
 		E74C7A7539A48310AD501567 /* BreathingConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDFFBA996DCE1E524A82EA5 /* BreathingConfigTests.swift */; };
+		EBAF05236D33926739B4BDC4 /* AppDelegateMenuTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AB5A3EF414F8CC8F044E08B /* AppDelegateMenuTests.swift */; };
 		EBB4C1031337173E876EEBC3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05F43E5F56F86AAEB272D29 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +66,7 @@
 		1D9710DA4412700CE4F0AF50 /* BreatheStatusIconTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreatheStatusIconTests.swift; sourceTree = "<group>"; };
 		210FE12C45115A2009D72487 /* TimeOfDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeOfDay.swift; sourceTree = "<group>"; };
 		2EDFFBA996DCE1E524A82EA5 /* BreathingConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingConfigTests.swift; sourceTree = "<group>"; };
+		4AB5A3EF414F8CC8F044E08B /* AppDelegateMenuTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateMenuTests.swift; sourceTree = "<group>"; };
 		4C708BD851FA88E1DD249DF6 /* NotificationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManagerTests.swift; sourceTree = "<group>"; };
 		511EA9652A94F91FC727E733 /* HistoryWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryWindowController.swift; sourceTree = "<group>"; };
 		58F63F913E9A9EDA2A0E6D11 /* BreatheTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BreatheTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -114,6 +116,7 @@
 		0CB695134DC3ACF42AAC4EDF /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				4AB5A3EF414F8CC8F044E08B /* AppDelegateMenuTests.swift */,
 				903B4A0C7313747E2000A0DA /* AppSettingsTests.swift */,
 				C91F049694C846E0927BA483 /* AudioManagerTests.swift */,
 				1D9710DA4412700CE4F0AF50 /* BreatheStatusIconTests.swift */,
@@ -351,6 +354,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBAF05236D33926739B4BDC4 /* AppDelegateMenuTests.swift in Sources */,
 				1293184E0107893159A09C8C /* AppSettingsTests.swift in Sources */,
 				7D55EFA5AD5F478D8DB1072B /* AudioManagerTests.swift in Sources */,
 				87ECFAF098EA63109B18E267 /* BreatheStatusIconTests.swift in Sources */,

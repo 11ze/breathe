@@ -42,7 +42,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - 快捷键
 
     /// LSUIElement 应用不显示主菜单，仅保留快捷键分发。
-    private func installMainMenu() {
+    func installMainMenu() {
         let mainMenu = NSMenu()
         let appMenuItem = NSMenuItem(title: "Breathe", action: nil, keyEquivalent: "")
         mainMenu.addItem(appMenuItem)
@@ -75,6 +75,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         )
         settingsItem.target = self
         appMenu.addItem(settingsItem)
+
+        let closeItem = NSMenuItem(
+            title: "关闭",
+            action: #selector(NSWindow.performClose(_:)),
+            keyEquivalent: "w"
+        )
+        closeItem.target = nil
+        appMenu.addItem(closeItem)
 
         appMenu.addItem(.separator())
 
