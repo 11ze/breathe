@@ -294,6 +294,7 @@ final class BreatheSelectPresenter: NSObject, ObservableObject {
         let selected: Bool
     }
 
+    weak var anchorView: NSView?
     var items: [Item] = []
     var onSelect: ((AnyHashable) -> Void)?
 
@@ -313,18 +314,29 @@ final class BreatheSelectPresenter: NSObject, ObservableObject {
             menu.addItem(menuItem)
         }
 
-        let mouse = NSEvent.mouseLocation
-        let window = NSApp.keyWindow ?? NSApp.windows.first {
-            $0.isVisible && $0.frame.contains(mouse)
-        }
-        guard let view = window?.contentView else { return }
-        let point = view.convert(mouse, from: nil)
-        menu.popUp(positioning: nil, at: NSPoint(x: point.x - 8, y: point.y - 22), in: view)
+        guard let view = anchorView, view.window != nil else { return }
+        let point = NSPoint(x: view.bounds.minX, y: view.isFlipped ? view.bounds.maxY : view.bounds.minY)
+        menu.popUp(positioning: nil, at: point, in: view)
     }
 
     @objc private func selectItem(_ sender: NSMenuItem) {
         guard let value = sender.representedObject as? AnyHashable else { return }
         onSelect?(value)
+    }
+}
+
+/// 把菜单锚定到控件，不依赖鼠标位置或当前 key window。
+private struct BreatheSelectAnchor: NSViewRepresentable {
+    let presenter: BreatheSelectPresenter
+
+    func makeNSView(context: Context) -> NSView {
+        let view = NSView()
+        presenter.anchorView = view
+        return view
+    }
+
+    func updateNSView(_ view: NSView, context: Context) {
+        presenter.anchorView = view
     }
 }
 
@@ -368,6 +380,7 @@ struct BreatheSelect<Value: Hashable>: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .background(BreatheSelectAnchor(presenter: presenter))
         .onAppear(perform: configurePresenter)
     }
 

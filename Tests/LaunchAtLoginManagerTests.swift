@@ -12,7 +12,8 @@ final class LaunchAtLoginManagerTests: XCTestCase {
         var calls: [Bool] = []
         let manager = LaunchAtLoginManager(
             systemStatus: { true },
-            systemSetter: { calls.append($0) }
+            systemSetter: { calls.append($0) },
+            systemRequiresApproval: { false }
         )
 
         let result = manager.setEnabled(true)
@@ -26,12 +27,14 @@ final class LaunchAtLoginManagerTests: XCTestCase {
         struct RegisterError: Error {}
         let manager = LaunchAtLoginManager(
             systemStatus: { false },
-            systemSetter: { _ in throw RegisterError() }
+            systemSetter: { _ in throw RegisterError() },
+            systemRequiresApproval: { false }
         )
 
         let result = manager.setEnabled(true)
 
         XCTAssertFalse(result)
+        XCTAssertNotNil(manager.errorMessage)
     }
 
     /// 禁用：注销动作被调用，返回 false
@@ -39,7 +42,8 @@ final class LaunchAtLoginManagerTests: XCTestCase {
         var calls: [Bool] = []
         let manager = LaunchAtLoginManager(
             systemStatus: { false },
-            systemSetter: { calls.append($0) }
+            systemSetter: { calls.append($0) },
+            systemRequiresApproval: { false }
         )
 
         let result = manager.setEnabled(false)
@@ -47,4 +51,47 @@ final class LaunchAtLoginManagerTests: XCTestCase {
         XCTAssertEqual(calls, [false])
         XCTAssertFalse(result)
     }
+    func testEnablePendingApprovalExposesApprovalAndDoesNotRegisterAgain() {
+        var registrations = 0
+        let manager = LaunchAtLoginManager(
+            systemStatus: { false },
+            systemSetter: { _ in registrations += 1 },
+            systemRequiresApproval: { true }
+        )
+
+        XCTAssertFalse(manager.setEnabled(true))
+        XCTAssertTrue(manager.requiresApproval)
+        XCTAssertEqual(registrations, 0)
+    }
+
+    func testRefreshReflectsApprovalGrantedInSystemSettings() {
+        var approved = false
+        let manager = LaunchAtLoginManager(
+            systemStatus: { approved },
+            systemSetter: { _ in },
+            systemRequiresApproval: { !approved }
+        )
+        XCTAssertTrue(manager.requiresApproval)
+        XCTAssertFalse(manager.isEnabled)
+
+        approved = true
+        manager.refresh()
+
+        XCTAssertFalse(manager.requiresApproval)
+        XCTAssertTrue(manager.isEnabled)
+    }
+
+    func testRegistrationCanRequireApprovalWithoutBeingEnabled() {
+        var pending = false
+        let manager = LaunchAtLoginManager(
+            systemStatus: { false },
+            systemSetter: { _ in pending = true },
+            systemRequiresApproval: { pending }
+        )
+
+        XCTAssertFalse(manager.setEnabled(true))
+        XCTAssertTrue(manager.requiresApproval)
+        XCTAssertNil(manager.errorMessage)
+    }
+
 }

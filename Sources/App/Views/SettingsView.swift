@@ -13,6 +13,7 @@ final class SettingsNavigation: ObservableObject {
 
 /// 设置窗口，布局和视觉与 `.ryugi/artifacts/html/breathe-prototype/` 原型保持一致。
 struct SettingsView: View {
+    @ObservedObject private var launchAtLogin = LaunchAtLoginManager.shared
     @ObservedObject private var settingsManager = AppSettingsManager.shared
     @StateObject private var windowBox = BreatheWindowBox()
     @ObservedObject private var navigation: SettingsNavigation
@@ -72,7 +73,13 @@ struct SettingsView: View {
                 .strokeBorder(Color.white.opacity(0.85), lineWidth: 1)
         )
         .ignoresSafeArea()
-        .onAppear(perform: syncDraftsFromSettings)
+        .onAppear {
+            syncDraftsFromSettings()
+            launchAtLogin.sync(withSettings: settingsManager.settings.launchAtLogin)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            launchAtLogin.sync(withSettings: settingsManager.settings.launchAtLogin)
+        }
     }
 
     private var selectedTab: SettingsTab {
@@ -418,7 +425,7 @@ struct SettingsView: View {
                 .padding(.bottom, 8)
 
             BreatheGroup {
-                if LaunchAtLoginManager.shared.isSupported {
+                if launchAtLogin.isSupported {
                     HStack {
                         settingLabel("开机自动启动", detail: "登录 macOS 时启动 Breathe")
                         Spacer()
@@ -428,6 +435,23 @@ struct SettingsView: View {
                     }
                     .padding(.horizontal, 14)
                     .frame(minHeight: 48)
+                    if launchAtLogin.requiresApproval {
+                        BreatheDivider()
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("请在系统设置的“登录项”中允许 Breathe 自动启动。")
+                            Button("打开登录项设置") {
+                                launchAtLogin.openLoginItemsSettings()
+                            }
+                        }
+                        .font(.system(size: 12))
+                        .padding(14)
+                    } else if let message = launchAtLogin.errorMessage {
+                        BreatheDivider()
+                        Text("无法更改自动启动：\(message)")
+                            .font(.system(size: 12))
+                            .foregroundColor(BreatheStyle.error)
+                            .padding(14)
+                    }
                 } else {
                     Text("需要 macOS 13 或更高版本")
                         .font(.system(size: 13))
@@ -552,9 +576,9 @@ struct SettingsView: View {
     /// 先注册系统服务，配置同步为系统最终状态，注册失败时开关回弹。
     private var launchAtLoginBinding: Binding<Bool> {
         Binding(
-            get: { settingsManager.settings.launchAtLogin },
+            get: { launchAtLogin.isEnabled },
             set: { newValue in
-                let finalState = LaunchAtLoginManager.shared.setEnabled(newValue)
+                let finalState = launchAtLogin.setEnabled(newValue)
                 settingsManager.settings.launchAtLogin = finalState
                 settingsManager.save()
             }
