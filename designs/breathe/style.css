@@ -10,3 +10,39 @@
 @media(max-width:1000px){.version{display:none}.app-menu{right:20px}.settings-window{left:28px;top:110px;width:500px}.system-left{gap:15px}.settings-content{padding:22px;min-height:390px}}
 @media(max-width:720px){.preview-header{padding:18px;flex-wrap:wrap;min-height:110px;gap:16px}.brand-mark{font-size:36px}.scene-nav{margin-left:auto}.scene-nav button{padding:7px 10px}.desktop{margin:0 10px;min-height:720px;height:calc(100dvh - 170px)}.system-left>span:not(.apple){display:none}.system-bar{padding:0 12px}.system-right{gap:8px}.system-clock{font-size:10px}.app-menu{right:8px}.settings-window{left:14px;top:85px;width:calc(100% - 28px)}.settings-content{max-height:470px;min-height:0;padding:20px}.history-window{top:85px;width:calc(100% - 28px)}.history-heading{padding:20px}.history-toolbar{padding:10px 16px}.history-footer{flex-wrap:wrap;padding:12px 16px}.mapping-row{grid-template-columns:20px 1fr 60px;gap:6px}.setting-row select{min-width:145px;max-width:190px}.preview-footer{padding:14px 18px;flex-wrap:wrap}.history-heading h2{font-size:18px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}.orb{will-change:auto}}
+
+/* 已确认的视觉调整；应用文字使用深黑，功能状态保留颜色。 */
+/* 字号、中性底色、线形图标与历史列宽。 */
+:root{--surface:#f6f6f4;--line:#dfe2dd}
+.titlebar{background:#f0f1ef;border-color:var(--line)}
+.tabs{background:#f0f1ef}
+h3{font-size:12px}
+.preset-summary small,.mapping-row small,.footnote,.setting-row small,
+.preset-summary .unit,.number-control,.validation,.log-path,.log-path code,
+.history-record summary small,.history-details dt,.history-toolbar,.history-footer{font-size:12px}
+.current-badge{font-size:11px;padding:2px 5px}
+.mapping-row.current .mapping-title{font-weight:600}
+.mapping-row.current .mapping-title small{font-weight:400}
+.period-icon{display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.period-icon svg{width:20px;height:20px;stroke-width:1.5;display:block}
+.preset-summary>div:first-child strong{color:var(--ink)}
+.history-columns{background:#f0f1ef;border-color:var(--line);color:var(--muted)}
+.history-record:nth-child(even){background:#00000001}
+.history-record summary>span:nth-child(2){color:var(--ink)}
+.history-record summary:hover{background:#eef0ed}
+.history-record[open] summary{background:#edf0ec}
+.status-badge{font-size:12px;padding:3px 7px;white-space:nowrap}
+.history-columns,.history-record summary{min-width:0;grid-template-columns:minmax(145px,1.55fr) minmax(65px,.8fr) minmax(75px,.85fr) minmax(90px,1fr) 18px;gap:8px}
+.history-record{min-width:0}
+.history-details{flex-wrap:wrap;gap:20px 32px}
+@media(max-width:580px){.history-columns,.history-record summary{padding-left:14px;padding-right:14px;grid-template-columns:minmax(110px,1.2fr) minmax(48px,.7fr) minmax(65px,.8fr) minmax(80px,1fr) 12px;gap:5px}.history-details{padding-left:14px;padding-right:14px}}
+
+/* 文字改深黑；状态底色和呼吸阶段颜色保持不变。 */
+:root{--green:#242b28}
+.preset-summary strong,.current-badge,.status-badge{color:var(--ink)}
+.status-badge.early{color:#8d5c25}
+.preset-menu button.selected:hover{color:#fff}
+
+/* 桌面是原型展示背景；系统菜单栏文字随背景外观变化。 */
+.desktop{background:#f3f4f3}
+@media(prefers-color-scheme:dark){.system-bar{background:#292d2a;color:#fff;border-bottom-color:#ffffff20}#status-button[aria-expanded="true"]{background:#ffffff20}}

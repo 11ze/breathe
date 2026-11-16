@@ -67,7 +67,7 @@ struct HistoryView: View {
     private var toolbar: some View {
         HStack(spacing: 8) {
             Text("\(records.count) 条记录")
-                .font(.system(size: 11))
+                .font(.system(size: 12))
                 .foregroundColor(BreatheStyle.muted)
             Spacer()
             BreathePushButton(title: "刷新", action: loadRecords)
@@ -136,7 +136,7 @@ struct HistoryView: View {
             Text("~/.config/breathe/sessions.csv")
                 .textSelection(.enabled)
         }
-        .font(.system(size: 10))
+        .font(.system(size: 12))
         .foregroundColor(BreatheStyle.muted)
         .padding(.horizontal, 24)
         .padding(.vertical, 13)
@@ -204,12 +204,12 @@ private struct HistoryRow: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(record.date)
                         Text(record.time)
-                            .font(.system(size: 11).monospacedDigit())
+                            .font(.system(size: 12).monospacedDigit())
                             .foregroundColor(BreatheStyle.muted)
                     }
                     .frame(width: HistoryColumn.date, alignment: .leading)
                     Text(Preset.displayName(for: record.preset))
-                        .foregroundColor(BreatheStyle.tablePreset)
+                        .foregroundColor(BreatheStyle.ink)
                         .frame(width: HistoryColumn.preset, alignment: .leading)
                     Text(Self.duration(record.durationActualSeconds))
                         .frame(width: HistoryColumn.actual, alignment: .leading)
@@ -257,15 +257,15 @@ private struct HistoryRow: View {
             return BreatheStyle.tableRowHover
         }
         if isExpanded {
-            return Color(hex: 0xEDF2E9)
+            return Color(hex: 0xEDF0EC)
         }
-        return index % 2 == 1 ? Color(hex: 0xEAF0E5, opacity: 0.13) : Color.clear
+        return index % 2 == 1 ? Color.black.opacity(0.004) : Color.clear
     }
 
     private func detail(_ title: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title)
-                .font(.system(size: 11))
+                .font(.system(size: 12))
                 .foregroundColor(BreatheStyle.muted)
             Text(value)
                 .font(.system(size: 13).monospacedDigit())

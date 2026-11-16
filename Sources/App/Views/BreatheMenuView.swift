@@ -32,7 +32,7 @@ struct BreatheMenuView: View {
 
             menuRow(
                 title: engine.isSessionActive ? "停止呼吸" : "开始呼吸",
-                tint: BreatheStyle.green,
+                tint: BreatheStyle.ink,
                 emphasized: true,
                 disabled: startDisabled
             ) { color in
@@ -113,7 +113,7 @@ struct BreatheMenuView: View {
 
     private var header: some View {
         HStack(spacing: 8) {
-            BreatheWavesMark(color: BreatheStyle.green, fontSize: 24)
+            BreatheWavesMark(color: BreatheStyle.ink, fontSize: 24)
                 .frame(height: 16)
             Text("Breathe")
                 .font(.system(size: 13, weight: .semibold))
@@ -295,7 +295,7 @@ private struct BreathePresetOption: View {
                         .opacity(0.7)
                 }
             }
-            .foregroundColor(hovering ? .white : (selected ? BreatheStyle.green : BreatheStyle.ink))
+            .foregroundColor(hovering ? .white : BreatheStyle.ink)
             .padding(.horizontal, 6)
             .padding(.vertical, 8)
             .frame(maxWidth: .infinity)

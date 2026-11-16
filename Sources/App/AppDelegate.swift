@@ -181,20 +181,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     /// 更新状态栏图标和剩余时长标题
-    private func updateStatusBarContent(isActive: Bool, remaining: Int) {
+    func updateStatusBarContent(isActive: Bool, remaining: Int) {
         guard let button = statusItem?.button else { return }
         guard isActive else {
-            button.attributedTitle = NSAttributedString(string: "")
+            button.title = ""
             return
         }
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .semibold),
-            .foregroundColor: NSColor(srgbRed: 0.149, green: 0.451, blue: 0.310, alpha: 1)
-        ]
-        button.attributedTitle = NSAttributedString(
-            string: " " + formatTime(remaining),
-            attributes: attributes
-        )
+        // 保留系统状态栏的文字颜色与高亮绘制，跟随按钮实际外观。
+        button.font = NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .semibold)
+        button.title = " " + formatTime(remaining)
     }
 
     private func formatTime(_ seconds: Int) -> String {

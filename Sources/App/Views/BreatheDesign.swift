@@ -8,17 +8,15 @@ import SwiftUI
 enum BreatheStyle {
     static let ink = Color(hex: 0x242B28)
     static let muted = Color(hex: 0x66716B)
-    static let green = Color(hex: 0x26734F)
     static let accent = Color(hex: 0x2C8058)
-    static let line = Color(hex: 0xDCE0DD)
+    static let line = Color(hex: 0xDFE2DD)
 
-    static let surface = Color(hex: 0xF5F6F4)
-    static let titlebar = Color(hex: 0xEFF1ED)
-    static let titlebarLine = Color(hex: 0xD6DDD5)
-    static let tabbar = Color(hex: 0xF0F2EE)
+    static let surface = Color(hex: 0xF6F6F4)
+    static let titlebar = Color(hex: 0xF0F1EF)
+    static let titlebarLine = Color(hex: 0xDFE2DD)
+    static let tabbar = Color(hex: 0xF0F1EF)
     static let separator = Color(hex: 0xE5E9E3)
     static let sectionTitle = Color(hex: 0x606B63)
-    static let summaryValue = Color(hex: 0x345C43)
 
     static let controlBorder = Color(hex: 0xCBD2CB)
     static let switchOff = Color(hex: 0xD2D8D0)
@@ -27,13 +25,11 @@ enum BreatheStyle {
     static let buttonHover = Color(hex: 0xEEF2EB)
     static let buttonPressed = Color(hex: 0xDCE5D9)
 
-    static let tableHeader = Color(hex: 0xECEfe8)
+    static let tableHeader = Color(hex: 0xF0F1EF)
     static let tableHeaderText = Color(hex: 0x677164)
-    static let tableHeaderLine = Color(hex: 0xD7DDD1)
-    static let tableRowHover = Color(hex: 0xE1ECDC)
-    static let tablePreset = Color(hex: 0x4F6650)
+    static let tableHeaderLine = Color(hex: 0xDFE2DD)
+    static let tableRowHover = Color(hex: 0xEEF0ED)
 
-    static let statusGreen = Color(hex: 0x2F7046)
     static let statusGreenBackground = Color(hex: 0xE3EFE2)
     static let statusOrange = Color(hex: 0x8D5C25)
     static let statusOrangeBackground = Color(hex: 0xF4EADA)
@@ -66,7 +62,7 @@ struct BreatheSectionTitle: View {
 
     var body: some View {
         Text(title)
-            .font(.system(size: 11, weight: .medium))
+            .font(.system(size: 12, weight: .medium))
             .foregroundColor(BreatheStyle.sectionTitle)
             .padding(.leading, 3)
     }
@@ -420,7 +416,7 @@ enum BreatheStatusIcon {
 
 /// 使用设计稿的系统字体 ≋ 字形，字号分别由菜单与分类标签指定。
 struct BreatheWavesMark: View {
-    var color: Color = BreatheStyle.green
+    var color: Color = BreatheStyle.ink
     var fontSize: CGFloat = 18
 
     var body: some View {
@@ -453,7 +449,7 @@ struct BreatheNumberField: View {
                         .strokeBorder(BreatheStyle.controlBorder, lineWidth: 1)
                 )
             Text(unit)
-                .font(.system(size: 11))
+                .font(.system(size: 12))
                 .foregroundColor(BreatheStyle.muted)
         }
     }
@@ -464,9 +460,9 @@ struct BreatheStatusBadge: View {
 
     var body: some View {
         Text(completed ? "已完成" : "提前结束")
-            .font(.system(size: 10))
-            .foregroundColor(completed ? BreatheStyle.statusGreen : BreatheStyle.statusOrange)
-            .padding(.horizontal, 5)
+            .font(.system(size: 12))
+            .foregroundColor(completed ? BreatheStyle.ink : BreatheStyle.statusOrange)
+            .padding(.horizontal, 7)
             .padding(.vertical, 3)
             .background(
                 RoundedRectangle(cornerRadius: 4, style: .continuous)

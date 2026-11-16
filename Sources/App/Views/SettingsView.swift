@@ -11,7 +11,7 @@ final class SettingsNavigation: ObservableObject {
     @Published var tab: SettingsTab = .preset
 }
 
-/// 设置窗口，布局和视觉按 `designs/breathe/` 原型一比一实现。
+/// 设置窗口，布局和视觉与 `designs/breathe/` 原型保持一致。
 struct SettingsView: View {
     @ObservedObject private var settingsManager = AppSettingsManager.shared
     @StateObject private var windowBox = BreatheWindowBox()
@@ -85,7 +85,7 @@ struct SettingsView: View {
         HStack(spacing: 6) {
             tabButton(.preset) {
                 BreatheWavesMark(
-                    color: selectedTab == .preset ? BreatheStyle.green : BreatheStyle.ink,
+                    color: BreatheStyle.ink,
                     fontSize: 18
                 )
                 .frame(height: 18)
@@ -119,7 +119,7 @@ struct SettingsView: View {
             navigation.tab = tab
         } label: {
             HStack(spacing: 7, content: label)
-                .foregroundColor(selected ? BreatheStyle.green : BreatheStyle.ink)
+                .foregroundColor(BreatheStyle.ink)
                 .padding(.horizontal, 16)
                 .frame(minWidth: 86, minHeight: 30)
                 .background(
@@ -192,17 +192,17 @@ struct SettingsView: View {
                             .padding(.bottom, 8)
 
                         BreatheGroup {
-                            periodRow("早晨", time: "06:00 – 12:00", symbol: "☼", preset: .morning, current: currentPreset)
+                            periodRow("早晨", time: "06:00 – 12:00", symbol: "sunrise", preset: .morning, current: currentPreset)
                             BreatheDivider(inset: 14)
-                            periodRow("下午", time: "12:00 – 17:00", symbol: "☀", preset: .midday, current: currentPreset)
+                            periodRow("下午", time: "12:00 – 17:00", symbol: "sun.max", preset: .midday, current: currentPreset)
                             BreatheDivider(inset: 14)
-                            periodRow("傍晚", time: "17:00 – 22:00", symbol: "◒", preset: .evening, current: currentPreset)
+                            periodRow("傍晚", time: "17:00 – 22:00", symbol: "sunset", preset: .evening, current: currentPreset)
                             BreatheDivider(inset: 14)
-                            periodRow("夜间", time: "22:00 – 06:00", symbol: "☾", preset: .night, current: currentPreset)
+                            periodRow("夜间", time: "22:00 – 06:00", symbol: "moon", preset: .night, current: currentPreset)
                         }
 
                         Text("全部预设均为每分钟 6 次呼吸。")
-                            .font(.system(size: 10))
+                            .font(.system(size: 12))
                             .foregroundColor(BreatheStyle.muted)
                             .padding(.top, 12)
                             .padding(.leading, 3)
@@ -255,16 +255,16 @@ struct SettingsView: View {
     ) -> some View {
         VStack(alignment: .leading, spacing: 5) {
             Text(title)
-                .font(.system(size: 10))
+                .font(.system(size: 12))
                 .foregroundColor(BreatheStyle.muted)
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 Text(value)
                     .font(.system(size: valueSize, weight: .medium).monospacedDigit())
-                    .foregroundColor(BreatheStyle.summaryValue)
+                    .foregroundColor(BreatheStyle.ink)
                     .lineLimit(1)
                 if !unit.isEmpty {
                     Text(unit)
-                        .font(.system(size: 11))
+                        .font(.system(size: 12))
                         .foregroundColor(BreatheStyle.muted)
                 }
             }
@@ -284,19 +284,20 @@ struct SettingsView: View {
         current: Preset
     ) -> some View {
         HStack(spacing: 10) {
-            Text(symbol)
-                .font(.system(size: 21))
+            Image(systemName: symbol)
+                .font(.system(size: 18, weight: .regular))
+                .accessibilityHidden(true)
                 .foregroundColor(preset == current ? BreatheStyle.accent : Color(hex: 0x708370))
                 .frame(width: 23, alignment: .leading)
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 6) {
                     Text(title)
-                        .font(.system(size: 12))
+                        .font(.system(size: 12, weight: preset == current ? .semibold : .regular))
                         .foregroundColor(BreatheStyle.ink)
                     if preset == current {
                         Text("当前")
-                            .font(.system(size: 9, weight: .medium))
-                            .foregroundColor(BreatheStyle.statusGreen)
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundColor(BreatheStyle.ink)
                             .padding(.horizontal, 4)
                             .padding(.vertical, 1)
                             .background(
@@ -306,7 +307,7 @@ struct SettingsView: View {
                     }
                 }
                 Text(time)
-                    .font(.system(size: 10))
+                    .font(.system(size: 12))
                     .foregroundColor(BreatheStyle.muted)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -315,7 +316,7 @@ struct SettingsView: View {
                     .font(.system(size: 12).monospacedDigit())
                     .foregroundColor(BreatheStyle.ink)
                 Text("\(preset.durationMinutes) 分钟")
-                    .font(.system(size: 10))
+                    .font(.system(size: 12))
                     .foregroundColor(BreatheStyle.muted)
             }
             .frame(width: 70, alignment: .trailing)
@@ -349,10 +350,10 @@ struct SettingsView: View {
                     .foregroundColor(BreatheStyle.error)
             } else if let config = customConfig {
                 Text("周期 \(config.cycleSeconds) 秒，实际时长 \(config.durationSeconds / 60) 分 \(config.durationSeconds % 60) 秒")
-                    .foregroundColor(BreatheStyle.green)
+                    .foregroundColor(BreatheStyle.ink)
             }
         }
-        .font(.system(size: 11))
+        .font(.system(size: 12))
         .lineSpacing(2)
         .padding(.top, 10)
         .padding(.leading, 3)
@@ -405,7 +406,7 @@ struct SettingsView: View {
                         Text("~/.config/breathe/sessions.csv")
                             .textSelection(.enabled)
                     }
-                    .font(.system(size: 10))
+                    .font(.system(size: 12))
                     .foregroundColor(BreatheStyle.muted)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 11)
@@ -460,7 +461,7 @@ struct SettingsView: View {
                 .font(.system(size: 13))
                 .foregroundColor(BreatheStyle.ink)
             Text(detail)
-                .font(.system(size: 11))
+                .font(.system(size: 12))
                 .foregroundColor(BreatheStyle.muted)
                 .lineSpacing(2)
         }
