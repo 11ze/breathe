@@ -28,33 +28,31 @@ struct BreathingCircle: View {
                 )
                 .frame(width: 216, height: 216)
 
-            // 主圆球
-            ZStack {
-                Circle()
-                    .fill(
-                        RadialGradient(
-                            colors: [colors.0, colors.1],
-                            center: UnitPoint(x: 0.42, y: 0.36),
-                            startRadius: 0,
-                            endRadius: baseSize * 0.75 * hypot(0.58, 0.64)
-                        )
+            // 只缩放球体，读秒与暂停符号保持固定大小。
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [colors.0, colors.1],
+                        center: UnitPoint(x: 0.42, y: 0.36),
+                        startRadius: 0,
+                        endRadius: baseSize * 0.75 * hypot(0.58, 0.64)
                     )
-                    .overlay(
-                        Circle()
-                            .strokeBorder(Color.white.opacity(0.19), lineWidth: 20)
-                            .blur(radius: 10)
-                            .clipShape(Circle())
-                    )
+                )
+                .overlay(
+                    Circle()
+                        .strokeBorder(Color.white.opacity(0.19), lineWidth: 20)
+                        .blur(radius: 10)
+                        .clipShape(Circle())
+                )
+                .frame(width: baseSize, height: baseSize)
+                .scaleEffect(scale)
 
-                if let text = secondsText {
-                    Text(text)
-                        .font(.system(size: 36, weight: .bold))
-                        .foregroundColor(.white)
-                        .shadow(color: .black.opacity(0.27), radius: 4, y: 1)
-                }
+            if let text = secondsText {
+                Text(text)
+                    .font(.system(size: 36, weight: .bold).monospacedDigit())
+                    .foregroundColor(.white)
+                    .shadow(color: .black.opacity(0.27), radius: 4, y: 1)
             }
-            .frame(width: baseSize, height: baseSize)
-            .scaleEffect(scale)
         }
         .frame(width: 240, height: 240)
         .drawingGroup() // 将 20Hz 渐变圆球渲染卸载到 GPU

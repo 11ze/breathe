@@ -116,22 +116,55 @@ function selectTab(tab) {
     $(`${name}-panel`).hidden = name !== tab;
   }
 }
+const expandedRecords = new Set();
 function renderHistory() {
   $("record-count").textContent = `${records.length} 条记录`;
   $("empty-history").hidden = records.length > 0;
   document.querySelector(".table-scroll").hidden = records.length === 0;
   $("history-body").replaceChildren(...records.map((record) => {
-    const row = document.createElement("tr");
-    record.slice(0, 8).forEach((value, index) => {
-      const cell = document.createElement("td");
-      cell.textContent = index === 2 ? presetLabel(value) : index === 7 ? `${value}%` : value;
-      row.appendChild(cell);
+    const row = document.createElement("details");
+    row.className = "history-record";
+    row.open = expandedRecords.has(record);
+    row.addEventListener("toggle", () => {
+      if (row.open) expandedRecords.add(record);
+      else expandedRecords.delete(record);
     });
-    const cell = document.createElement("td");
+    const summary = document.createElement("summary");
+    const date = document.createElement("span");
+    date.textContent = record[0];
+    const time = document.createElement("small");
+    time.textContent = record[1];
+    date.appendChild(time);
+    summary.appendChild(date);
+    for (const value of [presetLabel(record[2]), record[5]]) {
+      const cell = document.createElement("span");
+      cell.textContent = value;
+      summary.appendChild(cell);
+    }
+    const status = document.createElement("span");
     const badge = document.createElement("span");
     badge.className = `status-badge${record[8] ? "" : " early"}`;
     badge.textContent = record[8] ? "已完成" : "提前结束";
-    cell.appendChild(badge); row.appendChild(cell);
+    status.appendChild(badge);
+    summary.appendChild(status);
+    const arrow = document.createElement("span");
+    arrow.className = "history-arrow";
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "›";
+    summary.appendChild(arrow);
+    row.appendChild(summary);
+    const details = document.createElement("dl");
+    details.className = "history-details";
+    for (const [title, value] of [["吸气 / 呼气", `${record[3]} 秒`], ["目标时长", record[4]], ["呼吸次数", `${record[6]} 次`], ["完成比例", `${record[7]}%`]]) {
+      const field = document.createElement("div");
+      const label = document.createElement("dt");
+      label.textContent = title;
+      const content = document.createElement("dd");
+      content.textContent = value;
+      field.append(label, content);
+      details.appendChild(field);
+    }
+    row.appendChild(details);
     return row;
   }));
 }
@@ -264,7 +297,7 @@ $("desktop").addEventListener("pointerdown", (event) => { if (event.target === $
 document.addEventListener("keydown", (event) => {
   if (state.quit || event.target.closest("input,select,textarea")) return;
   if (event.key === "Escape") { setMenu(false); return; }
-  if (event.code === "Space" && event.target.tagName !== "BUTTON") { event.preventDefault(); togglePause(); }
+  if (event.code === "Space" && !event.target.closest("button,summary")) { event.preventDefault(); togglePause(); }
   if (event.key.toLowerCase() === "s" && !event.metaKey && !event.ctrlKey) { state.sound = !state.sound; enableAudio(); renderSettings(); }
   if (event.metaKey || event.ctrlKey) {
     if (event.key.toLowerCase() === "b") { event.preventDefault(); state.active ? finishSession(false) : startSession(); }

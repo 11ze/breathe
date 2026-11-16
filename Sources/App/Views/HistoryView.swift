@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// 会话历史视图，自定义标题栏与表格按设计稿一比一实现。
+/// 会话历史视图，主要字段常显，次要字段在记录详情中展开。
 struct HistoryView: View {
     @State private var records: [SessionRecord] = []
     @StateObject private var windowBox = BreatheWindowBox()
@@ -87,21 +87,17 @@ struct HistoryView: View {
 
     private var tableHeader: some View {
         HStack(spacing: 0) {
-            cell("日期", width: HistoryColumn.date)
-            cell("时间", width: HistoryColumn.time)
+            cell("日期与时间", width: HistoryColumn.date)
             cell("预设", width: HistoryColumn.preset)
-            cell("比例", width: HistoryColumn.ratio)
-            cell("目标", width: HistoryColumn.target)
-            cell("实际", width: HistoryColumn.actual)
-            cell("呼吸", width: HistoryColumn.breaths)
-            cell("完成", width: HistoryColumn.complete)
+            cell("实际时长", width: HistoryColumn.actual)
             cell("状态", width: nil)
+            Color.clear.frame(width: HistoryColumn.disclosure)
         }
-        .font(.system(size: 11, weight: .medium))
+        .font(.system(size: 12, weight: .medium))
         .foregroundColor(BreatheStyle.tableHeaderText)
         .padding(.leading, 24)
-        .padding(.trailing, 10)
-        .frame(height: 35.5)
+        .padding(.trailing, 24)
+        .frame(height: 38)
         .background(BreatheStyle.tableHeader)
         .overlay(alignment: .bottom) {
             Rectangle().fill(BreatheStyle.tableHeaderLine).frame(height: 1)
@@ -113,6 +109,7 @@ struct HistoryView: View {
             LazyVStack(spacing: 0) {
                 ForEach(Array(records.enumerated()), id: \.offset) { index, record in
                     HistoryRow(record: record, index: index)
+                        .id(record.id)
                 }
             }
         }
@@ -181,14 +178,10 @@ struct HistoryView: View {
 // MARK: - 表格行
 
 private enum HistoryColumn {
-    static let date: CGFloat = 153
-    static let time: CGFloat = 107
-    static let preset: CGFloat = 72
-    static let ratio: CGFloat = 71
-    static let target: CGFloat = 84
-    static let actual: CGFloat = 84
-    static let breaths: CGFloat = 72
-    static let complete: CGFloat = 82
+    static let date: CGFloat = 280
+    static let preset: CGFloat = 156
+    static let actual: CGFloat = 156
+    static let disclosure: CGFloat = 18
 }
 
 private struct HistoryRow: View {
@@ -196,46 +189,89 @@ private struct HistoryRow: View {
     let index: Int
 
     @State private var hovering = false
+    @State private var isExpanded = false
 
     private var completed: Bool {
         record.status == "completed"
     }
 
     var body: some View {
-        HStack(spacing: 0) {
-            text(record.date, width: HistoryColumn.date)
-            text(record.time, width: HistoryColumn.time)
-            Text(Preset.displayName(for: record.preset))
-                .foregroundColor(BreatheStyle.tablePreset)
-                .frame(width: HistoryColumn.preset, alignment: .leading)
-            text(record.ratio, width: HistoryColumn.ratio)
-            text(Self.duration(record.durationTargetSeconds), width: HistoryColumn.target)
-            text(Self.duration(record.durationActualSeconds), width: HistoryColumn.actual)
-            text("\(record.breaths)", width: HistoryColumn.breaths)
-            text("\(record.completionPercent)%", width: HistoryColumn.complete)
-            BreatheStatusBadge(completed: completed)
+        VStack(spacing: 0) {
+            Button {
+                isExpanded.toggle()
+            } label: {
+                HStack(spacing: 0) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(record.date)
+                        Text(record.time)
+                            .font(.system(size: 11).monospacedDigit())
+                            .foregroundColor(BreatheStyle.muted)
+                    }
+                    .frame(width: HistoryColumn.date, alignment: .leading)
+                    Text(Preset.displayName(for: record.preset))
+                        .foregroundColor(BreatheStyle.tablePreset)
+                        .frame(width: HistoryColumn.preset, alignment: .leading)
+                    Text(Self.duration(record.durationActualSeconds))
+                        .frame(width: HistoryColumn.actual, alignment: .leading)
+                    BreatheStatusBadge(completed: completed)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundColor(BreatheStyle.muted)
+                        .frame(width: HistoryColumn.disclosure)
+                }
+                .font(.system(size: 13).monospacedDigit())
+                .foregroundColor(BreatheStyle.ink)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 16)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .background(rowBackground)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityValue(isExpanded ? "已展开" : "已收起")
+            .accessibilityHint(isExpanded ? "收起会话详情" : "展开会话详情")
+            .onHover { hovering = $0 }
+
+            if isExpanded {
+                HStack(alignment: .top, spacing: 40) {
+                    detail("吸气 / 呼气", value: "\(record.ratio) 秒")
+                    detail("目标时长", value: Self.duration(record.durationTargetSeconds))
+                    detail("呼吸次数", value: "\(record.breaths) 次")
+                    detail("完成比例", value: "\(record.completionPercent)%")
+                    Spacer(minLength: 0)
+                }
+                .padding(.horizontal, 24)
+                .padding(.top, 15)
+                .padding(.bottom, 18)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.white.opacity(0.5))
+            }
+
+            BreatheDivider()
         }
-        .font(.system(size: 11).monospacedDigit())
-        .foregroundColor(BreatheStyle.ink)
-        .padding(.leading, 24)
-        .padding(.trailing, 10)
-        .frame(height: 39.5)
-        .background(rowBackground)
-        .contentShape(Rectangle())
-        .onHover { hovering = $0 }
     }
 
     private var rowBackground: Color {
         if hovering {
             return BreatheStyle.tableRowHover
         }
+        if isExpanded {
+            return Color(hex: 0xEDF2E9)
+        }
         return index % 2 == 1 ? Color(hex: 0xEAF0E5, opacity: 0.13) : Color.clear
     }
 
-    private func text(_ value: String, width: CGFloat) -> some View {
-        Text(value)
-            .frame(width: width, alignment: .leading)
+    private func detail(_ title: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.system(size: 11))
+                .foregroundColor(BreatheStyle.muted)
+            Text(value)
+                .font(.system(size: 13).monospacedDigit())
+                .foregroundColor(BreatheStyle.ink)
+                .textSelection(.enabled)
+        }
     }
 
     private static func duration(_ seconds: Int) -> String {
