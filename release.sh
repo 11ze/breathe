@@ -39,6 +39,10 @@ else
     echo "Build number updated to ${BUILD_NUMBER}"
 fi
 
+# 拉取最新 tag，确保版本信息最新
+echo "🔄 拉取最新标签..."
+git fetch --tags
+
 # 生成发布说明
 generate_release_notes() {
     local last_tag
@@ -103,3 +107,8 @@ echo "1. 一键发布："
 echo "   git add Resources/Info.plist && git commit -m \"chore: bump version to ${VERSION}\" && git tag -a v${VERSION} -m \"version ${VERSION}\" && git push --follow-tags"
 echo "2. 访问 GitHub Releases 创建新 Release"
 echo "3. 上传 Release/${APP_NAME}-${VERSION}.zip"
+echo "4. 复制以下内容到 Release Description:"
+echo ""
+echo "────────────────────────────────────────"
+echo "${RELEASE_NOTES}"
+echo "────────────────────────────────────────"
