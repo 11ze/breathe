@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - designs/breathe/**
+      - .ryugi/artifacts/html/breathe-prototype/**
       - .github/workflows/pages.yml
   workflow_dispatch:
 
@@ -31,6 +31,6 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: designs/breathe
+          path: .ryugi/artifacts/html/breathe-prototype
       - uses: actions/deploy-pages@v4
         id: deployment

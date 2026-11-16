@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Breathe · general · current</title>
+  <!-- 设计依据：AppDelegate、SettingsView、HistoryView、BreathingCircle。
+       保留菜单栏应用结构；轻灰窗口、系统字体、绿色重点色。历史数据为演示数据。
+       外层导航属于原型工具；不增加应用功能，不访问系统配置或用户日志。 -->
+  <style>:root{color-scheme:light;--ink:#242b28;--muted:#66716b;--green:#26734f;--line:#dce0dd;--surface:#f5f6f4;--accent:#2c8058;font-family:-apple-system,"SF Pro Text","PingFang SC","Noto Sans SC",sans-serif;color:var(--ink);font-size:13px}
+*{box-sizing:border-box}body{margin:0;background:#f7f8f6}button,input,select{font:inherit;color:inherit}button{cursor:pointer}button:disabled{opacity:.45;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #5b9fbc;outline-offset:3px}button{border:0;background:none}button,select,input{ -webkit-tap-highlight-color:transparent}[hidden]{display:none!important}h1,h2,h3,p{margin:0}small{font-size:11px;color:var(--muted)}
+.preview-header{min-height:100px;padding:23px 38px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:flex;align-items:center;gap:13px}.brand-mark{font-size:44px;line-height:1;color:var(--green);transform:rotate(-10deg)}h1{font-size:23px;font-weight:600;letter-spacing:-.7px}.brand p{font-size:11px;color:var(--muted);margin-top:3px;letter-spacing:1px}.scene-nav{display:flex;gap:3px;background:#e9ece7;padding:4px;border:1px solid #e0e4de;border-radius:9px}.scene-nav button{padding:7px 19px;border-radius:6px;color:#5c665f;font-size:12px}.scene-nav button[aria-pressed="true"]{background:#fff;color:#24372b;box-shadow:0 1px 4px #1e3b1920}.version{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:11px}.live-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#4b8466}
+.desktop{position:relative;margin:0 24px;min-height:680px;height:calc(100dvh - 156px);background:radial-gradient(ellipse at 25% 90%,#e9eee5 0%,#dce5df 45%,#c8d5ce 100%);border:1px solid #b9c7bf;border-radius:12px;overflow:hidden;isolation:isolate}.system-bar{height:32px;display:flex;align-items:center;justify-content:space-between;background:#f2f6f2aa;border-bottom:1px solid #b6c4ba66;padding:0 18px;font-size:12px;position:relative;z-index:20}.system-left,.system-right{display:flex;align-items:center;gap:22px}.system-left strong{font-weight:600}.apple{font-size:16px}.system-right{gap:20px}.system-clock{font-size:11px;font-variant-numeric:tabular-nums}#status-button{height:30px;display:flex;align-items:center;gap:6px;padding:0 9px;border-radius:5px}#status-button[aria-expanded="true"]{background:#a6b8ac55}.wind{font-size:29px;line-height:20px}#remaining{font-weight:600;font-variant-numeric:tabular-nums}
+.app-menu{position:absolute;z-index:30;right:138px;top:38px;width:260px;padding:6px;background:#f4f7f3ef;backdrop-filter:blur(30px);border:1px solid #ffffffcc;box-shadow:0 12px 35px #273b2e28,0 0 0 1px #4c685b24;border-radius:9px}.menu-brand{display:flex;align-items:center;gap:8px;padding:10px 8px 12px}.mini-mark{font-size:24px;color:var(--green);line-height:16px}.menu-brand strong{font-size:13px}.menu-brand>span:last-child{margin-left:auto;font-size:10px;color:var(--muted)}.menu-row{width:100%;min-height:30px;display:flex;align-items:center;justify-content:space-between;padding:5px 10px;border-radius:5px;font-size:12px;text-align:left}.menu-row:hover,.preset-menu button:hover{color:#fff;background:var(--accent)}.menu-row:hover kbd,.menu-row:hover .menu-end{color:#fff}.start-row{color:var(--green);font-weight:600}.menu-rule{height:1px;background:#c9d1c9;margin:5px 8px}kbd{font:11px -apple-system,sans-serif;color:#6c776e;letter-spacing:.5px}.menu-end{display:flex;gap:12px;align-items:center;color:var(--muted);font-size:11px}.menu-end>span:last-child{font-size:20px}.preset-menu{padding:4px;border:1px solid #cbd5cc;border-radius:6px;background:#fff;margin:4px}.preset-menu button{display:flex;justify-content:space-between;gap:8px;width:100%;padding:8px 6px;text-align:left;border-radius:4px;font-size:11px}.preset-menu button span{color:inherit;opacity:.7}.preset-menu button.selected{color:var(--green);font-weight:600}
+.window{position:absolute;z-index:10;background:var(--surface);border-radius:11px;border:1px solid #ffffffd9;box-shadow:0 24px 60px #283d3024,0 6px 18px #283d3010,0 0 0 1px #4a5c4d28;overflow:hidden}.settings-window{width:540px;left:max(30px,calc(50% - 380px));top:100px}.titlebar{height:47px;border-bottom:1px solid #d6ddd5;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 16px;background:#eff1ed}.titlebar>strong{font-size:13px;font-weight:600}.traffic{display:flex;gap:8px}.traffic button,.traffic span{width:12px;height:12px;border-radius:50%;border:1px solid #00000014;padding:0}.traffic button{background:#ef6a60}.traffic button:hover{background:#c64e45}.traffic span:nth-child(2){background:#edc052}.traffic span:nth-child(3){background:#62be67}.title-end{text-align:right;font-size:10px;color:#7a847b}.tabs{display:flex;justify-content:center;gap:6px;padding:10px;border-bottom:1px solid var(--line);background:#f0f2ee}.tabs button{display:flex;align-items:center;justify-content:center;gap:7px;min-width:86px;padding:6px 16px;border-radius:6px;font-size:18px;line-height:18px}.tabs button span{font-size:12px}.tabs button[aria-selected="true"]{background:#fff;box-shadow:0 1px 4px #243a2320;color:var(--green)}.settings-content{padding:24px 30px 22px;max-height:calc(100dvh - 370px);min-height:400px;overflow:auto}h2{font-size:20px;letter-spacing:-.5px;font-weight:600}.section-description{color:var(--muted);font-size:12px;margin:7px 0 19px;line-height:1.7}h3{font-size:11px;font-weight:500;color:#606b63;margin:20px 0 8px 3px}.group{border:1px solid var(--line);border-radius:8px;background:#ffffffc4;overflow:hidden}.setting-row{min-height:48px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:16px}.setting-row small{display:block;margin-top:5px;line-height:1.5}.setting-row select{max-width:245px;min-width:180px;border:1px solid #cbd2cb;background:#fff;border-radius:5px;padding:5px 9px;font-size:12px;box-shadow:0 1px 2px #263a2110}.preset-summary{margin:0 14px;padding:14px 0;border-top:1px solid #e8ece6;display:flex;align-items:center;gap:0}.preset-summary>div{flex:1;border-right:1px solid #e5e9e3;padding-left:18px}.preset-summary>div:first-child{padding:0}.preset-summary>div:last-child{border:0}.preset-summary strong{font-size:19px;font-weight:500;font-variant-numeric:tabular-nums;color:#345c43}.preset-summary small{display:block;margin-bottom:5px;font-size:10px}.preset-summary .unit{font-size:11px;margin-left:4px;color:var(--muted)}.mapping-row{display:grid;grid-template-columns:23px 1fr 70px;align-items:center;gap:10px;margin:0 14px;padding:11px 0;border-bottom:1px solid #e5e9e3;font-size:12px}.mapping-row:last-child{border:0}.mapping-row small{display:block;font-size:10px;margin-top:3px}.mapping-row>span:last-child{text-align:right;font-variant-numeric:tabular-nums}.period-icon{font-size:21px;color:#708370}.current-badge{display:none;margin-left:6px;padding:1px 4px;border-radius:3px;background:#e3efe2;color:#2f7046;font-size:9px;font-weight:500;vertical-align:1px}.mapping-row.current .current-badge{display:inline-block}.mapping-row.current .period-icon{color:var(--accent)}.footnote{font-size:10px;color:var(--muted);margin:12px 3px 0;line-height:1.7}.number-control{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:11px}.number-control input{width:70px;border:1px solid #cbd2cb;border-radius:5px;padding:4px 7px;background:white;text-align:center;font-variant-numeric:tabular-nums}.custom-group .setting-row+.setting-row{border-top:1px solid #e5e9e3}.validation{font-size:11px;color:var(--green);line-height:1.7;margin:10px 3px 0}.validation.error{color:#a34224}.switch{appearance:none;flex-shrink:0;width:32px;height:19px;border:1px solid #c2cac2;border-radius:20px;background:#d2d8d0;cursor:pointer;position:relative;transition:background .15s}.switch:after{content:"";position:absolute;width:15px;height:15px;left:1px;top:1px;background:#fff;border-radius:50%;box-shadow:0 1px 3px #0002;transition:transform .15s}.switch:checked{background:var(--accent);border-color:var(--accent)}.switch:checked:after{transform:translateX(13px)}.log-path{padding:11px 14px;display:flex;gap:12px;justify-content:space-between;border-top:1px solid #e5e9e3;font-size:10px;color:var(--muted)}code{font-size:10px}
+.history-window{width:min(860px,calc(100% - 64px));top:110px;left:50%;transform:translateX(-50%)}.history-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:28px 26px 24px}.history-heading p{color:var(--muted);font-size:12px;margin-top:7px}.demo-badge{font-size:10px;color:#66745f;background:#e7ece2;border:1px solid #d7dfd0;border-radius:4px;padding:4px 7px}.history-toolbar{display:flex;justify-content:space-between;align-items:center;padding:10px 24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:11px;color:var(--muted)}.history-toolbar>div{display:flex;gap:8px}.native-button{background:white;border:1px solid #cfd5ce;border-radius:5px;padding:4px 11px;box-shadow:0 1px 2px #20341a0d;font-size:11px}.native-button:hover{background:#eef2eb}.native-button:active{background:#dce5d9}.table-scroll{overflow:auto;max-height:340px;min-height:220px}.history-columns,.history-record summary{display:grid;grid-template-columns:280px 156px 156px minmax(100px,1fr) 18px;align-items:center;min-width:810px;padding:0 24px;font-variant-numeric:tabular-nums}.history-columns{position:sticky;top:0;z-index:1;min-height:38px;background:#ecefe8;color:#677164;font-size:12px;border-bottom:1px solid #d7ddd1}.history-record{min-width:810px;border-bottom:1px solid #e5e9e3}.history-record:nth-child(even){background:#eaf0e522}.history-record summary{padding-top:16px;padding-bottom:16px;cursor:pointer;list-style:none;font-size:13px}.history-record summary::-webkit-details-marker{display:none}.history-record summary:focus-visible{outline:3px solid #5b9fbc;outline-offset:-3px}.history-record summary:hover{background:#e1ecdc}.history-record[open] summary{background:#edf2e9}.history-record summary small{display:block;margin-top:4px;font-size:11px}.history-record summary>span:nth-child(2){color:#4f6650}.history-arrow{font-size:20px;color:#66716b;text-align:center}.history-record[open] .history-arrow{transform:rotate(90deg)}.history-details{display:flex;gap:40px;margin:0;padding:15px 24px 18px;background:#ffffff80;font-size:13px;font-variant-numeric:tabular-nums}.history-details dt{font-size:11px;color:var(--muted);margin-bottom:6px}.history-details dd{margin:0}.status-badge{color:#2f7046;background:#e3efe2;padding:3px 5px;border-radius:4px;font-size:10px}.status-badge.early{background:#f4eada;color:#8d5c25}.history-footer{padding:13px 24px;display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);color:var(--muted);font-size:10px}.empty-history{text-align:center;padding:55px;color:var(--muted)}.empty-history>span{font-size:36px}.empty-history p{margin-top:12px}
+.orb-container{position:absolute;left:calc(50% - 120px);top:calc(50% - 100px);width:240px;height:240px;display:grid;place-items:center;z-index:15;cursor:grab;touch-action:none;user-select:none}.orb-container:active{cursor:grabbing}.orb{width:200px;height:200px;border-radius:50%;display:grid;place-items:center;transform:scale(.5);background:radial-gradient(circle at 42% 36%,#67d79c,#58bca37a 70%);box-shadow:inset 0 0 30px #ffffff30;will-change:transform}.orb-glow{position:absolute;inset:12px;background:radial-gradient(circle,#75b99b45,transparent 68%);border-radius:50%;pointer-events:none}#orb-text{position:absolute;pointer-events:none;font-size:36px;font-weight:650;color:#fff;text-shadow:0 1px 4px #0004;font-variant-numeric:tabular-nums}.desktop-hint,.quit-message{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;color:#60746a;pointer-events:none}.desktop-hint>span,.quit-message>span{font-size:70px;color:#7c9785;font-weight:200}.desktop-hint p{font-size:13px}.quit-message{pointer-events:auto}.quit-message h2{font-size:17px}.toast{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);max-width:calc(100% - 30px);padding:12px 20px;background:#f9fcf7f2;border:1px solid #ffffffcc;border-radius:9px;box-shadow:0 8px 28px #21352020;color:#3d5444;font-size:12px;z-index:40;line-height:1.7}.preview-footer{display:flex;justify-content:space-between;gap:15px;padding:15px 30px;color:var(--muted);font-size:10px;min-height:48px}.preview-footer>span:first-child{display:flex;align-items:center;gap:8px}
+@media(min-width:1400px){.settings-window{left:calc(50% - 350px);top:115px}.app-menu{right:150px}.settings-content{padding:28px 32px;min-height:420px}.mapping-row{padding:13px 0}}
+@media(max-width:1000px){.version{display:none}.app-menu{right:20px}.settings-window{left:28px;top:110px;width:500px}.system-left{gap:15px}.settings-content{padding:22px;min-height:390px}}
+@media(max-width:720px){.preview-header{padding:18px;flex-wrap:wrap;min-height:110px;gap:16px}.brand-mark{font-size:36px}.scene-nav{margin-left:auto}.scene-nav button{padding:7px 10px}.desktop{margin:0 10px;min-height:720px;height:calc(100dvh - 170px)}.system-left>span:not(.apple){display:none}.system-bar{padding:0 12px}.system-right{gap:8px}.system-clock{font-size:10px}.app-menu{right:8px}.settings-window{left:14px;top:85px;width:calc(100% - 28px)}.settings-content{max-height:470px;min-height:0;padding:20px}.history-window{top:85px;width:calc(100% - 28px)}.history-heading{padding:20px}.history-toolbar{padding:10px 16px}.history-footer{flex-wrap:wrap;padding:12px 16px}.mapping-row{grid-template-columns:20px 1fr 60px;gap:6px}.setting-row select{min-width:145px;max-width:190px}.preview-footer{padding:14px 18px;flex-wrap:wrap}.history-heading h2{font-size:18px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}.orb{will-change:auto}}
+
+/* Same presentation framing in both candidates, separate from the proposed design. */
+html,body{margin:0;height:100%;overflow:hidden}
+.preview-header,.preview-footer{display:none}
+.desktop{margin:0;min-height:0;height:100dvh;border:0;border-radius:0;background:#f3f4f3}
+.settings-window{left:50%;top:76px;transform:translateX(-50%);width:540px}
+.settings-content{padding:24px 30px 22px;max-height:calc(100dvh - 210px);min-height:min(400px,calc(100dvh - 210px))}
+.history-window{top:76px;width:min(860px,calc(100% - 64px))}
+.system-left{gap:15px}.system-right{gap:12px}.app-menu{right:16px}
+@media(max-width:580px){.settings-window{width:calc(100% - 32px)}.settings-content{padding:20px}.history-window{width:calc(100% - 32px)}}
+</style>
+</head>
+<body>
+  <header class="preview-header">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">≋</span><div><h1>Breathe</h1><p>macOS · 交互原型</p></div></div>
+    <nav class="scene-nav" aria-label="原型场景">
+      <button data-scene="desktop">呼吸桌面</button>
+      <button data-scene="settings" aria-pressed="true">设置</button>
+      <button data-scene="history">历史记录</button>
+    </nav>
+    <span class="version">基于现有功能 <span class="live-dot"></span></span>
+  </header>
+  <main class="desktop" id="desktop" data-screen-label="macOS 桌面">
+    <div class="system-bar">
+      <div class="system-left"><span class="apple" aria-hidden="true">●</span><strong>访达</strong><span>文件</span><span>编辑</span><span>显示</span><span>前往</span><span>窗口</span><span>帮助</span></div>
+      <div class="system-right"><button id="status-button" aria-label="Breathe 菜单栏" aria-expanded="true"><span class="wind">≋</span><span id="remaining"></span></button><span class="system-clock" id="clock"></span></div>
+    </div>
+
+    <section class="app-menu" id="app-menu" aria-label="Breathe 菜单" data-screen-label="菜单栏菜单">
+      <div class="menu-brand"><span class="mini-mark">≋</span><strong>Breathe</strong><span id="menu-state">准备就绪</span></div>
+      <button class="menu-row start-row" id="start-button"><span id="start-label">开始呼吸</span><kbd>⌘ B</kbd></button>
+      <button class="menu-row" id="pause-button" hidden><span id="pause-label">暂停</span><kbd>Space</kbd></button>
+      <div class="menu-rule"></div>
+      <button class="menu-row" id="preset-button" aria-expanded="false"><span>预设</span><span class="menu-end"><span id="preset-name">自动</span><span>›</span></span></button>
+      <div class="preset-menu" id="preset-menu" hidden>
+        <button data-preset="auto">自动（按时段）</button>
+        <button data-preset="morning">晨间 <span>5–5 · 10 分钟</span></button>
+        <button data-preset="midday">午间 <span>4–6 · 20 分钟</span></button>
+        <button data-preset="evening">晚间 <span>4–6 · 15 分钟</span></button>
+        <button data-preset="night">深夜 <span>3–7 · 20 分钟</span></button>
+        <button data-preset="custom">自定义…</button>
+      </div>
+      <button class="menu-row" id="mute-button"><span id="mute-label">静音</span><kbd>S</kbd></button>
+      <div class="menu-rule"></div>
+      <button class="menu-row" data-open="history"><span>历史记录</span><kbd>⌘ H</kbd></button>
+      <button class="menu-row" data-open="settings"><span>设置…</span><kbd>⌘ ,</kbd></button>
+      <div class="menu-rule"></div>
+      <button class="menu-row" id="quit-button"><span>退出 Breathe</span><kbd>⌘ Q</kbd></button>
+    </section>
+
+    <section class="window settings-window" id="settings-window" aria-label="Breathe 设置" data-screen-label="设置">
+      <div class="titlebar"><div class="traffic"><button data-close="settings" aria-label="关闭设置"></button><span></span><span></span></div><strong>设置</strong><span class="title-end">Breathe</span></div>
+      <div class="tabs" role="tablist" aria-label="设置分类"><button id="preset-tab" role="tab" aria-selected="true">≋ <span>预设</span></button><button id="general-tab" role="tab" aria-selected="false">⚙ <span>通用</span></button></div>
+      <div class="settings-content" id="preset-panel" role="tabpanel" aria-labelledby="preset-tab">
+        <h2>呼吸节奏</h2><p class="section-description">选择适合当前时段的呼吸预设。</p>
+        <div class="group"><div class="setting-row"><label for="preset-select">默认预设</label><select id="preset-select"><option value="auto">自动（按时段）</option><option value="morning">晨间</option><option value="midday">午间</option><option value="evening">晚间</option><option value="night">深夜</option><option value="custom">自定义…</option></select></div><div class="preset-summary" id="preset-summary"></div></div>
+        <div id="custom-settings" hidden>
+          <h3>自定义比例</h3><div class="group custom-group"><div class="setting-row"><label for="inhale">吸气</label><div class="number-control"><input id="inhale" type="number" min="3" max="10" step="1" value="5"><span>秒</span></div></div><div class="setting-row"><label for="exhale">呼气</label><div class="number-control"><input id="exhale" type="number" min="3" max="10" step="1" value="5"><span>秒</span></div></div><div class="setting-row"><label for="duration">练习时长</label><div class="number-control"><input id="duration" type="number" min="1" max="60" step="1" value="10"><span>分钟</span></div></div></div><p class="validation" id="validation" role="status"></p>
+        </div>
+        <div id="time-mapping"><h3>时段映射</h3><div class="group mapping">
+          <div class="mapping-row" data-period="morning"><span class="period-icon">☼</span><span class="mapping-title">早晨 <b class="current-badge">当前</b><small>06:00 – 12:00</small></span><span>5–5 <small>10 分钟</small></span></div>
+          <div class="mapping-row" data-period="midday"><span class="period-icon">☀</span><span class="mapping-title">下午 <b class="current-badge">当前</b><small>12:00 – 17:00</small></span><span>4–6 <small>20 分钟</small></span></div>
+          <div class="mapping-row" data-period="evening"><span class="period-icon">◒</span><span class="mapping-title">傍晚 <b class="current-badge">当前</b><small>17:00 – 22:00</small></span><span>4–6 <small>15 分钟</small></span></div>
+          <div class="mapping-row" data-period="night"><span class="period-icon">☾</span><span class="mapping-title">夜间 <b class="current-badge">当前</b><small>22:00 – 06:00</small></span><span>3–7 <small>20 分钟</small></span></div>
+        </div><p class="footnote">全部预设均为每分钟 6 次呼吸。</p></div>
+      </div>
+      <div class="settings-content" id="general-panel" role="tabpanel" aria-labelledby="general-tab" hidden>
+        <h2>通用</h2><p class="section-description">声音、会话记录与启动选项。</p>
+        <h3>音频</h3><div class="group"><label class="setting-row" for="sound"><span>声音提示<small>在吸气和呼气开始时播放提示音</small></span><input class="switch" id="sound" type="checkbox" role="switch" checked></label></div>
+        <h3>数据</h3><div class="group"><label class="setting-row" for="logging"><span>记录会话日志</span><input class="switch" id="logging" type="checkbox" role="switch" checked></label><div class="log-path" id="log-path"><span>日志路径</span><code>~/.config/breathe/sessions.csv</code></div></div>
+        <h3>启动</h3><div class="group"><label class="setting-row" for="launch"><span>开机自动启动<small>登录 macOS 时启动 Breathe</small></span><input class="switch" id="launch" type="checkbox" role="switch"></label></div>
+        <p class="footnote">演示开关仅保存在当前页面，不会更改系统设置。</p>
+      </div>
+    </section>
+
+    <section class="window history-window" id="history-window" aria-label="会话历史" data-screen-label="历史记录" hidden>
+      <div class="titlebar"><div class="traffic"><button data-close="history" aria-label="关闭历史记录"></button><span></span><span></span></div><strong>历史记录</strong><span class="title-end">Breathe</span></div>
+      <div class="history-heading"><div><h2>会话记录</h2><p>每一次呼吸练习，都留在这里。</p></div><span class="demo-badge">演示数据</span></div>
+      <div class="history-toolbar"><span id="record-count"></span><div><button class="native-button" id="refresh-button">刷新</button><button class="native-button" id="import-button">导入旧版日志</button></div></div>
+      <div class="table-scroll"><div class="history-columns" aria-hidden="true"><span>日期与时间</span><span>预设</span><span>实际时长</span><span>状态</span><span></span></div><div id="history-body"></div></div>
+      <div class="empty-history" id="empty-history" hidden><span>◷</span><p>暂无会话记录</p></div>
+      <div class="history-footer"><span>CSV · 与 breathe-cli 兼容</span><span>仅展示浏览器内的演示记录</span></div>
+    </section>
+
+    <div class="orb-container" id="orb-container" aria-label="可拖动的呼吸球" hidden><div class="orb-glow"></div><div class="orb" id="orb"></div><span id="orb-text"></span></div>
+    <div class="desktop-hint" id="desktop-hint" hidden><span>≋</span><p>点击右上角的 Breathe，开始呼吸。</p></div>
+    <div class="quit-message" id="quit-message" hidden><span>≋</span><h2>Breathe 已退出</h2><button class="native-button" id="restart-button">重新打开演示</button></div>
+    <div class="toast" id="toast" role="status" hidden></div>
+  </main>
+  <footer class="preview-footer"><span><span class="live-dot"></span>可交互 · 点击菜单栏开始，呼吸球可拖动</span><span>浏览器演示，不读取本地数据</span></footer>
+  <script>"use strict";
+const $ = (id) => document.getElementById(id);
+const presets = {
+  morning: { inhale: 5, exhale: 5, minutes: 10 },
+  midday: { inhale: 4, exhale: 6, minutes: 20 },
+  evening: { inhale: 4, exhale: 6, minutes: 15 },
+  night: { inhale: 3, exhale: 7, minutes: 20 }
+};
+// 内部值沿用英文 preset id；界面显示用 presetLabel 转中文。
+const presetLabels = {
+  auto: "自动",
+  morning: "晨间",
+  midday: "午间",
+  evening: "晚间",
+  night: "深夜",
+  custom: "自定义",
+  balanced: "晨间",
+  extended: "午间",
+  calm: "晚间",
+  unknown: "未知"
+};
+const presetLabel = (name) => presetLabels[name] || name;
+const state = { preset: "auto", custom: { inhale: 5, exhale: 5, minutes: 10 }, sound: true, logging: true, launch: false, scene: "settings", active: false, paused: false, phase: "idle", phaseElapsed: 0, countdown: 3, breaths: 0, remaining: 0, config: null, started: null, quit: false };
+// Fixture records only. No filesystem access, import, or real session data.
+// preset 列保留 CSV 的英文 id，renderHistory 显示中文。
+const records = [
+  ["2026-10-29", "07:30:12", "morning", "5-5", "10:00", "10:00", 60, 100, true],
+  ["2026-10-28", "22:15:08", "night", "3-7", "20:00", "20:00", 120, 100, true],
+  ["2026-10-28", "18:42:36", "evening", "4-6", "15:00", "08:24", 50, 56, false],
+  ["2026-10-28", "13:05:20", "midday", "4-6", "20:00", "20:00", 120, 100, true],
+  ["2026-10-28", "07:12:45", "morning", "5-5", "10:00", "10:00", 60, 100, true],
+  ["2026-10-27", "21:08:03", "evening", "4-6", "15:00", "15:00", 90, 100, true],
+  ["2026-10-27", "06:50:16", "morning", "5-5", "10:00", "10:00", 60, 100, true]
+];
+const formatTime = (seconds) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+const localHour = () => 14;
+function autoPreset() {
+  const hour = localHour();
+  return hour >= 6 && hour < 12 ? "morning" : hour >= 12 && hour < 17 ? "midday" : hour >= 17 && hour < 22 ? "evening" : "night";
+}
+function selectedConfig() {
+  const name = state.preset === "auto" ? autoPreset() : state.preset;
+  const config = { ...(name === "custom" ? state.custom : presets[name]), name };
+  config.cycle = config.inhale + config.exhale;
+  config.total = Math.ceil(config.minutes * 60 / config.cycle) * config.cycle;
+  return config;
+}
+function validationError() {
+  const { inhale, exhale, minutes } = state.custom;
+  if (![inhale, exhale, minutes].every(Number.isInteger)) return "请输入完整的整数时长。";
+  if (inhale + exhale < 8) return `总呼吸周期须 ≥ 8 秒，当前 ${inhale + exhale} 秒`;
+  if (inhale < 3 || inhale > 10) return "吸气时长须在 3–10 秒";
+  if (exhale < 3 || exhale > 10) return "呼气时长须在 3–10 秒";
+  if (minutes < 1 || minutes > 60) return "练习时长须在 1–60 分钟";
+  return "";
+}
+let toastTimer;
+function toast(message) {
+  $("toast").textContent = message;
+  $("toast").hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { $("toast").hidden = true; }, 3800);
+}
+function setMenu(open) {
+  $("app-menu").hidden = !open || state.quit;
+  $("status-button").setAttribute("aria-expanded", String(open && !state.quit));
+  if (!open) {
+    $("preset-menu").hidden = true;
+    $("preset-button").setAttribute("aria-expanded", "false");
+  }
+}
+function showScene(scene) {
+  if (state.quit) return;
+  state.scene = scene;
+  $("settings-window").hidden = scene !== "settings";
+  $("history-window").hidden = scene !== "history";
+  $("desktop-hint").hidden = scene !== "desktop" || state.active;
+  document.querySelectorAll("[data-scene]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.scene === scene)));
+  if (scene === "history") renderHistory();
+}
+function renderSettings() {
+  const config = selectedConfig();
+  const custom = state.preset === "custom";
+  const error = custom ? validationError() : "";
+  $("preset-select").value = state.preset;
+  const displayPreset = custom ? "自定义" : presetLabel(config.name);
+  $("preset-name").textContent = state.preset === "auto" ? "自动" : displayPreset;
+  $("custom-settings").hidden = !custom;
+  $("time-mapping").hidden = state.preset !== "auto";
+  const currentAuto = autoPreset();
+  document.querySelectorAll(".mapping-row").forEach((row) => {
+    row.classList.toggle("current", row.dataset.period === currentAuto);
+  });
+  $("preset-summary").hidden = !!error;
+  $("preset-summary").innerHTML = `<div><small>${state.preset === "auto" ? "当前预设" : "所选预设"}</small><strong style="font-size:15px">${displayPreset}</strong></div><div><small>吸气 / 呼气</small><strong>${config.inhale} / ${config.exhale}</strong><span class="unit">秒</span></div><div><small>练习时长</small><strong>${config.minutes}</strong><span class="unit">分钟</span></div>`;
+  $("validation").classList.toggle("error", !!error);
+  $("validation").textContent = error || `周期 ${config.cycle} 秒，实际时长 ${Math.floor(config.total / 60)} 分 ${config.total % 60} 秒`;
+  $("start-button").disabled = !state.active && !!error;
+  $("sound").checked = state.sound;
+  $("logging").checked = state.logging;
+  $("launch").checked = state.launch;
+  $("log-path").hidden = !state.logging;
+  $("mute-label").textContent = state.sound ? "静音" : "取消静音";
+  document.querySelectorAll("[data-preset]").forEach((button) => button.classList.toggle("selected", button.dataset.preset === state.preset));
+}
+function selectPreset(value) {
+  state.preset = value;
+  $("preset-menu").hidden = true;
+  $("preset-button").setAttribute("aria-expanded", "false");
+  renderSettings();
+  if (value === "custom") { showScene("settings"); selectTab("preset"); }
+}
+function selectTab(tab) {
+  for (const name of ["preset", "general"]) {
+    $(`${name}-tab`).setAttribute("aria-selected", String(name === tab));
+    $(`${name}-panel`).hidden = name !== tab;
+  }
+}
+const expandedRecords = new Set();
+function renderHistory() {
+  $("record-count").textContent = `${records.length} 条记录`;
+  $("empty-history").hidden = records.length > 0;
+  document.querySelector(".table-scroll").hidden = records.length === 0;
+  $("history-body").replaceChildren(...records.map((record) => {
+    const row = document.createElement("details");
+    row.className = "history-record";
+    row.open = expandedRecords.has(record);
+    row.addEventListener("toggle", () => {
+      if (row.open) expandedRecords.add(record);
+      else expandedRecords.delete(record);
+    });
+    const summary = document.createElement("summary");
+    const date = document.createElement("span");
+    date.textContent = record[0];
+    const time = document.createElement("small");
+    time.textContent = record[1];
+    date.appendChild(time);
+    summary.appendChild(date);
+    for (const value of [presetLabel(record[2]), record[5]]) {
+      const cell = document.createElement("span");
+      cell.textContent = value;
+      summary.appendChild(cell);
+    }
+    const status = document.createElement("span");
+    const badge = document.createElement("span");
+    badge.className = `status-badge${record[8] ? "" : " early"}`;
+    badge.textContent = record[8] ? "已完成" : "提前结束";
+    status.appendChild(badge);
+    summary.appendChild(status);
+    const arrow = document.createElement("span");
+    arrow.className = "history-arrow";
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "›";
+    summary.appendChild(arrow);
+    row.appendChild(summary);
+    const details = document.createElement("dl");
+    details.className = "history-details";
+    for (const [title, value] of [["吸气 / 呼气", `${record[3]} 秒`], ["目标时长", record[4]], ["呼吸次数", `${record[6]} 次`], ["完成比例", `${record[7]}%`]]) {
+      const field = document.createElement("div");
+      const label = document.createElement("dt");
+      label.textContent = title;
+      const content = document.createElement("dd");
+      content.textContent = value;
+      field.append(label, content);
+      details.appendChild(field);
+    }
+    row.appendChild(details);
+    return row;
+  }));
+}
+let audioContext;
+function enableAudio() {
+  if (!state.sound) return;
+  try {
+    audioContext ??= new (window.AudioContext || window.webkitAudioContext)();
+    audioContext.resume().catch(() => {});
+  } catch { /* Audio can be unavailable in embedded browsers. */ }
+}
+function cue() {
+  if (!state.sound) return;
+  try {
+    audioContext ??= new (window.AudioContext || window.webkitAudioContext)();
+    if (audioContext.state !== "running") return;
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    oscillator.frequency.value = state.phase === "inhale" ? 660 : 440;
+    gain.gain.setValueAtTime(0, audioContext.currentTime);
+    gain.gain.linearRampToValueAtTime(.035, audioContext.currentTime + .03);
+    gain.gain.exponentialRampToValueAtTime(.001, audioContext.currentTime + .32);
+    oscillator.connect(gain); gain.connect(audioContext.destination);
+    oscillator.start(); oscillator.stop(audioContext.currentTime + .35);
+  } catch { /* Sound is optional in the browser demo. */ }
+}
+function startSession() {
+  if (state.quit || (state.preset === "custom" && validationError())) return;
+  state.config = selectedConfig();
+  state.active = true; state.paused = false; state.phase = "countdown";
+  state.phaseElapsed = 0; state.countdown = 3; state.breaths = 0;
+  state.remaining = state.config.total; state.started = new Date();
+  // Audio is initialized in a user gesture, never on page load.
+  enableAudio();
+  showScene("desktop"); setMenu(false); renderSession();
+}
+function finishSession(completed) {
+  if (!state.active) return;
+  const config = state.config;
+  const elapsed = completed ? config.total : Math.floor((Date.now() - state.started.getTime()) / 1000);
+  if (state.logging) {
+    const parts = new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" }).format(state.started).split(" ");
+    records.push([parts[0], parts[1], config.name, `${config.inhale}-${config.exhale}`, formatTime(config.total), formatTime(elapsed), state.breaths, completed ? 100 : Math.min(100, Math.floor(elapsed * 100 / config.total)), completed]);
+  }
+  state.active = false; state.paused = false; state.phase = "idle";
+  renderSession(); showScene(state.scene); renderHistory();
+  toast(completed ? "呼吸练习已完成。" : "呼吸练习已结束。");
+}
+function togglePause() {
+  if (!state.active || state.phase === "countdown") return;
+  state.paused = !state.paused;
+  if (!state.paused) {
+    // Native engine resumes from inhale, discarding the partial cycle.
+    state.phase = "inhale"; state.phaseElapsed = 0;
+    state.remaining = state.config.total - state.breaths * state.config.cycle;
+    cue();
+  }
+  renderSession();
+}
+function renderSession() {
+  $("orb-container").hidden = !state.active;
+  $("remaining").textContent = state.active ? formatTime(state.remaining) : "";
+  $("status-button").style.color = state.active ? "#26734f" : "";
+  $("start-label").textContent = state.active ? "停止呼吸" : "开始呼吸";
+  $("pause-button").hidden = !state.active;
+  $("pause-button").disabled = state.phase === "countdown";
+  $("pause-label").textContent = state.paused ? "继续" : "暂停";
+  $("menu-state").textContent = !state.active ? "准备就绪" : state.paused ? "已暂停" : state.phase === "countdown" ? "准备开始" : state.phase === "inhale" ? "吸气" : "呼气";
+  if (!state.active) { renderSettings(); return; }
+  const phase = state.paused ? "paused" : state.phase;
+  const seconds = phase === "countdown" ? state.countdown - Math.floor(state.phaseElapsed) : phase === "paused" ? 0 : Math.ceil(state.config[phase] - state.phaseElapsed);
+  $("orb-text").textContent = phase === "paused" ? "Ⅱ" : Math.max(0, seconds);
+  const progress = phase === "inhale" || phase === "exhale" ? Math.min(1, state.phaseElapsed / state.config[phase]) : 0;
+  const scale = phase === "inhale" ? .3 + .7 * progress : phase === "exhale" ? 1 - .7 * progress : .5;
+  $("orb").style.transform = `scale(${scale})`;
+  const colors = phase === "inhale" ? ["#4bc984", "#6cc5ad88"] : phase === "exhale" ? ["#ea8c6f", "#e8ab7988"] : phase === "paused" ? ["#dda44f", "#e9cb7888"] : ["#71a8d9", "#8fc0dc88"];
+  $("orb").style.background = `radial-gradient(circle at 42% 36%,${colors[0]},${colors[1]} 75%)`;
+  $("orb-container").setAttribute("aria-label", `可拖动的呼吸球：${$("menu-state").textContent}，${phase === "paused" ? "" : seconds + " 秒"}`);
+}
+let previousTick = performance.now();
+setInterval(() => {
+  const now = performance.now(); const delta = (now - previousTick) / 1000; previousTick = now;
+  if (!state.active || state.paused) return;
+  state.phaseElapsed += delta;
+  while (state.active) {
+    const duration = state.phase === "countdown" ? 3 : state.config[state.phase];
+    if (state.phaseElapsed < duration) break;
+    state.phaseElapsed -= duration;
+    if (state.phase === "exhale") {
+      state.breaths++;
+      if (state.breaths * state.config.cycle >= state.config.total) { finishSession(true); return; }
+    }
+    state.phase = state.phase === "inhale" ? "exhale" : "inhale";
+    // Avoid a burst of tones after returning from a background tab.
+    if (delta < 1) cue();
+  }
+  const elapsed = state.phase === "countdown" ? 0 : state.breaths * state.config.cycle + (state.phase === "exhale" ? state.config.inhale : 0) + Math.floor(state.phaseElapsed);
+  state.remaining = Math.max(0, state.config.total - elapsed);
+  renderSession();
+}, 50);
+$("status-button").addEventListener("click", () => setMenu($("app-menu").hidden));
+$("status-button").addEventListener("contextmenu", (event) => { event.preventDefault(); setMenu(true); });
+$("start-button").addEventListener("click", () => state.active ? finishSession(false) : startSession());
+$("pause-button").addEventListener("click", togglePause);
+$("preset-button").addEventListener("click", () => { $("preset-menu").hidden = !$("preset-menu").hidden; $("preset-button").setAttribute("aria-expanded", String(!$("preset-menu").hidden)); });
+document.querySelectorAll("[data-preset]").forEach((button) => button.addEventListener("click", () => selectPreset(button.dataset.preset)));
+document.querySelectorAll("[data-scene]").forEach((button) => button.addEventListener("click", () => { showScene(button.dataset.scene); setMenu(button.dataset.scene === "desktop"); }));
+document.querySelectorAll("[data-open]").forEach((button) => button.addEventListener("click", () => { showScene(button.dataset.open); setMenu(false); }));
+document.querySelectorAll("[data-close]").forEach((button) => button.addEventListener("click", () => showScene("desktop")));
+$("preset-tab").addEventListener("click", () => selectTab("preset"));
+$("general-tab").addEventListener("click", () => selectTab("general"));
+$("preset-select").addEventListener("change", (event) => selectPreset(event.target.value));
+for (const [id, property] of [["inhale", "inhale"], ["exhale", "exhale"], ["duration", "minutes"]]) {
+  $(id).addEventListener("input", (event) => { state.custom[property] = event.target.value === "" ? NaN : Number(event.target.value); renderSettings(); });
+}
+$("mute-button").addEventListener("click", () => { state.sound = !state.sound; enableAudio(); renderSettings(); });
+for (const [id, property] of [["sound", "sound"], ["logging", "logging"], ["launch", "launch"]]) {
+  $(id).addEventListener("change", (event) => { state[property] = event.target.checked; if (property === "sound") enableAudio(); renderSettings(); });
+}
+$("refresh-button").addEventListener("click", () => { renderHistory(); toast("演示记录已刷新。"); });
+$("import-button").addEventListener("click", () => { records.push(["2026-10-26", "08:10:00", "morning", "5-5", "10:00", "10:00", 60, 100, true]); renderHistory(); toast("已加入 1 条旧版日志示例；未读取本地文件。"); });
+$("quit-button").addEventListener("click", () => {
+  // Quitting the native app does not call the stop action or write a record.
+  state.active = false; state.quit = true; state.phase = "idle"; setMenu(false);
+  $("status-button").hidden = true; $("settings-window").hidden = true; $("history-window").hidden = true;
+  $("orb-container").hidden = true; $("desktop-hint").hidden = true; $("quit-message").hidden = false;
+});
+$("restart-button").addEventListener("click", () => { state.quit = false; $("status-button").hidden = false; $("quit-message").hidden = true; renderSession(); showScene("desktop"); setMenu(true); });
+$("desktop").addEventListener("pointerdown", (event) => { if (event.target === $("desktop") || event.target.closest(".window")) setMenu(false); });
+document.addEventListener("keydown", (event) => {
+  if (state.quit || event.target.closest("input,select,textarea")) return;
+  if (event.key === "Escape") { setMenu(false); return; }
+  if (event.code === "Space" && !event.target.closest("button,summary")) { event.preventDefault(); togglePause(); }
+  if (event.key.toLowerCase() === "s" && !event.metaKey && !event.ctrlKey) { state.sound = !state.sound; enableAudio(); renderSettings(); }
+  if (event.metaKey || event.ctrlKey) {
+    if (event.key.toLowerCase() === "b") { event.preventDefault(); state.active ? finishSession(false) : startSession(); }
+    if (event.key === ",") { event.preventDefault(); showScene("settings"); setMenu(false); }
+    if (event.key.toLowerCase() === "h") { event.preventDefault(); showScene("history"); setMenu(false); }
+  }
+});
+let drag = null;
+$("orb-container").addEventListener("pointerdown", (event) => {
+  const rect = $("orb-container").getBoundingClientRect();
+  drag = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+  $("orb-container").setPointerCapture(event.pointerId);
+});
+$("orb-container").addEventListener("pointermove", (event) => {
+  if (!drag) return;
+  const rect = $("desktop").getBoundingClientRect();
+  $("orb-container").style.left = `${Math.max(0, Math.min(rect.width - 242, event.clientX - rect.left - drag.x))}px`;
+  $("orb-container").style.top = `${Math.max(32, Math.min(rect.height - 242, event.clientY - rect.top - drag.y))}px`;
+});
+$("orb-container").addEventListener("pointerup", () => { drag = null; });
+$("orb-container").addEventListener("pointercancel", () => { drag = null; });
+window.addEventListener("resize", () => {
+  if (!state.active) return;
+  const orb = $("orb-container");
+  orb.style.left = `${Math.max(0, Math.min($("desktop").clientWidth - 240, orb.offsetLeft))}px`;
+  orb.style.top = `${Math.max(32, Math.min($("desktop").clientHeight - 240, orb.offsetTop))}px`;
+});
+function renderClock() { $("clock").textContent = "11月16日周一 14:00"; }
+renderClock(); setInterval(renderClock, 10000);
+renderSettings(); renderHistory(); showScene("settings"); renderSession();
+setInterval(renderSettings, 60000);
+if (window.matchMedia("(max-width: 720px)").matches) setMenu(false);
+
+setMenu(false);
+showScene("settings");
+selectTab("general");
+</script>
+</body>
+</html>

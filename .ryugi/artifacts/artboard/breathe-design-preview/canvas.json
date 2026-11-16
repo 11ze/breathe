@@ -1,0 +1,242 @@
+{
+  "version": 1,
+  "title": "Breathe · 改动前后对比",
+  "activePage": "style-review",
+  "pages": [
+    {
+      "id": "breathing",
+      "name": "呼吸球"
+    },
+    {
+      "id": "history",
+      "name": "历史记录"
+    },
+    {
+      "id": "style-review",
+      "name": "本轮 · 整体微调"
+    }
+  ],
+  "boards": {
+    "orb-before": {
+      "file": "pages/orb-before.html",
+      "page": "breathing",
+      "x": 0,
+      "y": 0,
+      "w": 640,
+      "h": 560,
+      "title": "原版 · 数字随球缩放",
+      "interactive": true
+    },
+    "orb-after": {
+      "file": "pages/orb-after.html",
+      "page": "breathing",
+      "x": 720,
+      "y": 0,
+      "w": 640,
+      "h": 560,
+      "title": "建议版 · 固定读秒，无阶段文字",
+      "interactive": true
+    },
+    "history-before": {
+      "file": "pages/history-before.html",
+      "page": "history",
+      "x": 0,
+      "y": 0,
+      "w": 920,
+      "h": 600,
+      "title": "原版 · 九列记录"
+    },
+    "history-after": {
+      "file": "pages/history-after.html",
+      "page": "history",
+      "x": 1000,
+      "y": 0,
+      "w": 920,
+      "h": 600,
+      "title": "建议版 · 主要字段与展开详情",
+      "interactive": true
+    },
+    "style-preset-current": {
+      "file": "pages/style-review/preset-current.html",
+      "page": "style-review",
+      "x": 0,
+      "y": 0,
+      "w": 760,
+      "h": 840,
+      "title": "预设 · 当前版",
+      "interactive": true
+    },
+    "style-preset-proposed": {
+      "file": "pages/style-review/preset-proposed.html",
+      "page": "style-review",
+      "x": 840,
+      "y": 0,
+      "w": 760,
+      "h": 840,
+      "title": "预设 · 综合调整版",
+      "interactive": true
+    },
+    "style-general-current": {
+      "file": "pages/style-review/general-current.html",
+      "page": "style-review",
+      "x": 0,
+      "y": 1280,
+      "w": 760,
+      "h": 760,
+      "title": "通用 · 当前版",
+      "interactive": true
+    },
+    "style-general-proposed": {
+      "file": "pages/style-review/general-proposed.html",
+      "page": "style-review",
+      "x": 840,
+      "y": 1280,
+      "w": 760,
+      "h": 760,
+      "title": "通用 · 综合调整版",
+      "interactive": true
+    },
+    "style-history-current": {
+      "file": "pages/style-review/history-current.html",
+      "page": "style-review",
+      "x": 0,
+      "y": 2480,
+      "w": 760,
+      "h": 760,
+      "title": "历史 · 当前版",
+      "interactive": true
+    },
+    "style-history-proposed": {
+      "file": "pages/style-review/history-proposed.html",
+      "page": "style-review",
+      "x": 840,
+      "y": 2480,
+      "w": 760,
+      "h": 760,
+      "title": "历史 · 综合调整版",
+      "interactive": true
+    },
+    "style-countdown-dark": {
+      "file": "pages/style-review/countdown-dark.html",
+      "page": "style-review",
+      "x": 0,
+      "y": 4000,
+      "w": 760,
+      "h": 300,
+      "title": "深色菜单栏 · 绿色与白色读秒"
+    },
+    "style-countdown-light": {
+      "file": "pages/style-review/countdown-light.html",
+      "page": "style-review",
+      "x": 840,
+      "y": 4000,
+      "w": 760,
+      "h": 300,
+      "title": "浅色菜单栏 · 绿色与白色读秒"
+    }
+  },
+  "groups": {
+    "breathing-choice": {
+      "title": "呼吸球：保留颜色与缩放，只改提示",
+      "boards": [
+        "orb-before",
+        "orb-after"
+      ],
+      "choose": true,
+      "recommend": "orb-after"
+    },
+    "history-choice": {
+      "title": "历史页：比较信息密度",
+      "boards": [
+        "history-before",
+        "history-after"
+      ],
+      "choose": true,
+      "recommend": "history-after"
+    },
+    "style-preset": {
+      "title": "整套风格取舍（含下方通用与历史对比）",
+      "boards": [
+        "style-preset-current",
+        "style-preset-proposed"
+      ],
+      "choose": true,
+      "recommend": "style-preset-proposed"
+    },
+    "style-general": {
+      "title": "通用：核对说明、路径与开关的整体关系",
+      "boards": [
+        "style-general-current",
+        "style-general-proposed"
+      ]
+    },
+    "style-history": {
+      "title": "历史：核对状态字号与窄窗口列宽",
+      "boards": [
+        "style-history-current",
+        "style-history-proposed"
+      ]
+    },
+    "style-countdown": {
+      "title": "倒计时白字：同时检查深色与浅色菜单栏",
+      "boards": [
+        "style-countdown-dark",
+        "style-countdown-light"
+      ]
+    }
+  },
+  "notes": {
+    "scope": {
+      "kind": "sticky",
+      "page": "breathing",
+      "x": 0,
+      "y": 720,
+      "w": 640,
+      "text": "已选择建议版：读秒保持固定大小，不显示阶段文字；历史页采用主要字段与展开详情。沿用系统字体、配色与球体缩放。原版为源码复现，非原生截图。尚未接入应用。"
+    },
+    "history-scope": {
+      "kind": "sticky",
+      "page": "history",
+      "x": 0,
+      "y": 760,
+      "w": 640,
+      "text": "同一组演示记录。建议版点击记录展开详情。未读取真实日志；原版按源码复现，非原生截图。"
+    },
+    "style-preset-scope": {
+      "kind": "sticky",
+      "page": "style-review",
+      "x": 0,
+      "y": 968,
+      "w": 1600,
+      "text": "本轮只选择整体方向。左侧为当前稿，右侧合并本轮建议。两侧窗口尺寸与演示数据相同；当前时段固定为下午便于比较。图标为同一套线形预览，原生实施时映射到 SF Symbols。系统字体、品牌标记、圆角与呼吸球不改。 两侧应用外背景统一为浅灰 #F3F4F3，去掉桌面绿色渐变；这是设计稿展示背景，待最终确认时与其余调整一并处理。 新增候选：界面的绿色文字改为深黑 #242B28，保留呼吸球、开关和状态底色；倒计时白字见下方菜单栏对比。"
+    },
+    "style-general-scope": {
+      "kind": "sticky",
+      "page": "style-review",
+      "x": 0,
+      "y": 2168,
+      "w": 1600,
+      "text": "可进入 PLAY 切换预设/通用、修改表单与开关；状态只在当前页面保留，不会更改系统设置或真实数据。两个版本都沿用现有原型交互。"
+    },
+    "style-history-scope": {
+      "kind": "sticky",
+      "page": "style-review",
+      "x": 0,
+      "y": 3368,
+      "w": 1600,
+      "text": "这里刻意使用 760px 画板，显示网页原型的窄窗口状态；原生历史窗口最小宽度为 860pt，不能据此判定原生存在同一问题。两侧均可展开详情。深色模式暂缓；应用和 designs/breathe 均未修改。"
+    },
+    "style-countdown-scope": {
+      "kind": "sticky",
+      "page": "style-review",
+      "x": 0,
+      "y": 4428,
+      "w": 1600,
+      "text": "白色倒计时已纳入候选。深色菜单栏上更清楚；浅色菜单栏上对比不足。这里是两种系统菜单栏背景的静态颜色示意，不代表原生自动适配已实现。界面绿色文字同时改深黑，呼吸球、开关、选中背景与状态底色保留。最终统一确认后实施。"
+    }
+  },
+  "focus": {
+    "target": "style-preset",
+    "at": "2026-11-16T06:20:52.528542+00:00"
+  }
+}

@@ -227,7 +227,6 @@ function togglePause() {
 function renderSession() {
   $("orb-container").hidden = !state.active;
   $("remaining").textContent = state.active ? formatTime(state.remaining) : "";
-  $("status-button").style.color = state.active ? "#26734f" : "";
   $("start-label").textContent = state.active ? "停止呼吸" : "开始呼吸";
   $("pause-button").hidden = !state.active;
   $("pause-button").disabled = state.phase === "countdown";

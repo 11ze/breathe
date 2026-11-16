@@ -11,7 +11,7 @@ final class SettingsNavigation: ObservableObject {
     @Published var tab: SettingsTab = .preset
 }
 
-/// 设置窗口，布局和视觉与 `designs/breathe/` 原型保持一致。
+/// 设置窗口，布局和视觉与 `.ryugi/artifacts/html/breathe-prototype/` 原型保持一致。
 struct SettingsView: View {
     @ObservedObject private var settingsManager = AppSettingsManager.shared
     @StateObject private var windowBox = BreatheWindowBox()

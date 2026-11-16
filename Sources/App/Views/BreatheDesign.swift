@@ -4,7 +4,7 @@ import SwiftUI
 
 // MARK: - 设计令牌
 
-/// 设计稿 `designs/breathe/style.css` 的颜色与尺寸。
+/// 设计稿 `.ryugi/artifacts/html/breathe-prototype/style.css` 的颜色与尺寸。
 enum BreatheStyle {
     static let ink = Color(hex: 0x242B28)
     static let muted = Color(hex: 0x66716B)

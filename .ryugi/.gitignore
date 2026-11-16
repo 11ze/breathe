@@ -2,3 +2,22 @@ config.json
 artifacts/*
 !artifacts/document/
 artifacts/document/*/.artifact-id
+
+# 正式原型与历史画板源码；其余 artifact 与本机状态仍忽略。
+!artifacts/html/
+artifacts/html/*
+!artifacts/html/breathe-prototype/
+artifacts/html/breathe-prototype/*
+!artifacts/html/breathe-prototype/index.html
+!artifacts/html/breathe-prototype/style.css
+!artifacts/html/breathe-prototype/prototype.js
+
+!artifacts/artboard/
+artifacts/artboard/*
+!artifacts/artboard/breathe-design-preview/
+artifacts/artboard/breathe-design-preview/*
+!artifacts/artboard/breathe-design-preview/canvas.json
+!artifacts/artboard/breathe-design-preview/pages/
+
+**/.artifact-id
+artifacts/**/comments.json

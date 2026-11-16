@@ -4,7 +4,7 @@
 
 ## 原生界面
 
-界面以 `designs/breathe/` 原型为基础，使用 SwiftUI/AppKit；呼吸球和历史页采用后续确认的调整（固定读秒、可展开记录详情）。原型外层的场景导航、桌面背景和演示标签不属于应用界面。
+界面以 `.ryugi/artifacts/html/breathe-prototype/` 原型为基础，使用 SwiftUI/AppKit；呼吸球和历史页采用后续确认的调整（固定读秒、可展开记录详情）。原型外层的场景导航、桌面背景和演示标签不属于应用界面。
 
 - 窗口：设置与历史使用隐藏系统标题栏与交通灯的自定义窗口（`BreatheWindow` + `fullSizeContentView`），系统红黄绿按钮隐藏，`BreatheWindowTitlebar` 绘制标题、品牌和交通灯。`BreatheHostingView` 把 `safeAreaInsets` 置零，避免系统标题栏把内容下推 32pt；`BreatheTrafficLightMonitor` 在事件派发前接管 47pt 标题栏：三个圆点执行窗口动作，其余区域拖动或双击缩放。窗口强制浅色外观以匹配设计稿调色板。
 - 设置：默认 540×640，最小 540×560；顶部为 `≋`/通用分类，内容可滚动。预设摘要复用 `BreathingConfig`，自动模式每分钟刷新时段；时段映射只在自动模式显示，并给当前时段加“当前”标记，固定预设时隐藏；自定义比例使用文本输入，直接展示周期、实际时长与原有安全校验反馈，无效时隐藏摘要。

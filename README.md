@@ -60,7 +60,7 @@ xcodebuild test -project breathe.xcodeproj \
   CODE_SIGN_IDENTITY="-"
 ```
 
-开发约定见[开发规范](docs/conventions.md)与[架构说明](docs/architecture.md)。原型的本地预览和 Pages 发布方式见[设计说明](designs/breathe/README.md#在线预览与发布)。
+开发约定见[开发规范](docs/conventions.md)与[架构说明](docs/architecture.md)。原型的本地预览和 Pages 发布方式见[设计说明](docs/design.md#在线预览与发布)。
 
 ## 致谢
 

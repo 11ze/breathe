@@ -1,26 +1,43 @@
 # Breathe 交互原型
 
-以当前 Swift 源码为功能依据，采用 macOS 中性浅色窗口、系统字体和深黑文字，绿色用于开关与功能状态。入口为 `index.html`；不修改原生应用。
+以当前 Swift 源码为功能依据，采用 macOS 中性浅色窗口、系统字体和深黑文字，绿色用于开关与功能状态。唯一设计源为 `.ryugi/artifacts/html/breathe-prototype/`，入口为 `index.html`；预览不会修改原生应用。
 
 ## 预览
 
-从仓库根目录执行：
+安装 Ryugi 后，从仓库根目录执行：
 
 ```bash
-python3 -m http.server 4311 --bind 127.0.0.1 --directory designs
+ryugi start --background --artifact html/breathe-prototype
 ```
 
-浏览器打开 <http://localhost:4311/breathe/>。无外部依赖，不需要联网；所有文件都在当前目录。
+打开命令打印的 Open 地址。只维护这份正式原型，GitHub Pages 直接发布相同文件，不生成第二份设计稿。
+
+无需 Ryugi 的静态预览方式，从仓库根目录执行：
+
+```bash
+python3 -m http.server 4313 --bind 127.0.0.1 \
+  --directory .ryugi/artifacts/html/breathe-prototype
+```
+
+浏览器打开 <http://localhost:4313/>。无外部依赖，不需要联网；三个页面文件均在正式原型目录内，通过相对路径加载。
 
 ## 在线预览与发布
 
 发布地址：<https://11ze.github.io/breathe/>。
 
-`.github/workflows/pages.yml` 将整个 `designs/breathe/` 目录交给 `actions/upload-pages-artifact` 发布。`index.html`、`style.css` 和 `prototype.js` 使用相对引用，可在 Pages 的 `/breathe/` 子路径下加载，不需要构建或复制文件。
+`.github/workflows/pages.yml` 将正式原型目录 `.ryugi/artifacts/html/breathe-prototype/` 交给 `actions/upload-pages-artifact` 发布。`index.html`、`style.css` 和 `prototype.js` 使用相对引用，可在 Pages 的 `/breathe/` 子路径下加载，不需要构建或复制文件。
 
-首次发布前，将仓库 Settings → Pages → Build and deployment → Source 设为 GitHub Actions。工作流提交并推送到 `main` 后会触发部署；之后只有原型目录或该工作流变更时自动发布，也可手动运行 Deploy design preview。手动发布仅允许 `main` 分支。首次部署成功前，在线地址不可用。
+首次发布前，将仓库 Settings → Pages → Build and deployment → Source 设为 GitHub Actions。工作流提交并推送到 `main` 后会触发部署；之后只有原型目录或该工作流变更时自动发布，也可手动运行 Deploy design preview。手动发布仅允许 `main` 分支。工作流改动提交并推送前，线上仍显示上一次部署的版本。
 
 发布后确认 Actions 中部署成功，再逐个核对在线 `index.html`、`style.css`、`prototype.js` 与仓库版本一致，并执行下方的交互验收。部署失败时可继续使用本地预览；恢复上一版原型或工作流后重新部署即可回退，不影响应用配置和会话日志。
+
+## 正式稿与历史记录
+
+- 正式稿：`.ryugi/artifacts/html/breathe-prototype/`。只维护此目录中的 HTML、CSS、JS。
+- 历史画板：`.ryugi/artifacts/artboard/breathe-design-preview/canvas.json` 和 `pages/`。保留当时的候选、对比和说明，不代表当前正式设计，不继续同步到新版本。
+- 评估与实施记录：`.ryugi/artifacts/document/original-design-review/`。其中的旧路径和旧候选保留为历史背景，当前设计以正式稿为准。
+- 正式稿、历史画板源码与评估文档均进入 Git。批注、运行状态、`.artifact-id` 和本机配置不进入 Git。
+- Pages 只上传正式原型目录；历史画板、评估文档和批注不属于站点内容。若 Git 仓库公开，已提交的历史源码仍可从仓库查看。
 
 ## 范围与来源
 
