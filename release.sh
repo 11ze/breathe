@@ -43,19 +43,9 @@ fi
 echo "🔄 拉取最新标签..."
 git fetch --tags
 
-# 生成发布说明
+# 生成发布说明：与 CI 共用 scripts/release-notes.sh，避免两套规则漂移
 generate_release_notes() {
-    local last_tag
-    last_tag=$(git describe --tags --abbrev=0 2>/dev/null) || last_tag="0.0.0"
-
-    git log "${last_tag}..HEAD" --pretty=format:"%s" 2>/dev/null | awk -F': ' '{
-        split($1, a, "(")
-        type = a[1]
-        msg = $2
-        if (type == "feat") print "Added " msg
-        else if (type == "fix") print "Fixed " msg
-        else if (type == "style" || type == "perf" || type == "refactor") print "Improved " msg
-    }'
+    bash "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/scripts/release-notes.sh"
 }
 
 echo "📦 开始构建 ${PROJECT_NAME} v${VERSION} ..."
@@ -66,6 +56,8 @@ xcodebuild -project ${PROJECT_NAME}.xcodeproj \
     -scheme ${SCHEME} \
     -configuration ${CONFIG} \
     -derivedDataPath ${BUILD_PATH} \
+    ARCHS="arm64 x86_64" \
+    ONLY_ACTIVE_ARCH=NO \
     clean build
 
 # 获取构建产物路径（与上面的 derivedDataPath 对应）
@@ -85,6 +77,8 @@ mkdir -p ${RELEASE_DIR}
 # 复制 app
 echo "📂 复制应用..."
 cp -R "${APP_PATH}" "./${RELEASE_DIR}/"
+# 复制进 iCloud 目录会带上 FinderInfo 等扩展属性，清掉才能通过 codesign --verify
+xattr -cr "./${RELEASE_DIR}/${APP_NAME}.app"
 
 # 打包成 zip
 echo "🗜️ 打包中..."
@@ -102,12 +96,13 @@ echo "📁 输出文件:"
 echo "   - Release/${APP_NAME}-${VERSION}.zip"
 echo "   - Release/RELEASE_NOTES.md"
 echo ""
-echo "下一步："
-echo "1. 一键发布："
-echo "   git add Resources/Info.plist && git commit -m \"chore: bump version to ${VERSION}\" && git tag -a v${VERSION} -m \"version ${VERSION}\" && git push --follow-tags"
-echo "2. 访问 GitHub Releases 创建新 Release"
-echo "3. 上传 Release/${APP_NAME}-${VERSION}.zip"
-echo "4. 复制以下内容到 Release Description:"
+echo "本脚本只做本地自测打包，不上传。正式发版："
+echo "1. git add Resources/Info.plist && git commit -m \"chore: bump version to ${VERSION}\""
+echo "2. git tag -a v${VERSION} -m \"version ${VERSION}\""
+echo "3. git push --follow-tags"
+echo ""
+echo "推送 tag 后由 .github/workflows/release.yml 校验版本、构建通用包（arm64 + x86_64）并发布 Release。"
+echo "补发已有 tag：gh workflow run release.yml -f tag=v${VERSION}"
 echo ""
 echo "────────────────────────────────────────"
 echo "${RELEASE_NOTES}"

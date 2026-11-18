@@ -89,10 +89,15 @@ Tests/
 └── TimeOfDayTests.swift                      # 时段预设选择
 
 scripts/
-└── update_build_number.sh                    # 自动更新构建号
+├── update_build_number.sh                    # 自动更新构建号
+└── release-notes.sh                          # 生成发布说明（本地与 CI 共用）
+
+.github/workflows/
+├── pages.yml                                 # 原型推送到 Pages
+└── release.yml                               # 打 tag 后构建通用包并发布 Release
 
 project.yml                                   # XcodeGen 项目定义
-release.sh                                    # 自动化发布
+release.sh                                    # 本地打包自测（不上传）
 ```
 
 ## 配置文件

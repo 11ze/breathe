@@ -27,9 +27,11 @@ xcodebuild test -project breathe.xcodeproj \
   -derivedDataPath /tmp/breathe-build \
   CODE_SIGN_IDENTITY="-"
 
-# 发布
-./release.sh 1.0.0
+# 本地打包自测（不上传）
+./release.sh 1.3.4
 ```
+
+发版：改 `Resources/Info.plist` 版本并提交后，打 `v*` tag 推到 origin，由 [.github/workflows/release.yml](.github/workflows/release.yml) 校验版本、构建通用包（arm64 + x86_64）并发布 Release。`release.sh` 只做本地自测打包，不上传。发布说明由 [scripts/release-notes.sh](scripts/release-notes.sh) 生成，本地和 CI 共用。
 
 ## 参考文档
 

@@ -15,7 +15,7 @@ macOS 12.0+ · SwiftUI + AppKit · 无外部依赖
 
 ## 安装与使用
 
-1. 从 [Releases](https://github.com/11ze/breathe/releases/latest) 下载并解压，将 `Breathe.app` 拖入应用程序文件夹。
+1. 从 [Releases](https://github.com/11ze/breathe/releases/latest) 下载并解压，将 `Breathe.app` 拖入应用程序文件夹。包内含 Apple Silicon 与 Intel 两个架构。
 2. 打开应用；若被系统拦截，在系统设置的“隐私与安全性”中允许打开。启动后点击菜单栏图标，选择“开始呼吸”。
 3. 跟随呼吸球练习；通过菜单暂停、继续、停止或切换静音。
 4. 从菜单打开“设置…”调整预设，或打开“历史记录”查看会话。
@@ -61,6 +61,18 @@ xcodebuild test -project breathe.xcodeproj \
 ```
 
 开发约定见[开发规范](docs/conventions.md)与[架构说明](docs/architecture.md)。原型的本地预览和 Pages 发布方式见[设计说明](docs/design.md#在线预览与发布)。
+
+## 发布
+
+发版由 [.github/workflows/release.yml](.github/workflows/release.yml) 完成，本机不负责上传。
+
+1. 改 `Resources/Info.plist` 的 `CFBundleShortVersionString`，提交并推送。
+2. 打 tag 推送：`git tag -a v1.3.4 -m "version 1.3.4" && git push origin v1.3.4`。
+3. Actions 的 Release 工作流先校验 tag 与 `Info.plist` 版本一致，再构建通用包（arm64 + x86_64）并发布到 [Releases](https://github.com/11ze/breathe/releases)。版本不一致或构建失败不会产生 release。
+
+补发已有 tag（比如构建失败后重跑）：`gh workflow run release.yml -f tag=v1.3.4`。tag 里带 `-` 的（如 `v1.3.4-beta.1`）标为预发布。
+
+本地 `./release.sh <version>` 会更新 `Info.plist` 的版本号和构建号，在 `Release/` 生成 zip 和发布说明，只用于自测，不上传。发布说明由 [scripts/release-notes.sh](scripts/release-notes.sh) 生成，本地和 CI 共用。
 
 ## 致谢
 
