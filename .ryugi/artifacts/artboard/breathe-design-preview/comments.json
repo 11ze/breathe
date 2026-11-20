@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "threads": [
+    {
+      "id": "ahG0wtXtPg",
+      "anchor": {
+        "page": "breathing",
+        "x": 0,
+        "y": 0,
+        "group": "breathing-choice",
+        "choice": "orb-after"
+      },
+      "status": "resolved",
+      "statusAt": "2026-11-16T02:08:37.533Z",
+      "statusBy": "agent",
+      "messages": [
+        {
+          "id": "mP7AnxW0Zj",
+          "author": "agent",
+          "name": "Codex",
+          "text": "Chose orb-after",
+          "at": "2026-11-16T02:08:37.533Z"
+        }
+      ]
+    },
+    {
+      "id": "XqeBmSzUh_",
+      "anchor": {
+        "page": "breathing",
+        "x": 0,
+        "y": 0,
+        "round": "page:breathing",
+        "submit": true
+      },
+      "status": "resolved",
+      "statusAt": "2026-11-16T02:08:37.714Z",
+      "statusBy": "agent",
+      "messages": [
+        {
+          "id": "uKgN1Vc4Bw",
+          "author": "agent",
+          "name": "Codex",
+          "text": "Submitted page:breathing",
+          "at": "2026-11-16T02:08:37.714Z"
+        }
+      ]
+    },
+    {
+      "id": "dek1wPfz0o",
+      "anchor": {
+        "page": "history",
+        "x": 0,
+        "y": 0,
+        "group": "history-choice",
+        "choice": "history-after"
+      },
+      "status": "resolved",
+      "statusAt": "2026-11-16T02:08:37.853Z",
+      "statusBy": "agent",
+      "messages": [
+        {
+          "id": "jaXQkqo2iY",
+          "author": "agent",
+          "name": "Codex",
+          "text": "Chose history-after",
+          "at": "2026-11-16T02:08:37.853Z"
+        }
+      ]
+    },
+    {
+      "id": "A0CPNKRXAf",
+      "anchor": {
+        "page": "history",
+        "x": 0,
+        "y": 0,
+        "round": "page:history",
+        "submit": true
+      },
+      "status": "resolved",
+      "statusAt": "2026-11-16T02:08:37.974Z",
+      "statusBy": "agent",
+      "messages": [
+        {
+          "id": "se2RchjrQD",
+          "author": "agent",
+          "name": "Codex",
+          "text": "Submitted page:history",
+          "at": "2026-11-16T02:08:37.974Z"
+        }
+      ]
+    },
+    {
+      "id": "v_CD4JxqV3",
+      "anchor": {
+        "page": "style-review",
+        "x": 840,
+        "y": 0,
+        "group": "style-preset",
+        "choice": "style-preset-proposed"
+      },
+      "status": "resolved",
+      "statusAt": "2026-11-16T06:30:36.739Z",
+      "statusBy": "human",
+      "messages": [
+        {
+          "id": "h1DCjDInOW",
+          "author": "human",
+          "name": "11ze",
+          "avatar": "/api/avatar/gravatar/2491374d03683cd323b28555c076e72de43145f31e2cc3e78815c4540b0d4f4e",
+          "text": "style-preset-proposed",
+          "at": "2026-11-16T06:30:36.739Z"
+        }
+      ]
+    }
+  ]
+}
