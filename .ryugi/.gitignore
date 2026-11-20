@@ -2,6 +2,7 @@ config.json
 artifacts/*
 !artifacts/document/
 artifacts/document/*/.artifact-id
+artifacts/**/comments.json
 
 # 正式原型与历史画板源码；其余 artifact 与本机状态仍忽略。
 !artifacts/html/
@@ -20,4 +21,3 @@ artifacts/artboard/breathe-design-preview/*
 !artifacts/artboard/breathe-design-preview/pages/
 
 **/.artifact-id
-artifacts/**/comments.json
